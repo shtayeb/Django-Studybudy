@@ -33,6 +33,8 @@ def registerPage(request):
             user.username = user.username.lower()
 
             user.save()
+
+            # from django auth
             login(request, user)
 
             return redirect('home')

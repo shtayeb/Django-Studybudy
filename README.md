@@ -43,3 +43,11 @@ python manage.py createsuperuser
 ```shell
 python manage.py runserver
 ```
+## TODO
+
+- Recaptcha for login an register page
+- Email verification
+- Create an event and its listner
+- Forgot password option
+- roles and permissions
+- style the flash messages 
