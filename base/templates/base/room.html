@@ -1,4 +1,6 @@
-{% extends 'main.html' %} {% block content %}
+{% extends 'main.html' %} 
+{% load markdown_extras %}
+{% block content %}
 <main class="profile-page layout layout--2">
   <div class="container">
     <!-- Room Start -->
@@ -125,7 +127,7 @@
                 {% endif %}
               </div>
               <div class="thread__details">
-                {{message.body}}
+                {{ message.body | markdown | safe }}
               </div>
             </div>
             {% endfor %}
