@@ -15,6 +15,7 @@ class ParticipantsInline(admin.TabularInline):
     model = Room.participants.through
 
 class RoomAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
     inlines = [
         ParticipantsInline,
     ]
@@ -69,6 +70,7 @@ admin.site.register(User,UserAdmin)
 #End UserAdmin
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'description','github_url']
+    prepopulated_fields = {'slug': ('name',)}
 
     def get_urls(self):
         urls = super().get_urls()
