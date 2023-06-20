@@ -9,6 +9,8 @@ from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password
 
+
+admin.site.register(Message)
 class ParticipantsInline(admin.TabularInline):
     model = Room.participants.through
 
@@ -65,6 +67,44 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User,UserAdmin)
 
 #End UserAdmin
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description','github_url']
 
-admin.site.register(Topic)
-admin.site.register(Message)
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [path('upload-csv/', self.upload_csv),]
+        return new_urls + urls
+    
+    def upload_csv(self, request):
+
+        if request.method == "POST":
+            csv_file = request.FILES["csv_upload"]
+            
+            if not csv_file.name.endswith('.csv'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return HttpResponseRedirect(request.path_info)
+            
+            file_data = csv_file.read().decode("utf-8")
+            csv_data = file_data.split("\n")[1:]
+            print(csv_data)
+
+
+            for x in csv_data:
+                fields = x.split(",")
+                created = Topic.objects.update_or_create(
+                    name = fields[1],
+                    description = fields[2],
+                    github_url = fields[3],
+                    )
+                    
+            url = reverse('admin:index')
+            return HttpResponseRedirect(url)
+                
+
+        form = CsvImportForm()
+        data = {"form": form}
+        return render(request, "admin/csv_upload.html", data)
+
+admin.site.register(Topic,TopicAdmin)
+
+

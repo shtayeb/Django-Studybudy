@@ -16,6 +16,10 @@ class User(AbstractUser):
 
 class Topic(models.Model):
     name = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+    github_url = models.URLField(null=True, blank=True)
+
+    
 
     def __str__(self):
         return self.name
