@@ -1,5 +1,5 @@
 {% extends 'main.html' %} {% block content %}
-
+{% load markdown_extras %}
 <main class="layout">
   <div class="container">
     <div class="layout__box">
@@ -64,7 +64,7 @@
                 >{{message.room}}</a
               >”
             </p>
-            <div class="activities__boxRoomContent">{{message.body}}</div>
+            <div class="activities__boxRoomContent">{{message.body | markdown | safe}}</div>
           </div>
         </div>
         {% endfor %}

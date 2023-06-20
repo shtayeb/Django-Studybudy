@@ -1,3 +1,4 @@
+{% load markdown_extras %}
 <div class="activities">
   <div class="activities__header">
     <h2>Recent Activities</h2>
@@ -43,7 +44,7 @@
           >{{message.room}}</a
         >”
       </p>
-      <div class="activities__boxRoomContent">{{message.body}}</div>
+      <div class="activities__boxRoomContent">{{message.body | markdown | safe}}</div>
     </div>
   </div>
   {% endfor %}
