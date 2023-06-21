@@ -44,7 +44,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 ## TODO
-- Code blocks in the rooms - should support markdown in messages inside room
+- [x] Code blocks in the rooms - should support markdown in messages inside room
 - Recaptcha for login an register page
 - Email verification
 - Create an event and its listner
