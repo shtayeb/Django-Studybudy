@@ -32,3 +32,4 @@ virtualenv==20.16.5
 yarg==0.1.9
 django-debug-toolbar
 markdown
+Pygments
