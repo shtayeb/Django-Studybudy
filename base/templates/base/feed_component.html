@@ -15,7 +15,8 @@
     </div>
   </div>
   <div class="roomListRoom__content">
-    <a href="{% url 'room' room.id %}">{{room.name}}</a>
+    {% comment %} <a href="{% url 'room' room.id %}">{{room.name}}</a> {% endcomment %}
+    <a href="{{room.get_absolute_url}}">{{room.name}}</a>
   </div>
   <div class="roomListRoom__meta">
     <a href="{% url 'room' room.id %}" class="roomListRoom__joined">

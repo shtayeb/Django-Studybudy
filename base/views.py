@@ -1,5 +1,5 @@
 from multiprocessing import context
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from .models import Message, Room, Topic, Message, User
 from .forms import RoomForm, UserForm, MyUserCreationForm
 from django.db.models import Q
@@ -93,8 +93,10 @@ def home(request):
     return render(request, 'base/home.html', context)
 
 
-def room(request, pk):
-    room = Room.objects.get(id=pk)
+def room(request, slug):
+    # room = Room.objects.get(id=pk)
+    room = get_object_or_404(Room,slug=slug)
+
     room_messages = room.message_set.all()
     participants = room.participants.all()
 
@@ -154,8 +156,9 @@ def createRoom(request):
 
 
 @login_required(login_url='/login')
-def updateRoom(request, pk):
-    room = Room.objects.get(id=pk)
+def updateRoom(request, slug):
+    # room = Room.objects.get(id=pk)
+    room = get_object_or_404(Room,slug=slug)
     form = RoomForm(instance=room)
     topics = Topic.objects.all()
 
