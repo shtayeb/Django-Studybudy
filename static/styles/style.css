@@ -901,9 +901,9 @@ a {
 .room,
 .participants {
   background: var(--color-dark);
-  max-height: 87.5vh;
+  /* max-height: 87.5vh; */
   border-radius: 0.7rem;
-  overflow: hidden;
+  /* overflow: hidden; */
   position: relative;
 }
 
@@ -964,9 +964,9 @@ a {
 }
 
 .room__header {
-  max-height: 30vh;
+  /* max-height: 30vh; */
   overflow-y: auto;
-  position: absolute;
+  /* position: absolute; */
   width: 95%;
   background: var(--color-dark);
   z-index: 999;
@@ -985,7 +985,7 @@ a {
 .room__box {
   padding-left: 2rem;
   padding-right: 2rem;
-  height: 80.5vh;
+  /* height: 80.5vh; */
   /* overflow-y: auto; */
   padding-bottom: 0;
 }
@@ -1058,7 +1058,7 @@ a {
   border-radius: 0.7rem;
   overflow-y: auto;
   height: 100%;
-  margin-top: 28vh;
+  /* margin-top: 28vh; */
   padding: 0 2rem 4rem 2rem;
 }
 
@@ -1099,31 +1099,29 @@ a {
 
 .room__message {
   padding: 2rem;
-  position: absolute;
-  z-index: 111;
-  bottom: 0;
+  /* position: absolute; */
+  /* z-index: 111; */
+  /* bottom: 0;
   left: 0;
-  right: 0;
+  right: 0; */
   background: transparent;
 }
 
-.room__message > form > input {
-  resize: none;
+.room__message > form > textarea {
   background-color: var(--color-dark-light);
   color: var(--color-light);
   border: none;
   outline: none;
   border-radius: 0.7rem;
-  height: 4.5rem;
   width: 100%;
   margin-top: -1rem;
   padding: 1.2rem;
   font-size: 1.4rem;
   font-weight: 500;
-  position: relative;
+  /* position: relative; */
 }
 
-.room__message > form > input::placeholder {
+.room__message > form > textarea::placeholder {
   color: var(--color-light-gray);
 }
 

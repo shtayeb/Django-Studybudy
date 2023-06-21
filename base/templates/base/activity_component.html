@@ -44,7 +44,7 @@
           >{{message.room}}</a
         >”
       </p>
-      <div class="activities__boxRoomContent">{{message.body | markdown | safe}}</div>
+      <div class="activities__boxRoomContent">{{message.body|slice:":50" | markdown | safe}}</div>
     </div>
   </div>
   {% endfor %}
