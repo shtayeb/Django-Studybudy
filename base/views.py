@@ -58,7 +58,7 @@ def room(request, slug):
     return render(request, 'base/room.html', context)
 
 
-@login_required(login_url='/login')
+@login_required(login_url='accounts/login')
 def createRoom(request):
     form = RoomForm()
     topics = Topic.objects.all()
@@ -89,7 +89,7 @@ def createRoom(request):
     return render(request, 'base/room_form.html', context)
 
 
-@login_required(login_url='/login')
+@login_required(login_url='accounts/login')
 def updateRoom(request, slug):
     # room = Room.objects.get(id=pk)
     room = get_object_or_404(Room,slug=slug)
@@ -114,7 +114,7 @@ def updateRoom(request, slug):
     return render(request, 'base/room_form.html', context)
 
 
-@login_required(login_url='/login')
+@login_required(login_url='accounts/login')
 def deleteRoom(request, pk):
     room = Room.objects.get(id=pk)
 
@@ -129,7 +129,7 @@ def deleteRoom(request, pk):
     return render(request, 'base/delete.html', {'obj': room})
 
 
-@login_required(login_url='/login')
+@login_required(login_url='accounts/login')
 def deleteMessage(request, pk):
     message = Message.objects.get(id=pk)
 

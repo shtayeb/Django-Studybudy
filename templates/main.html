@@ -13,13 +13,21 @@
   </head>
 
   <body>
-    {% include 'navbar.html' %} {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %} {% block content %} {% endblock %}
+    {% include 'navbar.html' %} 
+
+    {% if messages %}
+    <div class="layout">
+      <div class="container" style="background-color:var(--color-success);border-radius:5px;padding:5px 8px;color:black">
+        <ul class="messages">
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %} 
+    
+    {% block content %} {% endblock %}
 
     <script src="{% static 'js/script.js' %}"></script>
     {% block extra_scripts %} {% endblock extra_scripts %}
