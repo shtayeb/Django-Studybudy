@@ -1,10 +1,8 @@
 from django import forms
 from django.contrib import admin, messages
-from django.contrib.auth.hashers import make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
-from django.utils.crypto import get_random_string
 
 from .models import Message, Room, Topic, User
 
@@ -13,23 +11,19 @@ class ParticipantsInline(admin.TabularInline):
     model = Room.participants.through
 
 class RoomAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
+    # prepopulated_fields = {'slug': ('name',)}
     inlines = [
         ParticipantsInline,
     ]
 
 admin.site.register(Room,RoomAdmin)
 
-# UserAdmin
 class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()
 
-
-
-#End UserAdmin
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'description','github_url']
-    prepopulated_fields = {'slug': ('name',)}
+    # prepopulated_fields = {'slug': ('name',)}
 
     def get_urls(self):
         urls = super().get_urls()

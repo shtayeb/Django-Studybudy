@@ -44,10 +44,41 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 ## TODO
+- Email verification
+- Forgot password option
+- style the flash messages 
 - [x] Code blocks in the rooms - should support markdown in messages inside room
 - Recaptcha for login an register page
-- Email verification
-- Create an event and its listner
-- Forgot password option
 - roles and permissions
-- style the flash messages 
+- Create an event and its listner
+
+
+## Docs
+With django-extensions package, you access to these commands
+Install ``` apt-get install graphviz ```
+
+```shell
+# List all you app urls
+python manage.py show_urls
+
+# Generate ERD of all you DB tables
+python manage.py graph_models -a -o myapp_models.png
+
+# Generate ERD of specific apps
+python manage.py graph_models base auth -o myapp_models.png
+
+python manage.py shell_plus
+python manage.py shell_plus --print-sql
+
+python manage.py list_model_info --model base.Room
+
+python manage.py list_signals 
+
+python manage.py  reset_db mybucket
+
+python manage.py admin_generator <your_app_name>
+
+
+
+
+```

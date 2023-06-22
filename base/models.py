@@ -1,23 +1,25 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django_extensions.db.fields import AutoSlugField
 
 from accounts.models import User
 
 
 class Topic(models.Model):
     name = models.CharField(max_length=200,blank=False,null=False)
-    slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
+    # slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
+    slug = AutoSlugField(populate_from=['name'])
     description = models.TextField(null=True, blank=True)
     github_url = models.URLField(null=True, blank=True)
 
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):  
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):  
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)
+    #     return super().save(*args, **kwargs)
 
     
 
@@ -32,7 +34,8 @@ class Room(models.Model):
         User, related_name='participants', blank=True)
 
     name = models.CharField(max_length=200,blank=False,null=False)
-    slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
+    # slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
+    slug = AutoSlugField(populate_from=['name'])
     description = models.TextField(null=True, blank=True)
     
     updated = models.DateTimeField(auto_now=True)
@@ -41,10 +44,10 @@ class Room(models.Model):
     class Meta:
         ordering = ['-updated', '-created']
 
-    def save(self, *args, **kwargs):  
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):  
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)
+    #     return super().save(*args, **kwargs)
     
     def get_absolute_url(self):
         return reverse("room", kwargs={"slug": self.slug})
