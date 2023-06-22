@@ -6,31 +6,14 @@ from django.shortcuts import render
 from django.urls import path, reverse
 from django.utils.crypto import get_random_string
 
-from .models import Message, Room, Topic, User
+from .models import User
 
-admin.site.register(Message)
-class ParticipantsInline(admin.TabularInline):
-    model = Room.participants.through
 
-class RoomAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
-    inlines = [
-        ParticipantsInline,
-    ]
-
-admin.site.register(Room,RoomAdmin)
-
-# UserAdmin
 class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()
 
-
-
-#End UserAdmin
-class TopicAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description','github_url']
-    prepopulated_fields = {'slug': ('name',)}
-
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'email', 'is_staff']
     def get_urls(self):
         urls = super().get_urls()
         new_urls = [path('upload-csv/', self.upload_csv),]
@@ -46,19 +29,21 @@ class TopicAdmin(admin.ModelAdmin):
                 return HttpResponseRedirect(request.path_info)
             
             file_data = csv_file.read().decode("utf-8")
-            csv_data = file_data.split("\n")[1:]
-            print(csv_data)
-
+            csv_data = file_data.split("\n")
 
             for x in csv_data:
                 fields = x.split(",")
-                created = Topic.objects.update_or_create(
-                    name = fields[1],
-                    description = fields[2],
-                    github_url = fields[3],
+                created = User.objects.update_or_create(
+                    first_name = fields[2],
+                    last_name = fields[3],
+                    username = fields[2]+'-'+get_random_string(length=5),
+                    name = fields[2] + ' ' +fields[3],
+                    email = fields[1],
+                    avatar = fields[4],
+                    password=make_password('12345678')
                     )
                     
-            url = reverse('admin:base_topic_changelist')
+            url = reverse('admin:accounts_user_changelist')
             return HttpResponseRedirect(url)
                 
 
@@ -66,6 +51,4 @@ class TopicAdmin(admin.ModelAdmin):
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
 
-admin.site.register(Topic,TopicAdmin)
-
-
+admin.site.register(User,UserAdmin)
