@@ -1,6 +1,7 @@
 {% extends 'main.html' %} {% load markdown_extras %} {% block content %}
 {% load static %}
 {% block extra_heads %}
+  <title>{{ room.name }}</title>
   <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
 {% endblock extra_heads %}
 <main class="profile-page layout layout--2">

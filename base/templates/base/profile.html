@@ -1,6 +1,8 @@
 
 {% extends 'main.html' %} 
-
+{% block extra_heads %}
+  <title>@{{ user.username }}'s Profile</title>
+{% endblock extra_heads %}
 {% block content %}
   <main class="profile-page layout layout--3">
     <div class="container">
