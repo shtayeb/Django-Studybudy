@@ -44,10 +44,10 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 ## TODO
-- Email verification
-- Forgot password option
-- style the flash messages 
+- [x] Email verification
+- [x] Forgot password option
 - [x] Code blocks in the rooms - should support markdown in messages inside room
+- style the flash messages 
 - Recaptcha for login an register page
 - roles and permissions
 - Create an event and its listner
@@ -77,8 +77,5 @@ python manage.py list_signals
 python manage.py  reset_db mybucket
 
 python manage.py admin_generator <your_app_name>
-
-
-
 
 ```
