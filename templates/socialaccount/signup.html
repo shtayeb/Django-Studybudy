@@ -1,0 +1,55 @@
+{% extends "main.html" %}
+{% load i18n %}
+
+{% block extra_heads %}
+<title>Sign Up with Social Account</title>
+{% endblock extra_heads %}
+
+{% block content %}
+<main class="auth layout">
+    <div class="container">
+        <div class="layout__box">
+            <div class="layout__boxHeader">
+                <div class="layout__boxTitle">
+                <h3>Social Sign Up</h3>
+                </div>
+            </div>
+
+            <div class="layout__body">
+                <h2 class="auth__tagline">
+                    {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to
+{{site_name}}. As a final step, please complete the following form:{% endblocktrans %}
+                </h2>
+
+                <form method="post" class="auth__tagline">
+                    {% csrf_token %}
+                    {% comment %} {{ form.as_p }} {% endcomment %}
+                    {% for field in form.visible_fields %}
+                        {% if field.name != "remember" %}
+                        <div class="form__group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            
+                            {% for error in field.errors %}
+                                <span class="error">
+                                {{ error }}
+                                </span>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    <button type="submit" class="btn btn--main">{% trans "Sign Up" %}</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+
+
+{% endblock %}

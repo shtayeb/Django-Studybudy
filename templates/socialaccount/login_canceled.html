@@ -1,0 +1,29 @@
+{% extends 'main.html' %} 
+
+{% block extra_heads %}
+<title>Login Cancelled</title>
+{% endblock extra_heads %}
+
+{% block content %}
+<main class="auth layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Login Cancelled</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        <div class="auth__action">
+          <p>
+            You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please proceed to sign in</a>.
+          </p>
+          <a href="{{login_url}}" class="btn btn--link">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</main>
+
+{% endblock content %}
