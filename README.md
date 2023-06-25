@@ -47,10 +47,10 @@ python manage.py runserver
 - [x] Email verification
 - [x] Forgot password option
 - [x] Code blocks in the rooms - should support markdown in messages inside room
+- [x] Add new users to news room by default
 - style the flash messages 
 - Recaptcha for login an register page
 - roles and permissions
-- Create an event and its listner
 
 
 ## Docs
