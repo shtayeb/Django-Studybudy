@@ -1,0 +1,30 @@
+{% extends 'main.html' %} 
+{% load account socialaccount %}
+
+{% block extra_heads %}
+<title>Account Inactive</title>
+{% endblock extra_heads %}
+
+{% block content %}
+<main class="auth layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Account is inactive</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        <div class="auth__action">
+          <p>This account is inactive.</p>
+          <a href="{% url 'account_login' %}" class="btn btn--link">Sign Up</a>
+          <span>---</span>
+          <a class="btn btn--link" href="{% url 'account_signup' %}">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</main>
+
+{% endblock content %}

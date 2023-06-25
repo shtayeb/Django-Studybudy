@@ -1,0 +1,28 @@
+{% extends 'main.html' %} 
+{% load account socialaccount %}
+
+{% block extra_heads %}
+<title>Verify Your Email Address</title>
+{% endblock extra_heads %}
+
+{% block content %}
+<main class="auth layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Verify Your E-mail Address</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        <div class="auth__action">
+          <p>We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification e-mail in your main inbox, check your spam folder. Please contact us if you do not receive the verification e-mail within a few minutes.</p>
+          <a href="{% url 'account_login' %}" class="btn btn--link">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</main>
+
+{% endblock content %}

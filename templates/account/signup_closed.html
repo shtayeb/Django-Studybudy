@@ -1,0 +1,27 @@
+{% extends 'main.html' %} 
+{% load account socialaccount %}
+
+{% block extra_heads %}
+<title>Sign Up Closed</title>
+{% endblock extra_heads %}
+
+{% block content %}
+<main class="auth layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Sign Up is closed at the moment !</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        <div class="auth__action">
+          <p>We are sorry, but the sign up is currently closed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</main>
+
+{% endblock content %}

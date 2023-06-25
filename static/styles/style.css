@@ -1183,3 +1183,17 @@ pre{
   list-style: none;
   text-decoration: none;
 }
+
+.blockLabels{
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.ctrlHolder{
+
+}
+
+.buttonHolder{
+  /* margin-left: 0.75rem; 12px */
+  margin: 5px;
+}

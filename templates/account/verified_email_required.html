@@ -1,0 +1,37 @@
+{% extends 'main.html' %} 
+{% load account socialaccount %}
+
+{% block extra_heads %}
+<title>Verify Your Email Address</title>
+{% endblock extra_heads %}
+
+{% block content %}
+<main class="auth layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Verify Your E-mail Address</h3>
+          {% url 'account_email' as email_url %}
+        </div>
+      </div>
+      <div class="layout__body">
+         <h2 class="auth__tagline"> This part of the site requires us to verify that
+you are who you claim to be. For this purpose, we require that you
+verify ownership of your e-mail address.</h2>
+        <div class="auth__action">
+          <p>
+           We have sent an e-mail to you for
+verification. Please click on the link inside that e-mail. If you do not see the verification e-mail in your main inbox, check your spam folder. Otherwise
+contact us if you do not receive it within a few minutes.
+        </p>
+          <a href="{% url 'account_login' %}" class="btn btn--link">Sign In</a>
+        </div>
+        <p><strong>Note:</strong> you can still <a href="{{ email_url }}">change your e-mail address</a></p>
+      </div>
+    </div>
+  </div>
+ 
+</main>
+
+{% endblock content %}
