@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Email Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --color-main: #71c6dd;
+        --color-main-light: #e1f6fb;
+        --color-dark: #3f4156;
+        --color-dark-medium: #51546e;
+        --color-dark-light: #696d97;
+        --color-light: #e5e5e5;
+        --color-gray: #8b8b8b;
+        --color-light-gray: #b2bdbd;
+        --color-bg: #2d2d39;
+        --color-success: #79d6a3;
+        --color-error: #fc4b0b;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+        background-color: var(--color-bg);
+      }
+      .container {
+        width: 90%;
+        max-width: 48rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -46%);
+        background-color: var(--color-dark);
+        border-radius: 1rem;
+        box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .logo {
+        max-width: 200px;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      p {
+        margin-bottom: 20px;
+      }
+      a {
+        color: #b2bdbd;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--color-dark-light);
+        color: #ffffff;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 20px;
+      }
+
+      .gradient-line {
+        height: 3px;
+        background: linear-gradient(to right, #3f4156, transparent);
+        margin-bottom: 20px;
+      }
+
+      /* Responsive Styles */
+      @media screen and (max-width: 480px) {
+        h1 {
+          font-size: 20px;
+        }
+        p {
+          font-size: 14px;
+        }
+        .button {
+          font-size: 14px;
+        }
+        .logo {
+          max-width: 150px;
+        }
+      }
+      .footer {
+        margin-top: 50px;
+        text-align: center; /* Center footer */
+      }
+
+      .social-links {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+
+      .social-links:last-child {
+        margin-right: 0; /* Remove margin on last link */
+      }
+
+      .layout__boxHeader {
+        display: flex;
+        padding: 1.5rem;
+        background-color: var(--color-dark-light);
+      }
+
+      .layout__boxTitle {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+
+      .layout__boxTitle h3 {
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--color-light);
+      }
+
+      .layout__boxTitle svg {
+        width: 1.6rem;
+        height: 1.6rem;
+        fill: var(--color-main);
+      }
+
+      .layout__body {
+        margin: 3rem;
+        color: #b2bdbd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>SHTB</h3>
+          <div class="gradient-line"></div>
+        </div>
+      </div>
+
+      <div class="layout__body">
+        <h1>Email Subject Line</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec
+          nisl vel nisi tristique elementum. Sed id justo ac velit feugiat
+          fermentum vel eu urna. Sed luctus sa…[omitted]
+        </p>
+        <a href="#" class="button">Primary Button</a>
+        <footer class="footer">
+          <a href="#" class="social-links">
+            Facebook
+          </a>
+          <a href="#" class="social-links">
+            Twitter
+          </a>
+          <a href="#" class="social-links">
+           Instagram
+          </a>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

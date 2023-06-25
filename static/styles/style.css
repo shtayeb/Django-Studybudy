@@ -425,7 +425,6 @@ a {
 .layout__box {
   width: 90%;
   max-width: 48rem;
-  min-height: 40rem;
   position: absolute;
   top: 50%;
   left: 50%;
