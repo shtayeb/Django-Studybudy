@@ -1207,3 +1207,18 @@ pre{
   /* margin-left: 0.75rem; 12px */
   margin: 5px;
 }
+
+
+/* Auto dark mode */
+
+/* @media (prefers-color-scheme: dark){
+  body{
+    filter:invert(100%);
+    background-color: rgb(256,256,256) !important;
+  }
+
+  img,
+  .emoji{
+    filter: invert(100%);
+  }
+} */
