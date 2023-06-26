@@ -48,7 +48,19 @@ python manage.py runserver
 - [x] Forgot password option
 - [x] Code blocks in the rooms - should support markdown in messages inside room
 - [x] Add new users to news room by default
-- style the flash messages 
+- [x] style the flash messages 
+- SEO meta tags for pages
+- Account removal request
+- Soft delete for all models
+- Add Admins rooms 
+- Ability to archive(block new messages) a room by admin
+- Ability to create private rooms
+- Room participants management(Kick, Block and suspend participants of rooms by its Admin)
+- Ability to join/leave a room
+- Rooms message moderation by Admins
+- Like/Dislike messages of a room by its participants
+- Activity notification for joined rooms
+- Glabal setting for notification settings
 - Recaptcha for login an register page
 - roles and permissions
 
