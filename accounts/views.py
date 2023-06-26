@@ -2,6 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Prefetch, Q
 from django.shortcuts import redirect, render
 
 from base.models import Topic
@@ -66,11 +67,16 @@ from .models import User
 
 def userProfile(request, pk):
     user = User.objects.get(id=pk)
-    rooms = user.room_set.all()
-    room_messages = user.message_set.all()
-    topics = Topic.objects.all()
+
+    rooms = user.room_set.select_related('host','topic').annotate(participants_count=Count('participants'))
+    
+    room_messages = user.message_set.prefetch_related('user','room')
+
+    topics = Topic.objects.annotate(rooms_count=Count('room'))
+    
     context = {'user': user, 'rooms': rooms,
                'room_messages': room_messages, 'topics': topics}
+    
     return render(request, 'accounts/profile.html', context)
 
 

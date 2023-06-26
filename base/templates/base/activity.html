@@ -1,5 +1,14 @@
-{% extends 'main.html' %} {% block content %}
+{% extends 'main.html' %} 
 {% load markdown_extras %}
+{% load static %}
+
+{% block extra_heads %}
+  <title>Activities</title>
+  <link rel="stylesheet" href="{% static 'styles/markdown.css' %}" />
+  <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
+{% endblock extra_heads %}
+
+{% block content %}
 <main class="layout">
   <div class="container">
     <div class="layout__box">
