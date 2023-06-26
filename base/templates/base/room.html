@@ -1,9 +1,13 @@
-{% extends 'main.html' %} {% load markdown_extras %} {% block content %}
+{% extends 'main.html' %} {% load markdown_extras %} 
 {% load static %}
 {% block extra_heads %}
   <title>{{ room.name }}</title>
   <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
+  <link rel="stylesheet" href="{% static 'styles/markdown.css' %}" />
+
 {% endblock extra_heads %}
+
+{% block content %}
 <main class="profile-page layout layout--2">
   <div class="container">
     <!-- Room Start -->
@@ -152,7 +156,7 @@
                 </a>
                 {% endif %}
               </div>
-              <div class="thread__details  prose-xl " style="font-size:unset;line-height:unset">
+              <div class="thread__details markdown-prose" style="font-size:unset;line-height:unset">
                 {{ message.body | markdown | safe }}
               </div>
             </div>
@@ -189,5 +193,5 @@
 {% endblock content %}
 
 {% block extra_scripts %}
-<script src="https://cdn.tailwindcss.com?plugins=typography" defer></script>
+
 {% endblock extra_scripts %}

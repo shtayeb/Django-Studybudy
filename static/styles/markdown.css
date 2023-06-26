@@ -1,0 +1,11 @@
+pre {
+    padding: 16px;
+    border-radius: 8px;
+}
+
+/* .markdown-prose{
+} */
+
+.room__conversation{
+    line-height: 3.5rem;
+}
