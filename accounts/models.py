@@ -7,12 +7,12 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=False)
     bio = models.TextField(null=True)
 
-    avatar = models.ImageField(upload_to='profile_pics',null=True, default="images/avatar.svg")
+    avatar = models.ImageField(
+        upload_to="profile_pics", null=True, default="avatar.svg"
+    )
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.username
-
-

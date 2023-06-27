@@ -8,20 +8,15 @@ Django==4.2.2
 django-appconf==1.0.5
 django-compressor==4.0
 django-cors-headers==3.13.0
-django-debug-toolbar==4.1.0
 django-environ==0.10.0
-djangorestframework==3.14.0
 docopt==0.6.2
 environ==1.0
 filelock==3.8.0
 idna==3.4
-Markdown==3.4.3
 numpy==1.23.1
 pandas==1.4.3
-Pillow==9.2.0
 platformdirs==2.5.2
 pycparser==2.21
-Pygments==2.15.1
 python-dateutil==2.8.2
 pytz==2022.1
 rcssmin==1.1.0
@@ -32,9 +27,15 @@ sqlparse==0.4.2
 typing_extensions==4.6.3
 tzdata==2022.2
 urllib3==1.26.12
-virtualenv==20.16.5
 yarg==0.1.9
+#
+Markdown==3.4.3
+Pillow==9.2.0
+Pygments==2.15.1
+djangorestframework==3.14.0
+virtualenv==20.16.5
 django-allauth
 # Dev
+django-debug-toolbar==4.1.0
 django-extensions
 pydotplus

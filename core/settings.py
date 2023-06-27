@@ -43,19 +43,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'django.contrib.sites',
+    "django.contrib.sites",
     # Installed apps
     "rest_framework",
     "debug_toolbar",
     "corsheaders",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
-    'django_extensions',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
+    "django_extensions",
     # my apps
     "accounts.apps.AccountsConfig",
-    "base.apps.BaseConfig"
+    "base.apps.BaseConfig",
 ]
 
 MIDDLEWARE = [
@@ -160,45 +160,40 @@ INTERNAL_IPS = [
 ]
 
 # EMAIL
-EMAIL_HOST=env('EMAIL_HOST')
-EMAIL_PORT=env('EMAIL_PORT')
-EMAIL_HOST_USER=env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL=env('DEFAULT_FROM_EMAIL')
-EMAIL_USE_TLS=env('EMAIL_USE_TLS')
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS")
 
 
 # ---------- DJANGO ALL AUTH ------------
 ACCOUNT_FORMS = {
-    'add_email': 'allauth.account.forms.AddEmailForm',
-    'change_password': 'allauth.account.forms.ChangePasswordForm',
-    'disconnect': 'allauth.socialaccount.forms.DisconnectForm',
-    'login': 'allauth.account.forms.LoginForm',
-    'reset_password': 'allauth.account.forms.ResetPasswordForm',
-    'reset_password_from_key': 'allauth.account.forms.ResetPasswordKeyForm',
-    'set_password': 'allauth.account.forms.SetPasswordForm',
-    'signup': 'allauth.account.forms.SignupForm',
-    'user_token': 'allauth.account.forms.UserTokenForm',
+    "add_email": "allauth.account.forms.AddEmailForm",
+    "change_password": "allauth.account.forms.ChangePasswordForm",
+    "disconnect": "allauth.socialaccount.forms.DisconnectForm",
+    "login": "allauth.account.forms.LoginForm",
+    "reset_password": "allauth.account.forms.ResetPasswordForm",
+    "reset_password_from_key": "allauth.account.forms.ResetPasswordKeyForm",
+    "set_password": "allauth.account.forms.SetPasswordForm",
+    "signup": "allauth.account.forms.SignupForm",
+    "user_token": "allauth.account.forms.UserTokenForm",
 }
 
 # Provider specific settings
 SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
-    'github': {
+    "github": {
         # For each OAuth based provider, either add a ``SocialApp``
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         "VERIFIED_EMAIL": True,
-        'APP': {
-            'client_id': '123',
-            'secret': '456',
-            'key': ''
-        }
+        "APP": {"client_id": "123", "secret": "456", "key": ""},
     }
 }
-LOGIN_REDIRECT_URL='/'
-ACCOUNT_EMAIL_REQUIRED=True
-ACCOUNT_EMAIL_VERIFICATION='none'
-ACCOUNT_LOGOUT_ON_GET=True
-
-
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_LOGOUT_ON_GET = True
+USERNAME_FIELD = "email"
