@@ -104,3 +104,7 @@ git commit -m "The wrong commit message"
 # Edit the last commit message
 git commit --amend -m "This is the right commit message"
 ```
+
+## Packages to Install
+[django-prose](https://github.com/withlogicco/django-prose)
+[django-extra-settings](https://github.com/fabiocaccamo/django-extra-settings)
