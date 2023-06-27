@@ -1222,3 +1222,10 @@ pre{
     filter: invert(100%);
   }
 } */
+
+.socialaccount_ballot{
+  display: flex;
+  justify-content: center;
+
+ 
+}

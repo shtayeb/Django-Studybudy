@@ -22,52 +22,49 @@
     </form>
     <nav class="header__menu">
       <!-- Logged In -->
-
       {% if request.user.is_authenticated %}
-
-      <div class="header__user">
-        <a href="{% url 'user-profile' request.user.username %}">
-          <div class="avatar avatar--medium active">
-            <img src="{{request.user.avatar.url}}" />
-          </div>
-          <p>
-            {{request.user.username}} <span>@{{request.user.username}}</span>
-          </p>
-        </a>
-        <button class="dropdown-button">
-          <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 32 32">
-            <title>chevron-down</title>
-            <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
-          </svg>
-        </button>
-      </div>
-
+        <div class="header__user">
+          <a href="{% url 'user-profile' request.user.username %}">
+            <div class="avatar avatar--medium active">
+              <img src="{{request.user.avatar.url}}" />
+            </div>
+            <p>
+              {{request.user.username}} <span>@{{request.user.username}}</span>
+            </p>
+          </a>
+          <button class="dropdown-button">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32">
+              <title>chevron-down</title>
+              <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
+            </svg>
+          </button>
+        </div>
       {% else %}
-
-      <!-- Not Logged In -->
-      <a href="{% url 'account_login' %}">
-        <img src="{% static 'images/avatar.svg' %}" />
-        <p>Login</p>
-      </a>
+        <!-- Not Logged In -->
+        <a href="{% url 'account_login' %}">
+          <img src="{% static 'images/avatar.svg' %}" />
+          <p>Login</p>
+        </a>
       {% endif %}
 
       <div class="dropdown-menu">
         {% if request.user.is_authenticated %}
-        <a href="{% url 'activity' %}" class="dropdown-link"> Activities </a>
+          <a href="{% url 'activity' %}" class="dropdown-link"> Activities </a>
+           <a
+              href="{% url 'user-profile' request.user.username %}"
+              class="dropdown-link">
+              Profile
+            </a>
         {% endif %}
 
         <a href="{% url 'topics' %}" class="dropdown-link"> Topics </a>
 
-        <a
-          href="{% url 'user-profile' request.user.username %}"
-          class="dropdown-link">
-          Profile
-        </a>
+       
         <a href="{% url 'update-user' %}" class="dropdown-link"
           ><svg
             version="1.1"
