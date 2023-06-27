@@ -52,6 +52,8 @@ python manage.py runserver
 - [x] Add new users to news room by default
 - [x] style the flash messages
 - [x] Soft delete for all models
+- Ability to join/leave a room
+- Add message replies (Add Polymorphic relationship)
 - SEO meta tags for pages
 - Account removal request
 - Add in markdown editor image upload
@@ -59,7 +61,6 @@ python manage.py runserver
 - Ability to archive(block new messages) a room by admin
 - Ability to create private rooms
 - Room participants management(Kick, Block and suspend participants of rooms by its Admin)
-- Ability to join/leave a room
 - Rooms message moderation by Admins
 - Like/Dislike messages of a room by its participants
 - Activity notification for joined rooms
