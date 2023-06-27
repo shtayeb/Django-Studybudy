@@ -1,8 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django_softdelete.models import SoftDeleteModel
 
 
-class User(AbstractUser):
+class User(SoftDeleteModel, AbstractUser):
     name = models.CharField(max_length=200, null=True)
     email = models.EmailField(unique=True, null=False)
     bio = models.TextField(null=True)

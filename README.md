@@ -51,8 +51,8 @@ python manage.py runserver
 - [x] Code blocks in the rooms - should support markdown in messages inside room
 - [x] Add new users to news room by default
 - [x] style the flash messages
+- [x] Soft delete for all models
 - SEO meta tags for pages
-- Soft delete for all models
 - Account removal request
 - Add in markdown editor image upload
 - Add room Admin
@@ -93,4 +93,13 @@ python manage.py  reset_db mybucket
 
 python manage.py admin_generator <your_app_name>
 
+```
+
+
+
+```shell
+git commit -m "The wrong commit message"
+
+# Edit the last commit message
+git commit --amend -m "This is the right commit message"
 ```

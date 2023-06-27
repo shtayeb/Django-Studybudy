@@ -35,6 +35,7 @@ Pygments==2.15.1
 djangorestframework==3.14.0
 virtualenv==20.16.5
 django-allauth
+django-soft-delete
 # Dev
 django-debug-toolbar==4.1.0
 django-extensions
