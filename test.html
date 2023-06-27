@@ -130,35 +130,46 @@
         margin: 3rem;
         color: #b2bdbd;
       }
+
+      .header__logo {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .header__logo > img {
+        height: 3.2rem;
+        width: 3.2rem;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="layout__boxHeader">
         <div class="layout__boxTitle">
-          <h3>SHTB</h3>
+          <a href="/" class="header__logo" style="text-decoration: none">
+            <img src="static/images/logo.svg" />
+            <h1>StudyBuddy</h1>
+          </a>
+          <!-- <img src="static/images/logo.svg" alt="logo" class="header__logo" />
+          <h1 style="color: white">SHTB</h1> -->
           <div class="gradient-line"></div>
         </div>
       </div>
 
       <div class="layout__body">
-        <h1>Email Subject Line</h1>
+        <h2>Email Subject Line</h2>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec
           nisl vel nisi tristique elementum. Sed id justo ac velit feugiat
           fermentum vel eu urna. Sed luctus sa…[omitted]
         </p>
         <a href="#" class="button">Primary Button</a>
+
         <footer class="footer">
-          <a href="#" class="social-links">
-            Facebook
-          </a>
-          <a href="#" class="social-links">
-            Twitter
-          </a>
-          <a href="#" class="social-links">
-           Instagram
-          </a>
+          <a href="#" class="social-links"> Facebook </a>
+          <a href="#" class="social-links"> Twitter </a>
+          <a href="#" class="social-links"> Instagram </a>
         </footer>
       </div>
     </div>
