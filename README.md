@@ -105,6 +105,10 @@ git commit -m "The wrong commit message"
 git commit --amend -m "This is the right commit message"
 ```
 
-## Packages to Install
+## Installed Packages
+[django-easy-audit](https://github.com/soynatan/django-easy-audit)
+
+## Packages to consider
 [django-prose](https://github.com/withlogicco/django-prose)
 [django-extra-settings](https://github.com/fabiocaccamo/django-extra-settings)
+[django-jet-reboot](https://github.com/assem-ch/django-jet-reboot)
