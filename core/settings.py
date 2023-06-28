@@ -97,11 +97,21 @@ WSGI_APPLICATION = "core.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "production": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "shtayeb_studybuddy",
+        "USER": "shtayeb_studybuddy_user",
+        "PASSWORD": "SHtayeb123",
+        "HOST": "localhost",
+        "PORT": "3306",
+    },
+    "dev": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    }
+    },
 }
+
+DATABASES["default"] = DATABASES["dev" if DEBUG else "production"]
 
 
 # Password validation
