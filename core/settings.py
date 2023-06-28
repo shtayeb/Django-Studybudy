@@ -104,11 +104,11 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "production": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "shtayeb_studybuddy",
-        "USER": "shtayeb_studybuddy_user",
-        "PASSWORD": "SHtayeb123",
-        "HOST": "localhost",
-        "PORT": "3306",
+        "NAME": env("DB_NAME", default="test"),
+        "USER": env("DB_USER", default="root"),
+        "PASSWORD": env("DB_PASSWORD", default=""),
+        "HOST": env("DB_HOST", default="localhost"),
+        "PORT": env("DB_PORT", default="3306"),
     },
     "dev": {
         "ENGINE": "django.db.backends.sqlite3",
