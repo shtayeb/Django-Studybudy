@@ -52,7 +52,7 @@ python manage.py runserver
 - [x] Add new users to news room by default
 - [x] style the flash messages
 - [x] Soft delete for all models
-- Ability to join/leave a room
+- [x] Ability to join/leave a room
 - Add message replies (Add Polymorphic relationship)
 - SEO meta tags for pages
 - Account removal request

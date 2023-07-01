@@ -968,6 +968,7 @@ a {
 .room__topRight {
   display: flex;
   column-gap: 1em;
+  align-items: center;
 }
 
 .room__topRight svg {

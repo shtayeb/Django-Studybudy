@@ -8,6 +8,19 @@ from .forms import RoomForm
 from .models import Message, Room, Topic, User
 
 
+@login_required(login_url="accounts/login")
+def toggleJoinRoom(request, pk):
+    room = Room.objects.get(pk=pk)
+    is_joined = room.participants.contains(request.user)
+
+    if is_joined:
+        room.participants.remove(request.user)
+    else:
+        room.participants.add(request.user)
+
+    return redirect("room", room.slug)
+
+
 def home(request):
     q = request.GET.get("q")
 
@@ -52,10 +65,13 @@ def room(request, slug):
         room.participants.add(request.user)
         return redirect("room", slug=room.slug)
 
+    is_joined = room.participants.contains(request.user)
+
     context = {
         "room": room,
         "room_messages": room_messages,
         "participants": participants,
+        "is_joined": is_joined,
     }
 
     return render(request, "base/room.html", context)

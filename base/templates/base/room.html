@@ -32,9 +32,9 @@
           <h3>Study Room</h3>
         </div>
 
-        {% if room.host == request.user %}
         <div class="room__topRight">
-          <a href="{% url 'update-room' room.slug %}">
+        {% if room.host == request.user %}
+          <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
             <svg
               enable-background="new 0 0 24 24"
               height="32"
@@ -63,7 +63,7 @@
             </svg>
           </a>
 
-          <a href="{% url 'delete-room' room.id %}">
+          <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
             <svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -77,8 +77,20 @@
               ></path>
             </svg>
           </a>
+          {% endif %}
+
+          {% if is_joined %}
+            <a href="{% url 'toggle-room-join' room.id %}" class="room__topics btn--main btn">
+              Leave Room
+            </a>
+          {% else %}
+            <a href="{% url 'toggle-room-join' room.id %}" class="room__topics btn--main btn">
+              Join Room
+            </a>
+          {% endif %}
+
         </div>
-        {% endif %}
+
       </div>
 
       <div class="room__box scroll">
