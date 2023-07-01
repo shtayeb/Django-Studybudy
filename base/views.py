@@ -1,17 +1,29 @@
+import datetime
+
+import jwt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage, send_mail
 from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from invitations.utils import get_invitation_model
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.crypto import get_random_string
 
 from .forms import RoomForm
-from .models import Message, Room, Topic, User
+from .models import Message, Room, RoomInvitation, Topic, User
+
+expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+
+SECRET_KEY = "secret_key_001"
 
 
 @login_required(login_url="accounts/login")
 def toggleJoinRoom(request, pk):
-    room = Room.objects.get(pk=pk)
+    # room = Room.objects.get(pk=pk)
+    room = get_object_or_404(Room, pk=pk)
+
     is_joined = room.participants.contains(request.user)
 
     if is_joined:
@@ -23,11 +35,94 @@ def toggleJoinRoom(request, pk):
 
 
 @login_required(login_url="accounts/login")
-def inviteUsersToRoom(request, pk):
-    Invitation = get_invitation_model()
-    # inviter argument is optional
-    invite = Invitation.create("email@example.com", inviter=request.user)
-    invite.send_invitation(request)
+def sendRoomInvite(request, pk):
+    # room = Room.objects.get(pk=pk)
+    room = get_object_or_404(Room, pk=pk)
+
+    if request.method == "POST":
+        user_email = request.POST.get("email")
+        invitee = User.objects.get(email=user_email)
+
+        # encode room_id and invitee_id in the token
+        # TODO : make the SECRET_KEY a secret in the .env file
+        token = jwt.encode(
+            {
+                "room_id": room.id,
+                "invitee_id": invitee.id,
+                "exp": expiry_time,
+            },
+            SECRET_KEY,
+            algorithm="HS256",
+        )
+
+        invitation = RoomInvitation.objects.create(
+            inviter_id=request.user,
+            invitee_id=invitee,
+            room_id=room,
+            token=token,
+            is_accepted=False,
+        )
+
+        # send email to the user
+        template_name = "base/email/room_invitation_email.html"
+
+        subject = "You have been invited to join a room"
+        from_email = "shtb@shaharyartayeb.com"
+        recipient_list = [user_email]
+
+        invite_url = reverse("accept-invite-room", args=[token])
+        invite_url = request.build_absolute_uri(invite_url)
+
+        context = {
+            "room_name": room.name,
+            "user_email": user_email,
+            "inviter": request.user,
+            "invite_url": invite_url,
+        }
+
+        message = render_to_string(template_name, context)
+        email = EmailMessage(subject, message, from_email, recipient_list)
+        email.content_subtype = "html"
+        email.send()
+
+        messages.success(request, "User has been invited to the room.")
+
+        return redirect("room", room.slug)
+
+    context = {"room": room}
+
+    return render(request, "base/invite_user_form.html", context)
+
+
+@login_required(login_url="accounts/login")
+def acceptRoomInvite(request, token):
+    # decode the token
+    try:
+        decoded_token = jwt.decode(
+            token, SECRET_KEY, algorithms=["HS256"], verify_expiration=True
+        )
+    except jwt.ExpiredSignatureError:
+        # Token has expired
+        messages.error(request, "The token has expired.")
+        return redirect(request.META.get("HTTP_REFERER"))
+
+    # get room_id and invitee_id from the token
+    room_id = decoded_token["room_id"]
+    invitee_id = decoded_token["invitee_id"]
+
+    # Add the user to the room participants
+    room = get_object_or_404(Room, pk=room_id)
+    invitee = get_object_or_404(User, pk=invitee_id)
+
+    room.participants.add(invitee)
+
+    # update the invitation
+    room_invitation = RoomInvitation.objects.get(token=token)
+    room_invitation.is_accepted = True
+    room_invitation.save()
+
+    messages.success(request, "User has have been added to the room.")
+    return redirect("room", slug=room.slug)
 
 
 def home(request):

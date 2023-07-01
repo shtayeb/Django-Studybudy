@@ -54,7 +54,8 @@ python manage.py runserver
 - [x] Soft delete for all models
 - [x] Ability to join/leave a room
 - [x] Ability to create private rooms(non members cant go to the room)
-- Room host can invite users to private rooms - (The added user will recieve notification and have the option to accept or reject the invite)
+- [x] Room host can invite users to private rooms - (The added user will recieve notification and have the option to accept or reject the invite)
+- Create an autocomplete users list in the invite users to room page
 
 
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null

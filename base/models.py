@@ -75,3 +75,23 @@ class Message(SoftDeleteModel):
 
     def __str__(self):
         return self.body[0:50]
+
+
+class RoomInvitation(models.Model):
+    inviter_id = models.ForeignKey(
+        User, related_name="inviter", on_delete=models.CASCADE
+    )
+    invitee_id = models.ForeignKey(
+        User, related_name="invitee", on_delete=models.CASCADE
+    )
+    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    token = models.CharField(max_length=100, null=False, blank=False)
+    is_accepted = models.BooleanField(default=False)
+    is_valid = models.BooleanField(default=True)
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.room_id} - {self.inviter_id}"

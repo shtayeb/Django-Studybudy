@@ -98,7 +98,7 @@
           {% endif %}
 
           {% if room.host_id == request.user.id %}
-            <a href="{% url 'toggle-room-join' room.id %}" class="room__topics btn--main btn">
+            <a href="{% url 'invite-room' room.id %}" class="room__topics btn--main btn">
               Invite Users
             </a>
           {% endif %}
