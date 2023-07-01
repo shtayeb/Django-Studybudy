@@ -1,0 +1,17 @@
+{% extends "main_email.html" %}
+{% load i18n %}
+{% block content %}
+
+{% autoescape off %}
+{% blocktrans %}
+Hello,
+
+You ({{ email }}) have been invited to join {{ site_name }}
+
+If you'd like to join, Please click the button.<br/>
+
+<a class="button" href="{{invite_url}}">Invite URL </a>
+
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock %}

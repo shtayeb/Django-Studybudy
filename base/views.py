@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from invitations.utils import get_invitation_model
 
 from .forms import RoomForm
 from .models import Message, Room, Topic, User
@@ -19,6 +20,14 @@ def toggleJoinRoom(request, pk):
         room.participants.add(request.user)
 
     return redirect("room", room.slug)
+
+
+@login_required(login_url="accounts/login")
+def inviteUsersToRoom(request, pk):
+    Invitation = get_invitation_model()
+    # inviter argument is optional
+    invite = Invitation.create("email@example.com", inviter=request.user)
+    invite.send_invitation(request)
 
 
 def home(request):

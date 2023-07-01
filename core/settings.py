@@ -50,10 +50,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     # Installed apps
+    "allauth",
+    "invitations",
     "rest_framework",
     "debug_toolbar",
     "corsheaders",
-    "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
@@ -186,6 +187,10 @@ EMAIL_USE_TLS = env("EMAIL_USE_TLS")
 
 
 # ---------- DJANGO ALL AUTH ------------
+
+ACCOUNT_ADAPTER = "invitations.models.InvitationsAdapter"
+INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
+
 ACCOUNT_FORMS = {
     "add_email": "allauth.account.forms.AddEmailForm",
     "change_password": "allauth.account.forms.ChangePasswordForm",
