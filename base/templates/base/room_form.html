@@ -31,6 +31,14 @@
           {% csrf_token %}
 
           <div class="form__group">
+            <label for="room_type">Room Visibility</label>
+            <select name='type' id="room_type">
+              <option default value="public" >Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+
+          <div class="form__group">
             <label for="room_topic">Enter a Topic</label>
             <input
               type="text"

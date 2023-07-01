@@ -12,6 +12,21 @@
   --color-bg: #2d2d39;
   --color-success: #79d6a3;
   --color-error: #fc4b0b;
+  --color-warning:#dbc039;
+}
+
+.success{
+  background-color:var(--color-success);
+  border-radius:5px;
+  padding:5px 8px;
+  color:black;
+}
+
+.warning{
+  background-color:var(--color-warning);
+  border-radius:5px;
+  padding:5px 8px;
+  color:black;
 }
 
 /*========== base styles ==========*/
@@ -650,6 +665,8 @@ a {
   border-radius: 1rem;
   padding: 2rem;
 }
+
+
 
 .roomListRoom__header {
   display: flex;

@@ -29,13 +29,21 @@ def home(request):
 
     rooms = (
         Room.objects.filter(
-            Q(topic__name__icontains=q)
-            | Q(name__icontains=q)
-            | Q(description__icontains=q)
+            (
+                Q(topic__name__icontains=q)
+                | Q(name__icontains=q)
+                | Q(description__icontains=q)
+            )
+            & ~Q(type="private")
+            | Q(host_id=request.user.id)
         )
         .prefetch_related("host", "topic")
         .annotate(participants_count=Count("participants"))
     )
+
+    if request.user.is_authenticated:
+        joined_private_rooms = request.user.participants.filter(Q(type="private"))
+        rooms = rooms | joined_private_rooms
 
     topics = Topic.objects.annotate(rooms_count=Count("room"))[0:5]
 
@@ -52,6 +60,20 @@ def room(request, slug):
     # room = Room.objects.get(id=pk)
     room = get_object_or_404(Room.objects.prefetch_related(Prefetch("host")), slug=slug)
 
+    is_joined = False
+
+    # TODO : Move this to a directive
+    if request.user.is_authenticated:
+        is_joined = room.participants.contains(request.user)
+
+        if (
+            not (room.host_id == request.user.id)
+            and room.type == "private"
+            and (not room.participants.contains(request.user))
+        ):
+            messages.warning(request, "That room is private !")
+            return redirect("home")
+
     # my_object = get_object_or_404(Room.objects.prefetch_related(Prefetch('related_objects', queryset=RelatedModel.objects.select_related('other_model'))), pk=my_id)
 
     room_messages = room.message_set.select_related("user").all()
@@ -64,8 +86,6 @@ def room(request, slug):
         )
         room.participants.add(request.user)
         return redirect("room", slug=room.slug)
-
-    is_joined = room.participants.contains(request.user)
 
     context = {
         "room": room,
@@ -90,6 +110,7 @@ def createRoom(request):
             topic=topic,
             name=request.POST.get("name"),
             description=request.POST.get("description"),
+            type=request.POST.get("type"),
         )
         return redirect("home")
 
@@ -125,6 +146,7 @@ def updateRoom(request, slug):
         room.name = request.POST.get("name")
         room.topic = topic
         room.description = request.POST.get("description")
+        room.type = request.POST.get("type")
         room.save()
 
         return redirect("home")

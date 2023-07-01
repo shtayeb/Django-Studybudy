@@ -36,6 +36,13 @@ class Room(SoftDeleteModel):
     slug = AutoSlugField(populate_from=["name"])
     description = models.TextField(null=True, blank=True)
 
+    TYPES = [
+        ("public", "Public"),
+        ("private", "Private"),
+    ]
+
+    type = models.TextField(null=False, choices=TYPES, default="public")
+
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 

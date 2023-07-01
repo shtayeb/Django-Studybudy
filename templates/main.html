@@ -22,15 +22,15 @@
     {% include 'navbar.html' %} 
 
     {% if messages %}
-    <div class="layout">
-      <div class="container" style="background-color:var(--color-success);border-radius:5px;padding:5px 8px;color:black">
-        <ul class="messages">
-          {% for message in messages %}
-          <li>{{ message }}</li>
+      <div class="layout">
+        {% for message in messages %}
+        <div  class="container {{ message.tags }}">
+          <ul class="messages">
+              <li>{{ message }}</li>
+            </ul>
+          </div>
           {% endfor %}
-        </ul>
       </div>
-    </div>
     {% endif %} 
     
     {% block content %} {% endblock %}

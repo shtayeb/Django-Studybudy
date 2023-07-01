@@ -53,15 +53,21 @@ python manage.py runserver
 - [x] style the flash messages
 - [x] Soft delete for all models
 - [x] Ability to join/leave a room
+- [x] Ability to create private rooms(non members cant go to the room)
+- Room host can add/invite users to private rooms - (The added user will recieve notification and have the option to accept or reject the invite)
+
+
+- Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
 - Add message replies (Add Polymorphic relationship)
 - SEO meta tags for pages
-- Account removal request
 - Add in markdown editor image upload
+
 - Add room Admin
+- Room admins can add/invite users to private rooms
 - Ability to archive(block new messages) a room by admin
-- Ability to create private rooms
 - Room participants management(Kick, Block and suspend participants of rooms by its Admin)
 - Rooms message moderation by Admins
+
 - Like/Dislike messages of a room by its participants
 - Activity notification for joined rooms
 - Glabal setting for notification settings
