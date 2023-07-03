@@ -56,7 +56,7 @@ python manage.py runserver
 - [x] Ability to create private rooms(non members cant go to the room)
 - [x] Room host can invite users to private rooms - (The added user will recieve notification and have the option to accept or reject the invite)
 - Create an autocomplete users list in the invite users to room page
-
+- Make the invite user page into a modal pop up
 
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
 - Add message replies (Add Polymorphic relationship)

@@ -1,13 +1,65 @@
 {% extends 'main.html' %} {% load markdown_extras %} 
+
 {% load static %}
+
 {% block extra_heads %}
   <title>{{ room.name }}</title>
   <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
   <link rel="stylesheet" href="{% static 'styles/markdown.css' %}" />
 
+  <style>
+    /* The dialog element should be center by default but it didnt work, I used position to force */
+    dialog {
+      z-index: 10;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-height:100vh;
+      border: none;
+      border-radius: 1rem;
+    }
+    dialog::backdrop {
+      background-color: hsla(240, 4%, 19%, 0.7);
+    }
+  </style>
 {% endblock extra_heads %}
 
 {% block content %}
+<!-- Invite user modal -->
+<dialog id="invite-user-dialog">
+  <div class="layout__box" style="width:unset">
+    <div class="layout__boxHeader">
+      <div class="layout__boxTitle">
+        <h3>Invite User</h3>
+      </div>
+    </div>
+
+      <div class="layout__body" style="margin:0 3rem;padding:3rem;color:white">
+        <p class="">Please add an email below. The user will receive an email with instructions.</p>
+        <br/>
+
+        <form id="invite-form" method="POST" action="{% url 'invite-room' room.id %}">
+            {% csrf_token %}
+            <div class="form__group">
+                <label for="id_email">Invite: </label>
+                <input type="text" name="email" id="id_email" value="{{ form.email.value }}" class="form-control validate-email" placeholder="Email">
+            </div>
+
+            <div class="form__group">
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                {{ success_message }}
+            </div>
+            
+            <input type="submit" value="Send Invitation" class="btn btn--main generic-ajax-submit">
+        </form>
+
+      </div>
+  </div>
+</dialog>
+
 <main class="profile-page layout layout--2">
   <div class="container">
     <!-- Room Start -->
@@ -16,26 +68,13 @@
 
         <div class="room__topLeft">
           <a href="{{request.META.HTTP_REFERER}}">
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-            >
-              <title>arrow-left</title>
-              <path
-                d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z"
-              ></path>
-            </svg>
+            <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
           </a>
           <h3>Study Room</h3>
            {% if room.type == 'private' %}
             {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
             <button class="btn roomListRoom__topic" type="submit">
-              <svg xmlns="http://www.w3.org/2000/svg" style="fill:none;color:var(--color-error)" width="36" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              </svg>
+               <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
             </button>
           {% endif %}
         </div>
@@ -43,47 +82,11 @@
         <div class="room__topRight">
         {% if room.host == request.user %}
           <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
-            <svg
-              enable-background="new 0 0 24 24"
-              height="32"
-              viewBox="0 0 24 24"
-              width="32"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>edit</title>
-              <g>
-                <path
-                  d="m23.5 22h-15c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h15c.276 0 .5.224.5.5s-.224.5-.5.5z"
-                />
-              </g>
-              <g>
-                <g>
-                  <path
-                    d="m2.5 22c-.131 0-.259-.052-.354-.146-.123-.123-.173-.3-.133-.468l1.09-4.625c.021-.09.067-.173.133-.239l14.143-14.143c.565-.566 1.554-.566 2.121 0l2.121 2.121c.283.283.439.66.439 1.061s-.156.778-.439 1.061l-14.142 14.141c-.065.066-.148.112-.239.133l-4.625 1.09c-.038.01-.077.014-.115.014zm1.544-4.873-.872 3.7 3.7-.872 14.042-14.041c.095-.095.146-.22.146-.354 0-.133-.052-.259-.146-.354l-2.121-2.121c-.19-.189-.518-.189-.707 0zm3.081 3.283h.01z"
-                  />
-                </g>
-                <g>
-                  <path
-                    d="m17.889 10.146c-.128 0-.256-.049-.354-.146l-3.535-3.536c-.195-.195-.195-.512 0-.707s.512-.195.707 0l3.536 3.536c.195.195.195.512 0 .707-.098.098-.226.146-.354.146z"
-                  />
-                </g>
-              </g>
-            </svg>
+            <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
           </a>
 
           <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-            >
-              <title>remove</title>
-              <path
-                d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
-              ></path>
-            </svg>
+            <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
           </a>
           {% endif %}
 
@@ -100,9 +103,9 @@
           {% endif %}
 
           {% if room.host_id == request.user.id %}
-            <a href="{% url 'invite-room' room.id %}" class="room__topics btn--main btn">
+            <button class="room__topics btn--main btn" id="invite-user-btn">
               Invite Users
-            </a>
+            </button>
           {% endif %}
 
         </div>
@@ -112,10 +115,12 @@
       <div class="room__box scroll">
 
         <div class="room__header scroll">
+
           <div class="room__info">
             <h3>{{room.name}}</h3>
             <span>{{room.created|timesince}} ago</span>
           </div>
+
           <div class="room__hosted">
             <p>Hosted By</p>
             <a
@@ -128,10 +133,13 @@
               <span>@{{ room.host.username }}</span>
             </a>
           </div>
+          
           <div class="room__details">
             {{room.description}}
           </div>
+          
           <span class="room__topics">{{room.topic}}</span>
+        
         </div>
 
         <div class="room__message">
@@ -168,18 +176,7 @@
                 {% if request.user == message.user %}
                 <a href="{% url 'delete-message' message.id %}">
                   <div class="thread__delete">
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                    >
-                      <title>remove</title>
-                      <path
-                        d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
-                      ></path>
-                    </svg>
+                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
                   </div>
                 </a>
                 {% endif %}
@@ -194,9 +191,8 @@
       </div>
 
     </div>
-    <!-- Room End -->
 
-    <!--   Start -->
+    <!--   participants -->
     <div class="participants">
       <h3 class="participants__top">
         Participants <span>({{participants.count}} Joined)</span>
@@ -221,5 +217,24 @@
 {% endblock content %}
 
 {% block extra_scripts %}
+<script>
+  const dialog = document.getElementById("invite-user-dialog")
+  const inviteUserBtn = document.getElementById("invite-user-btn")
+  // dialog.show() // Opens a non-modal dialog
+  inviteUserBtn.addEventListener('click',e => {
+    dialog.showModal() 
+  })
 
+  dialog.addEventListener("click", e => {
+    const dialogDimensions = dialog.getBoundingClientRect()
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY < dialogDimensions.top ||
+      e.clientY > dialogDimensions.bottom
+    ) {
+      dialog.close()
+    }
+  })
+</script>
 {% endblock extra_scripts %}
