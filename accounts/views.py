@@ -85,7 +85,7 @@ def userProfile(request, username):
     return render(request, "accounts/profile.html", context)
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def updateUser(request):
     user = request.user
     form = UserForm(instance=user)

@@ -43,3 +43,4 @@ django-invitations==2.0.0
 django-debug-toolbar==4.1.0
 django-extensions
 pydotplus
+nplusone==1.0.0

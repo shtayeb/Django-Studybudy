@@ -19,7 +19,7 @@ expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 SECRET_KEY = "secret_key_001"
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def toggleJoinRoom(request, pk):
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
@@ -34,7 +34,7 @@ def toggleJoinRoom(request, pk):
     return redirect("room", room.slug)
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def sendRoomInvite(request, pk):
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
@@ -94,7 +94,7 @@ def sendRoomInvite(request, pk):
     return render(request, "base/invite_user_form.html", context)
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def acceptRoomInvite(request, token):
     # decode the token
     try:
@@ -201,7 +201,7 @@ def room(request, slug):
     return render(request, "base/room.html", context)
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def createRoom(request):
     form = RoomForm()
     topics = Topic.objects.all()
@@ -233,7 +233,7 @@ def createRoom(request):
     return render(request, "base/room_form.html", context)
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def updateRoom(request, slug):
     # room = Room.objects.get(id=pk)
     room = get_object_or_404(Room, slug=slug)
@@ -259,7 +259,7 @@ def updateRoom(request, slug):
     return render(request, "base/room_form.html", context)
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def deleteRoom(request, pk):
     room = Room.objects.get(id=pk)
 
@@ -274,7 +274,7 @@ def deleteRoom(request, pk):
     return render(request, "base/delete.html", {"obj": room})
 
 
-@login_required(login_url="accounts/login")
+@login_required(login_url="/accounts/login")
 def deleteMessage(request, pk):
     message = Message.objects.get(id=pk)
 

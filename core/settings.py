@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import logging
 import os
 from pathlib import Path
 
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
     "django_extensions",
     "easyaudit",
+    'nplusone.ext.django',
     # my apps
     "accounts.apps.AccountsConfig",
     "base.apps.BaseConfig",
@@ -76,6 +78,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
+    'nplusone.ext.django.NPlusOneMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -219,3 +222,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGOUT_ON_GET = True
 USERNAME_FIELD = "email"
+
+
+#
+NPLUSONE_LOGGER = logging.getLogger('nplusone')
+NPLUSONE_LOG_LEVEL = logging.WARN

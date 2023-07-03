@@ -114,6 +114,9 @@ git commit --amend -m "This is the right commit message"
 
 ## Installed Packages
 [django-easy-audit](https://github.com/soynatan/django-easy-audit)
+[django-extensions](https://github.com/django-extensions/django-extensions)
+[nplusone](https://github.com/jmcarp/nplusone)
+[django-debug-toolbar](https://)
 
 ## Packages to consider
 [django-prose](https://github.com/withlogicco/django-prose)
