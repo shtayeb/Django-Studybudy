@@ -29,6 +29,13 @@
   color:black;
 }
 
+.error{
+  background-color:var(--color-error);
+  border-radius:5px;
+  padding:5px 8px;
+  color:black;
+}
+
 /*========== base styles ==========*/
 
 * {
@@ -1203,7 +1210,7 @@ pre{
   word-wrap: break-word;
 }
 
-.error{
+.error-validation{
   color: var(--color-error);
 }
 

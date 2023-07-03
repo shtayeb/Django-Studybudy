@@ -24,6 +24,10 @@ def toggleJoinRoom(request, pk):
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
 
+    if request.user.id == room.host_id:
+        messages.error(request, "You are the room's host !!")
+        return redirect("room", room.slug)
+
     is_joined = room.participants.contains(request.user)
 
     if is_joined:
