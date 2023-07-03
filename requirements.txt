@@ -44,3 +44,4 @@ django-debug-toolbar==4.1.0
 django-extensions
 pydotplus
 nplusone==1.0.0
+factory-boy==3.2.1

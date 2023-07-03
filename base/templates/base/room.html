@@ -29,34 +29,33 @@
 <!-- Invite user modal -->
 <dialog id="invite-user-dialog">
   <div class="layout__box" style="width:unset">
+
     <div class="layout__boxHeader">
       <div class="layout__boxTitle">
         <h3>Invite User</h3>
       </div>
     </div>
 
-      <div class="layout__body" style="margin:0 3rem;padding:3rem;color:white">
-        <p class="">Please add an email below. The user will receive an email with instructions.</p>
-        <br/>
+    <div class="layout__body" style="margin:0 3rem;padding:3rem;color:white">
+      <p class="">Please add an email below. The user will receive an email with instructions.</p><br/>
+      <form id="invite-form" method="POST" action="{% url 'invite-room' room.id %}">
+          {% csrf_token %}
+          <div class="form__group">
+              <label for="id_email">Invite: </label>
+              <input type="text" name="email" id="id_email" value="{{ form.email.value }}" class="form-control validate-email" placeholder="Email">
+          </div>
 
-        <form id="invite-form" method="POST" action="{% url 'invite-room' room.id %}">
-            {% csrf_token %}
-            <div class="form__group">
-                <label for="id_email">Invite: </label>
-                <input type="text" name="email" id="id_email" value="{{ form.email.value }}" class="form-control validate-email" placeholder="Email">
-            </div>
+          <div class="form__group">
+              {% for error in form.email.errors %}
+                  <div class="error-validation">{{ error }}</div>
+              {% endfor %}
+              {{ success_message }}
+          </div>
+          
+          <input type="submit" value="Send Invitation" class="btn btn--main generic-ajax-submit">
+      </form>
+    </div>
 
-            <div class="form__group">
-                {% for error in form.email.errors %}
-                    <div class="alert alert-danger">{{ error }}</div>
-                {% endfor %}
-                {{ success_message }}
-            </div>
-            
-            <input type="submit" value="Send Invitation" class="btn btn--main generic-ajax-submit">
-        </form>
-
-      </div>
   </div>
 </dialog>
 

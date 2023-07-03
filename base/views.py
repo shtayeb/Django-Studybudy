@@ -45,7 +45,8 @@ def sendRoomInvite(request, pk):
 
     if request.method == "POST":
         user_email = request.POST.get("email")
-        invitee = User.objects.get(email=user_email)
+        invitee = get_object_or_404(User,email=user_email)
+        # invitee = User.objects.get(email=user_email)
 
         # encode room_id and invitee_id in the token
         # TODO : make the SECRET_KEY a secret in the .env file
