@@ -35,8 +35,8 @@ DEBUG = False if env("DEBUG") == "False" else True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "study.shahryartayeb.com",
-    "www.study.shahryartayeb.com",
+    "study-buddy-app.up.railway.app",
+    "*"
 ]
 
 
