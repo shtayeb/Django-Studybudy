@@ -1,4 +1,5 @@
 # Django project
+Project Demo - [Study Buddy App Link](https://study-buddy-app.up.railway.app/)
 
 ## Getting Started
 
@@ -78,7 +79,8 @@ python manage.py runserver
 ## Docs
 
 With django-extensions package, you access to these commands
-Install `apt-get install graphviz`
+
+>  `apt-get install graphviz`
 
 ```shell
 # List all you app urls
@@ -103,8 +105,6 @@ python manage.py admin_generator <your_app_name>
 
 ```
 
-
-
 ```shell
 git commit -m "The wrong commit message"
 
@@ -113,12 +113,12 @@ git commit --amend -m "This is the right commit message"
 ```
 
 ## Installed Packages
-[django-easy-audit](https://github.com/soynatan/django-easy-audit)
-[django-extensions](https://github.com/django-extensions/django-extensions)
-[nplusone](https://github.com/jmcarp/nplusone)
-[django-debug-toolbar](https://)
+- [django-easy-audit](https://github.com/soynatan/django-easy-audit)
+- [django-extensions](https://github.com/django-extensions/django-extensions)
+- [nplusone](https://github.com/jmcarp/nplusone)
+- [django-debug-toolbar](https://)
 
 ## Packages to consider
-[django-prose](https://github.com/withlogicco/django-prose)
-[django-extra-settings](https://github.com/fabiocaccamo/django-extra-settings)
-[django-jet-reboot](https://github.com/assem-ch/django-jet-reboot)
+- [django-prose](https://github.com/withlogicco/django-prose)
+- [django-extra-settings](https://github.com/fabiocaccamo/django-extra-settings)
+- [django-jet-reboot](https://github.com/assem-ch/django-jet-reboot)
