@@ -37,7 +37,6 @@ virtualenv==20.16.5
 django-allauth
 django-soft-delete==0.9.21
 django-easy-audit==1.3.5
-mysqlclient==2.2.0
 django-invitations==2.0.0
 # Dev
 django-debug-toolbar==4.1.0

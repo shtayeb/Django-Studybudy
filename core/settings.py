@@ -107,7 +107,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "production": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": env("DB_NAME", default="test"),
         "USER": env("DB_USER", default="root"),
         "PASSWORD": env("DB_PASSWORD", default=""),
