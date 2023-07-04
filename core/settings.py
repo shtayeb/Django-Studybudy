@@ -39,6 +39,7 @@ ALLOWED_HOSTS = [
     "*"
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://study-buddy-app.up.railway.app']
 
 # Application definition
 
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "easyaudit",
     'nplusone.ext.django',
+    'whitenoise.runserver_nostatic', 
     # my apps
     "accounts.apps.AccountsConfig",
     "base.apps.BaseConfig",
@@ -79,6 +81,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
     'nplusone.ext.django.NPlusOneMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -161,6 +164,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_STORAGE="whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/images/"
@@ -229,3 +233,4 @@ USERNAME_FIELD = "email"
 #
 NPLUSONE_LOGGER = logging.getLogger('nplusone')
 NPLUSONE_LOG_LEVEL = logging.WARN
+
