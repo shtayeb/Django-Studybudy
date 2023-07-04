@@ -36,14 +36,23 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "study-buddy-app.up.railway.app",
+    "www.study-buddy-app.up.railway.app",
     "*"
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://study-buddy-app.up.railway.app']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://study-buddy-app.up.railway.app",
+    "http://study-buddy-app.up.railway.app",
+]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic', 
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -63,7 +72,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "easyaudit",
     'nplusone.ext.django',
-    'whitenoise.runserver_nostatic', 
     # my apps
     "accounts.apps.AccountsConfig",
     "base.apps.BaseConfig",
@@ -71,6 +79,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -81,7 +90,6 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
     'nplusone.ext.django.NPlusOneMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -162,16 +170,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
+        # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # No Caching
+    },
+}
+
+
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE="whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/images/"
 
+
 AUTH_USER_MODEL = "accounts.User"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
