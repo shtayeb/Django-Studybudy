@@ -107,7 +107,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "production": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.mysql",
         "NAME": env("DB_NAME", default="test"),
         "USER": env("DB_USER", default="root"),
         "PASSWORD": env("DB_PASSWORD", default=""),
@@ -120,7 +120,9 @@ DATABASES = {
     },
 }
 
-DATABASES["default"] = DATABASES["dev" if DEBUG else "production"]
+APP_ENV = env("APP_ENV","local")
+
+DATABASES["default"] = DATABASES["dev" if APP_ENV == 'local' else "production"]
 
 
 # Password validation
