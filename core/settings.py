@@ -120,7 +120,7 @@ DATABASES = {
     },
 }
 
-APP_ENV = env("APP_ENV","local")
+APP_ENV = env("APP_ENV",default="local")
 
 DATABASES["default"] = DATABASES["dev" if APP_ENV == 'local' else "production"]
 
