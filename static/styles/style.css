@@ -15,6 +15,10 @@
   --color-warning:#dbc039;
 }
 
+/* Utilities */
+.w-full{
+  width: 100%;
+}
 
 
 .success{
@@ -481,7 +485,7 @@ a {
   color: var(--color-light);
 }
 
-.layout__boxTitle svg {
+.layout__boxTitle img {
   width: 1.6rem;
   height: 1.6rem;
   fill: var(--color-main);
@@ -499,6 +503,12 @@ a {
 
   .layout--3 > .container > div:nth-child(2) {
     flex-basis: 100%;
+  }
+
+  .layout > .container {
+    display: block;
+    justify-content: center;
+    /* align-items: flex-start; */
   }
 }
 
@@ -935,14 +945,38 @@ a {
 =>  Room
 ================================*/
 
-.room,
-.participants {
+.sticky_right_panel{
   background: var(--color-dark);
-  /* max-height: 87.5vh; */
   border-radius: 0.7rem;
-  /* overflow: hidden; */
+  max-height: 87.5vh;
+
+  overflow: hidden;
+  
+  position: sticky;
+  position: -webkit-sticky; /* Safari */
+  top: 1.5rem;
+}
+
+.participants{
+  background: var(--color-dark);
+  border-radius: 0.7rem;
+  max-height: 87.5vh;
+
+  overflow: hidden;
+  
+  position: sticky;
+  position: -webkit-sticky; /* Safari */
+  top: 1.5rem;
+}
+
+.room{
+  background: var(--color-dark);
+  border-radius: 0.7rem;
   position: relative;
 }
+
+
+
 
 @media screen and (max-width: 900px) {
   .participants {
@@ -1172,6 +1206,12 @@ a {
 .participants__top {
   justify-content: flex-start;
   gap: 0.5rem;
+}
+
+.activities__list{
+  height: 82.5vh;
+  overflow-y: scroll;
+  padding-bottom: 0;
 }
 
 .participants__list {
