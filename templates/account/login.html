@@ -1,5 +1,7 @@
 {% extends 'main.html' %} 
+
 {% load account socialaccount %}
+{% load static %}
 
 {% block extra_heads %}
 <title>Login</title>
@@ -7,88 +9,77 @@
 
 {% block content %}
 <main class=" container">
-<div class="auth">
+  <div class="auth">
     <div class="layout__box">
-      <div class="layout__boxHeader">
-        <div class="layout__boxTitle">
-          <h3>Login</h3>
+      
+        <div class="layout__boxHeader">
+          <div class="layout__boxTitle">
+            <h3>Login</h3>
+          </div>
         </div>
-      </div>
-      <div class="layout__body">
-        <h2 class="auth__tagline">Find your study partner</h2>
-        {% get_providers as socialaccount_providers %}
 
-        {% if socialaccount_providers %}
+        <div class="layout__body">
+          <h2 class="auth__tagline">Find your study partner</h2>
+          {% get_providers as socialaccount_providers %}
+
+          {% if socialaccount_providers %}
 
 
-<div class="socialaccount_ballot">
+          <div class="socialaccount_ballot">
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
+            <ul class="socialaccount_providers">
+              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
 
-</div>
+          </div>
 
-{% include "socialaccount/snippets/login_extra.html" %}
+          {% include "socialaccount/snippets/login_extra.html" %}
 
-{% else %}
-<p>If you have not created an account yet, then please
-  <a href="{{ signup_url }}">sign up</a> first</p>
-{% endif %}
+          {% else %}
+            <p>
+              If you have not created an account yet, then please <a href="{{ signup_url }}">sign up</a> first
+            </p>
+          {% endif %}
 
-       <form class="login" method="POST" action="{% url 'account_login' %}">
-          {% csrf_token %}
+          <form class="login" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
 
-          {% for field in form.visible_fields %}
-            {% if field.name != "remember" %}
-              <div class="form__group">
-                {{ field.label_tag }}
+            {% for field in form.visible_fields %}
+              {% if field.name != "remember" %}
+                <div class="form__group">
+                  {{ field.label_tag }}
                   {{ field }}
-                
+                  
                   {% for error in field.errors %}
                     <span class="error-validation">
                       {{ error }}
                     </span>
                   {% endfor %}
                 </div>
+              {% endif %}
+            {% endfor %}
+
+            {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
-          {% endfor %}
 
-        {% if redirect_field_value %}
-          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-        {% endif %}
+            <button class="btn btn--main" type="submit">
+              <img src="{% static 'images/icons/lock.svg' %}" alt="lock">
+              Login
+            </button>
+          </form>
 
-          <button class="btn btn--main" type="submit">
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-            >
-              <title>lock</title>
-              <path
-                d="M27 12h-1v-2c0-5.514-4.486-10-10-10s-10 4.486-10 10v2h-1c-0.553 0-1 0.447-1 1v18c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-18c0-0.553-0.447-1-1-1zM8 10c0-4.411 3.589-8 8-8s8 3.589 8 8v2h-16v-2zM26 30h-20v-16h20v16z"
-              ></path>
-              <path
-                d="M15 21.694v4.306h2v-4.306c0.587-0.348 1-0.961 1-1.694 0-1.105-0.895-2-2-2s-2 0.895-2 2c0 0.732 0.413 1.345 1 1.694z"
-              ></path>
-            </svg>
+          <div class="auth__action">
+            <p>Haven't signed up yet?</p>
+            <a href="{% url 'account_signup' %}" class="btn btn--link">Sign Up</a>
+            <span>---</span>
+            <a class="btn btn--link" href="{% url 'account_reset_password' %}">Forgot Password?</a>
+          </div>
 
-            Login
-          </button>
-        </form>
-
-        <div class="auth__action">
-          <p>Haven't signed up yet?</p>
-          <a href="{% url 'account_signup' %}" class="btn btn--link">Sign Up</a>
-          <span>---</span>
-          <a class="btn btn--link" href="{% url 'account_reset_password' %}">Forgot Password?</a>
+          </div>
         </div>
-      </div>
+
     </div>
   </div>
-  </main>
- 
-
+</main>
 {% endblock content %}

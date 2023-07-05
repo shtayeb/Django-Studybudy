@@ -996,6 +996,9 @@ a {
   align-items: center;
   padding: 1rem 2rem;
   position: relative;
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
+
 }
 
 .room__top svg,

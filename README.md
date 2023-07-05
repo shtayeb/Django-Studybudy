@@ -42,7 +42,8 @@ python manage.py createsuperuser
 - Run the server
 
 ```shell
-python manage.py runserver
+python manage.py runserver --setting=core.settings.local # local settings
+python manage.py runserver --setting=core.settings.production # production settings
 ```
 
 ## TODO

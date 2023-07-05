@@ -17,7 +17,7 @@ from pathlib import Path
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Initialise environment variables
 env = environ.Env()
@@ -28,9 +28,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 SECRET_KEY = env("SECRET_KEY")
-
-# SECURITY WARNING: don't run with debug turned on in production!
+APP_ENV = env("APP_ENV",default="local")
 DEBUG = False if env("DEBUG") == "False" else True
+DJANGO_SETTINGS_MODULE = env('DJANGO_SETTINGS_MODULE',default='core.settings.local')
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -64,14 +64,14 @@ INSTALLED_APPS = [
     "allauth",
     "invitations",
     "rest_framework",
-    "debug_toolbar",
+   
     "corsheaders",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "django_extensions",
     "easyaudit",
-    'nplusone.ext.django',
+    
     # my apps
     "accounts.apps.AccountsConfig",
     "base.apps.BaseConfig",
@@ -83,13 +83,13 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+   
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
-    'nplusone.ext.django.NPlusOneMiddleware',
+   
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -112,28 +112,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    "production": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": env("DB_NAME", default="test"),
-        "USER": env("DB_USER", default="root"),
-        "PASSWORD": env("DB_PASSWORD", default=""),
-        "HOST": env("DB_HOST", default="localhost"),
-        "PORT": env("DB_PORT", default="3306"),
-    },
-    "dev": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    },
-}
-
-APP_ENV = env("APP_ENV",default="local")
-
-DATABASES["default"] = DATABASES["dev" if APP_ENV == 'local' else "production"]
 
 
 # Password validation
@@ -170,18 +148,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # No Caching
-    },
-}
-
-
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -200,11 +166,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-    "localhost",
-]
 
 # EMAIL
 EMAIL_HOST = env("EMAIL_HOST")
@@ -243,14 +204,16 @@ SOCIALACCOUNT_PROVIDERS = {
         "APP": {"client_id": "123", "secret": "456", "key": ""},
     }
 }
+
 LOGIN_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGOUT_ON_GET = True
-USERNAME_FIELD = "email"
+ACCOUNT_USERNAME_REQUIRED = True
+# USERNAME_FIELD = "email"
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 
-#
-NPLUSONE_LOGGER = logging.getLogger('nplusone')
-NPLUSONE_LOG_LEVEL = logging.WARN
+
 
