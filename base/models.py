@@ -76,6 +76,20 @@ class Message(SoftDeleteModel):
     def __str__(self):
         return self.body[0:50]
 
+class ReactionType(models.Model):
+    name = models.CharField(max_length=70,null=False,blank=False)
+    
+    def __str__(self):
+        return f"{self.name}"
+
+class Reaction(models.Model):
+    reaction_type = models.ForeignKey(ReactionType, on_delete=models.CASCADE)
+    message =  models.ForeignKey(Message, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.reaction_type.name} to {self.user.username}'s message"
+
 
 class RoomInvitation(models.Model):
     inviter_id = models.ForeignKey(

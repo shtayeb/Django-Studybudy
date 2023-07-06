@@ -4,10 +4,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
 
-from .models import Message, Room, RoomInvitation, Topic
+from .models import Message, ReactionType, Room, RoomInvitation, Topic
 
 admin.site.register(Message)
 admin.site.register(RoomInvitation)
+admin.site.register(ReactionType)
 
 
 class ParticipantsInline(admin.TabularInline):

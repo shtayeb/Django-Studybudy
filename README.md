@@ -78,6 +78,22 @@ python manage.py runserver --setting=core.settings.production # production setti
 - Recaptcha for login on register page
 - roles and permissions
 
+
+```python
+
+  room = get_object_or_404(
+        Room.objects.prefetch_related(
+            Prefetch('host',),
+            Prefetch('participants',),
+            Prefetch(
+                'message_set',
+                Message.objects.select_related('user')
+            ),
+        ), 
+        slug=slug
+    )
+```
+
 ## Docs
 
 With django-extensions package, you access to these commands

@@ -73,7 +73,7 @@ def userProfile(request, username):
 
     room_messages = user.message_set.prefetch_related("user", "room")
 
-    topics = Topic.objects.annotate(rooms_count=Count("room"))
+    topics = Topic.objects.annotate(rooms_count=Count("room"))[:5]
 
     context = {
         "user": user,
