@@ -31,17 +31,22 @@ class UserAdmin(admin.ModelAdmin):
             file_data = csv_file.read().decode("utf-8")
             csv_data = file_data.split("\n")
 
+
             for x in csv_data:
                 fields = x.split(",")
+
+                username = fields[2]+'-'+get_random_string(length=5)
+                avatar = 'https://avatars.dicebear.com/api/bottts/' + username + '.svg'
+
                 created = User.objects.update_or_create(
                     first_name = fields[2],
                     last_name = fields[3],
-                    username = fields[2]+'-'+get_random_string(length=5),
+                    username = username,
                     name = fields[2] + ' ' +fields[3],
                     email = fields[1],
-                    avatar = fields[4],
+                    avatar = avatar,
                     password=make_password('12345678')
-                    )
+                )
                     
             url = reverse('admin:accounts_user_changelist')
             return HttpResponseRedirect(url)

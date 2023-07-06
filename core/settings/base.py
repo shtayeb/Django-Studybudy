@@ -124,12 +124,12 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    # },
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    # },
 ]
 
 
@@ -182,15 +182,7 @@ ACCOUNT_ADAPTER = "invitations.models.InvitationsAdapter"
 INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
 
 ACCOUNT_FORMS = {
-    "add_email": "allauth.account.forms.AddEmailForm",
-    "change_password": "allauth.account.forms.ChangePasswordForm",
-    "disconnect": "allauth.socialaccount.forms.DisconnectForm",
-    "login": "allauth.account.forms.LoginForm",
-    "reset_password": "allauth.account.forms.ResetPasswordForm",
-    "reset_password_from_key": "allauth.account.forms.ResetPasswordKeyForm",
-    "set_password": "allauth.account.forms.SetPasswordForm",
-    "signup": "allauth.account.forms.SignupForm",
-    "user_token": "allauth.account.forms.UserTokenForm",
+    "signup": "accounts.forms.MyUserCreationForm",
 }
 
 # Provider specific settings

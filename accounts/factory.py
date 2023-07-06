@@ -39,3 +39,7 @@ class UserFactory(DjangoModelFactory):
     @factory.lazy_attribute
     def name(self):
         return f"{self.first_name} {self.last_name}"
+    
+    @factory.lazy_attribute
+    def avatar(self):
+        return f"https://avatars.dicebear.com/api/bottts/{self.username}.svg"

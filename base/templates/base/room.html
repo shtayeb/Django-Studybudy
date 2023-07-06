@@ -127,7 +127,7 @@
               class="room__author"
             >
               <div class="avatar avatar--small">
-                <img src="{{room.host.avatar.url}}" />
+                <img src="{{room.host.avatar}}" alt="user-avatar" />
               </div>
               <span>@{{ room.host.username }}</span>
             </a>
@@ -164,7 +164,7 @@
                     class="thread__authorInfo"
                   >
                     <div class="avatar avatar--small">
-                      <img src="{{message.user.avatar.url}}" />
+                      <img src="{{message.user.avatar}}" alt="user-avatar" />
                     </div>
                     <span>@{{message.user.username}}</span>
                   </a>
@@ -200,7 +200,7 @@
         {% for user in participants %}
         <a href="{% url 'user-profile' user.username %}" class="participant">
           <div class="avatar avatar--medium">
-            <img src="{{user.avatar.url}}" />
+            <img src="{{user.avatar}}" alt="user-avatar" />
           </div>
           <p>
             {{user.username}}

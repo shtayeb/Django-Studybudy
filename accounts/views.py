@@ -94,6 +94,7 @@ def updateUser(request):
         form = UserForm(request.POST, request.FILES, instance=user)
 
         if form.is_valid():
+            form.avatar = form.cleaned_data['avatar']
             form.save()
 
             return redirect("user-profile", username=user.username)

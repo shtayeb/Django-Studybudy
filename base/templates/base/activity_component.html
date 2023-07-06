@@ -13,7 +13,7 @@
             href="{% url 'user-profile' message.user.username %}"
             class="roomListRoom__author">
             <div class="avatar avatar--small">
-              <img src="{{message.user.avatar.url}}" />
+              <img src="{{message.user.avatar}}" alt="user-avatar" />
             </div>
             <p>
               @{{message.user}}
