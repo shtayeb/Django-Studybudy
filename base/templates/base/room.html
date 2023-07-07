@@ -191,7 +191,26 @@
                 {% comment %} Reactions Section {% endcomment %}
                 <div class="thread__footer">
                   {% for reaction in reaction_types %}
-                    <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} 2</span>
+                    {% if reaction.name == '🔥' %}
+                      <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
+                      <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                          {{message.fire_count}}
+                        </span>
+                    {% endif %}
+                    
+                    {% if reaction.name == '👍' %}
+                      <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
+                      <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                        {{message.like_count}}
+                      </span>
+                    {% endif %}
+                    
+                    {% if reaction.name == '💩' %}
+                      <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
+                      <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                          {{message.poop_count}}
+                        </span>
+                    {% endif %}
                   {% endfor %}
                 </div>
 
@@ -205,7 +224,7 @@
     </div>
 
     <!--   participants -->
-    <div class="sticky_right_panel">
+    <div class="sticky_right_panel sticky_panel  ">
       <h3 class="participants__top">
         Participants <span>({{participants.count}} Joined)</span>
       </h3>
@@ -233,13 +252,13 @@
 {% if request.user.is_authenticated %}
   <script>
       // ==================== Message Reaction  ===================
+      reaction_counts = document.querySelectorAll(".reaction_count")
 
       document.querySelectorAll(".item").forEach(reaction => {
         reaction.addEventListener("click", (e) => {
           reaction_type_id = e.target.id
           message_id = e.target.dataset.message
 
-          console.log('clicked',e)
 
           data = {
             reaction_type_id:reaction_type_id
@@ -259,6 +278,17 @@
             .then(response => response.json())
             .then(data => {
               console.log(data)
+              // update html --- m-1-count-1
+              countSpan = document.getElementById(`m-${message_id}-count-${reaction_type_id}`)
+
+              if(data.operation === 'added'){
+                countSpan.innerHTML = parseInt(countSpan.innerText) + 1
+              }else if(data.operation === 'removed'){
+                countSpan.innerHTML = parseInt(countSpan.innerText) - 1
+              }else{
+                // do nothing
+              }
+
             }).catch(e => {
               console.log(e)
             })
