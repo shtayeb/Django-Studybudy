@@ -18,31 +18,36 @@ expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 
 SECRET_KEY = "secret_key_001"
 
-@login_required(login_url="/accounts/login")
-def toggleMessageReaction(request,pk):
 
+@login_required(login_url="/accounts/login")
+def toggleMessageReaction(request, pk):
+    data = {"operation": ""}
     if request.method == "POST":
         message = Message.objects.get(pk=pk)
-        reaction_type_id = json.loads(request.body)['reaction_type_id']
+        reaction_type_id = json.loads(request.body)["reaction_type_id"]
         user = request.user
 
         # Check if the reaction exists
-        msg_reaction = message.reaction_set.filter(user_id=user.id,message_id=message.id,reaction_type_id=reaction_type_id)
+        msg_reaction = message.reaction_set.filter(
+            user_id=user.id, message_id=message.id, reaction_type_id=reaction_type_id
+        )
 
         if msg_reaction.exists():
             # remove the reaction
             msg_reaction.delete()
+            data["operation"] = "removed"
         else:
             # add the reaction
             message.reaction_set.create(
                 message_id=message.id,
                 reaction_type_id=reaction_type_id,
-                user_id=user.id
+                user_id=user.id,
             )
+            data["operation"] = "added"
     else:
-        messages.error(request, "GET request is not supported for this route !!") 
+        messages.error(request, "GET request is not supported for this route !!")
 
-    return JsonResponse({'msg':'Reaction has been added !'}, safe=False)
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/accounts/login")
@@ -71,7 +76,7 @@ def sendRoomInvite(request, pk):
 
     if request.method == "POST":
         user_email = request.POST.get("email")
-        invitee = get_object_or_404(User,email=user_email)
+        invitee = get_object_or_404(User, email=user_email)
         # invitee = User.objects.get(email=user_email)
 
         # encode room_id and invitee_id in the token
@@ -193,7 +198,23 @@ def home(request):
 
 def room(request, slug):
     # room = Room.objects.get(id=pk)
-    room = get_object_or_404(Room.objects.prefetch_related(Prefetch("host")), slug=slug)
+
+    fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
+    like_count = Count("reaction", filter=Q(reaction__reaction_type__name="👍"))
+    poop_count = Count("reaction", filter=Q(reaction__reaction_type__name="💩"))
+
+    room = get_object_or_404(
+        Room.objects.prefetch_related(
+            Prefetch("host"),
+            Prefetch(
+                "message_set",
+                Message.objects.annotate(fire_count=fire_count)
+                .annotate(like_count=like_count)
+                .annotate(poop_count=poop_count),
+            ),
+        ),
+        slug=slug,
+    )
 
     is_joined = False
 
@@ -221,7 +242,7 @@ def room(request, slug):
         )
         room.participants.add(request.user)
         return redirect("room", slug=room.slug)
-    
+
     reaction_types = ReactionType.objects.all()
 
     # msg.reaction_set.filter(reaction_type__name='👍').count() # 1
@@ -232,7 +253,7 @@ def room(request, slug):
         "room_messages": room_messages,
         "participants": participants,
         "is_joined": is_joined,
-        'reaction_types':reaction_types
+        "reaction_types": reaction_types,
     }
 
     return render(request, "base/room.html", context)
