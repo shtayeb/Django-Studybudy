@@ -6,7 +6,7 @@ from faker.providers import job
 from accounts.factory import UserFactory
 from accounts.models import User
 
-from .models import Message, Room, RoomInvitation, Topic
+from .models import Message, ReactionType, Room, RoomInvitation, Topic
 
 FAKE = faker.Faker()
 
@@ -67,3 +67,18 @@ class MessageFactory(DjangoModelFactory):
             x += "\n" + FAKE.posts(nb_sentences=5) + "\n"
         return x
     
+
+REACTIONS = [
+    ("👍", "like"),
+    ("👎", "dislike"),
+    ("💩", "poop"),
+    ("🔥", "fire"),
+]
+
+class ReactionTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = ReactionType
+
+   
+    
+    name = factory.Iterator(REACTIONS, getter=lambda c: c[0])

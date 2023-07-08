@@ -3,7 +3,7 @@ from django.utils import timezone
 from halo import Halo
 
 from accounts.factory import UserFactory
-from base.factory import RoomFactory, TopicFactory
+from base.factory import ReactionTypeFactory, RoomFactory, TopicFactory
 
 
 class Command(BaseCommand):
@@ -20,6 +20,7 @@ class Command(BaseCommand):
         UserFactory.create_batch(amount)
         TopicFactory.create_batch(amount)
         RoomFactory.create_batch(amount)
+        ReactionTypeFactory.create_batch(4)
 
     @Halo(text='Generating...', spinner='dots', color='blue', text_color='blue')
     def handle(self, *args, **options):

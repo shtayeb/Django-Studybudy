@@ -471,6 +471,8 @@ a {
   display: flex;
   padding: 1.5rem;
   background-color: var(--color-dark-light);
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
 }
 
 .layout__boxTitle {
@@ -796,6 +798,8 @@ a {
 .activities__boxHeader p {
   font-size: 1.4rem;
   line-height: 1.3;
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
 }
 
 .activities__boxHeader p span {
@@ -944,9 +948,7 @@ a {
 /*==============================
 =>  Room
 ================================*/
-
-.sticky_right_panel{
-  background: var(--color-dark);
+.sticky_panel{
   border-radius: 0.7rem;
   max-height: 87.5vh;
 
@@ -955,6 +957,14 @@ a {
   position: sticky;
   position: -webkit-sticky; /* Safari */
   top: 1.5rem;
+}
+
+.sticky_right_panel{
+  background: var(--color-dark);
+}
+
+.sticky_left_panel{
+
 }
 
 .participants{
@@ -1135,6 +1145,22 @@ a {
   height: 100%;
   /* margin-top: 28vh; */
   padding: 0 2rem 4rem 2rem;
+}
+
+.thread__footer{
+  display: flex;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.thread__footer .item{
+  padding: 0px 8px;
+  border-radius: 0.7rem;
+}
+
+.thread__footer .item:hover{
+  background-color: var(--color-dark-light);
+  cursor: pointer;
 }
 
 .thread {

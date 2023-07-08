@@ -79,7 +79,7 @@
         </div>
 
         <div class="room__topRight">
-        {% if room.host == request.user %}
+          {% if room.host == request.user %}
           <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
             <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
           </a>
@@ -156,37 +156,50 @@
         <div class="room__conversation">
           <div class="threads scroll">
             {% for message in room_messages %}
-            <div class="thread">
-              <div class="thread__top">
-                <div class="thread__author">
-                  <a
-                    href="{% url 'user-profile' message.user.username %}"
-                    class="thread__authorInfo"
-                  >
-                    <div class="avatar avatar--small">
-                      <img src="{{message.user.avatar}}" alt="user-avatar" />
-                    </div>
-                    <span>@{{message.user.username}}</span>
-                  </a>
-                  <span class="thread__date"
-                    >{{message.created|timesince}} ago</span
-                  >
-                </div>
-                {% if request.user == message.user %}
-                <a href="{% url 'delete-message' message.id %}">
-                  <div class="thread__delete">
-                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
+              <div class="thread">
+                
+                <div class="thread__top">
+                  <div class="thread__author">
+                    <a
+                      href="{% url 'user-profile' message.user.username %}"
+                      class="thread__authorInfo"
+                    >
+                      <div class="avatar avatar--small">
+                        <img src="{{message.user.avatar}}" alt="user-avatar" />
+                      </div>
+                      <span>@{{message.user.username}}</span>
+                    </a>
+                    <span class="thread__date"
+                      >{{message.created|timesince}} ago</span
+                    >
                   </div>
-                </a>
-                {% endif %}
+                  
+                  {% if request.user == message.user %}
+                    <a href="{% url 'delete-message' message.id %}">
+                      <div class="thread__delete">
+                        <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
+                      </div>
+                    </a>
+                  {% endif %}
+
+                </div>
+                
+                <div class="thread__details markdown-prose" style="font-size:unset;line-height:unset">
+                  {{ message.body | markdown | safe }}
+                </div>
+
+                {% comment %} Reactions Section {% endcomment %}
+                <div class="thread__footer">
+                  {% for reaction in reaction_types %}
+                    <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} 2</span>
+                  {% endfor %}
+                </div>
+
               </div>
-              <div class="thread__details markdown-prose" style="font-size:unset;line-height:unset">
-                {{ message.body | markdown | safe }}
-              </div>
-            </div>
             {% endfor %}
           </div>
         </div>
+
       </div>
 
     </div>
@@ -198,15 +211,15 @@
       </h3>
       <div class="participants__list scroll">
         {% for user in participants %}
-        <a href="{% url 'user-profile' user.username %}" class="participant">
-          <div class="avatar avatar--medium">
-            <img src="{{user.avatar}}" alt="user-avatar" />
-          </div>
-          <p>
-            {{user.username}}
-            <span>@{{user.username}}</span>
-          </p>
-        </a>
+          <a href="{% url 'user-profile' user.username %}" class="participant">
+            <div class="avatar avatar--medium">
+              <img src="{{user.avatar}}" alt="user-avatar" />
+            </div>
+            <p>
+              {{user.username}}
+              <span>@{{user.username}}</span>
+            </p>
+          </a>
         {% endfor %}
       </div>
     </div>
@@ -216,24 +229,68 @@
 {% endblock content %}
 
 {% block extra_scripts %}
-<script>
-  const dialog = document.getElementById("invite-user-dialog")
-  const inviteUserBtn = document.getElementById("invite-user-btn")
-  // dialog.show() // Opens a non-modal dialog
-  inviteUserBtn.addEventListener('click',e => {
-    dialog.showModal() 
-  })
 
-  dialog.addEventListener("click", e => {
-    const dialogDimensions = dialog.getBoundingClientRect()
-    if (
-      e.clientX < dialogDimensions.left ||
-      e.clientX > dialogDimensions.right ||
-      e.clientY < dialogDimensions.top ||
-      e.clientY > dialogDimensions.bottom
-    ) {
-      dialog.close()
-    }
-  })
-</script>
+{% if request.user.is_authenticated %}
+  <script>
+      // ==================== Message Reaction  ===================
+
+      document.querySelectorAll(".item").forEach(reaction => {
+        reaction.addEventListener("click", (e) => {
+          reaction_type_id = e.target.id
+          message_id = e.target.dataset.message
+
+          console.log('clicked',e)
+
+          data = {
+            reaction_type_id:reaction_type_id
+          }
+
+          // message/<int:pk>/reaction
+          const URL = `/message/${message_id}/reaction`
+
+          fetch(URL,{
+            method:"POST",
+            body: JSON.stringify(data),
+            headers: { 
+              "X-CSRFToken": '{{csrf_token}}',
+              'content-type': 'application/json',
+            },
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data)
+            }).catch(e => {
+              console.log(e)
+            })
+
+        })
+      })
+
+      // ============= Invite User Modal ================
+
+      const dialog = document.getElementById("invite-user-dialog")
+      const inviteUserBtn = document.getElementById("invite-user-btn")
+
+      if(inviteUserBtn){
+        // dialog.show() // Opens a non-modal dialog
+        inviteUserBtn.addEventListener('click',e => {
+          dialog.showModal() 
+        })
+      }
+      
+
+      dialog.addEventListener("click", e => {
+        const dialogDimensions = dialog.getBoundingClientRect()
+        if (
+          e.clientX < dialogDimensions.left ||
+          e.clientX > dialogDimensions.right ||
+          e.clientY < dialogDimensions.top ||
+          e.clientY > dialogDimensions.bottom
+        ) {
+          dialog.close()
+        }
+      })
+  </script>
+{% endif %}
+
 {% endblock extra_scripts %}

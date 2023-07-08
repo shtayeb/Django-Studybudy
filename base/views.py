@@ -1,22 +1,48 @@
 import datetime
+import json
 
 import jwt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage, send_mail
 from django.db.models import Count, Prefetch, Q
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.crypto import get_random_string
 
 from .forms import RoomForm
-from .models import Message, Room, RoomInvitation, Topic, User
+from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
 
 expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 
 SECRET_KEY = "secret_key_001"
+
+@login_required(login_url="/accounts/login")
+def toggleMessageReaction(request,pk):
+
+    if request.method == "POST":
+        message = Message.objects.get(pk=pk)
+        reaction_type_id = json.loads(request.body)['reaction_type_id']
+        user = request.user
+
+        # Check if the reaction exists
+        msg_reaction = message.reaction_set.filter(user_id=user.id,message_id=message.id,reaction_type_id=reaction_type_id)
+
+        if msg_reaction.exists():
+            # remove the reaction
+            msg_reaction.delete()
+        else:
+            # add the reaction
+            message.reaction_set.create(
+                message_id=message.id,
+                reaction_type_id=reaction_type_id,
+                user_id=user.id
+            )
+    else:
+        messages.error(request, "GET request is not supported for this route !!") 
+
+    return JsonResponse({'msg':'Reaction has been added !'}, safe=False)
 
 
 @login_required(login_url="/accounts/login")
@@ -185,7 +211,7 @@ def room(request, slug):
 
     # my_object = get_object_or_404(Room.objects.prefetch_related(Prefetch('related_objects', queryset=RelatedModel.objects.select_related('other_model'))), pk=my_id)
 
-    room_messages = room.message_set.select_related("user").all()
+    room_messages = room.message_set.prefetch_related("user").all()
 
     participants = room.participants.all()
 
@@ -195,12 +221,18 @@ def room(request, slug):
         )
         room.participants.add(request.user)
         return redirect("room", slug=room.slug)
+    
+    reaction_types = ReactionType.objects.all()
+
+    # msg.reaction_set.filter(reaction_type__name='👍').count() # 1
+    # msg.reaction_set.filter().count() # 3
 
     context = {
         "room": room,
         "room_messages": room_messages,
         "participants": participants,
         "is_joined": is_joined,
+        'reaction_types':reaction_types
     }
 
     return render(request, "base/room.html", context)
