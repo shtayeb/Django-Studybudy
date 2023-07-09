@@ -65,6 +65,7 @@ python manage.py runserver --setting=core.settings.production # production setti
 
 - Create infinite scroll in home and room page
 - Create an autocomplete users list in the invite users to room page
+- Fix Modal/Dialogs scrolls with page
 
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
 - SEO meta tags for pages

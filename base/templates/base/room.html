@@ -59,6 +59,36 @@
   </div>
 </dialog>
 
+<dialog id="message-reply-dialog">
+  <div class="layout__box" style="width:unset;max-width:unset;">
+
+    <div class="layout__boxHeader">
+      <div class="layout__boxTitle">
+        <h3 class="title">Reply to Message</h3>
+      </div>
+    </div>
+
+    <div class="layout__body" style="margin:0 3rem;padding:3rem;color:white">
+      <p class="">Please add an email below. The user will receive an email with instructions.</p><br/>
+      <form id="invite-form" method="POST" action="{% url 'invite-room' room.id %}">
+          {% csrf_token %}
+          <div class="form__group">
+              <label for="id_email">Reply: </label>
+              <textarea
+                name="body"
+                rows="5"
+                placeholder="Write your message here (Supports Markdown)..."
+                required
+              ></textarea>
+          </div>
+
+          <input type="submit" value="Add Reply" class="btn btn--main generic-ajax-submit">
+      </form>
+    </div>
+
+  </div>
+</dialog>
+
 <main class="profile-page layout layout--2">
   <div class="container" >
     <!-- Room Start -->
@@ -199,7 +229,7 @@
         })
       }
       
-
+      
       dialog.addEventListener("click", e => {
         const dialogDimensions = dialog.getBoundingClientRect()
         if (
