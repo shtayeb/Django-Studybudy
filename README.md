@@ -58,21 +58,23 @@ python manage.py runserver --setting=core.settings.production # production setti
 - [x] Ability to create private rooms(non members cant go to the room)
 - [x] Room host can invite users to private rooms - (The added user will recieve notification and have the option to accept or reject the invite)
 - [x] Make the invite user page into a modal pop up
+- [x] Like/Dislike messages of a room by its participants
+
+- Add message replies (Add Polymorphic relationship)
+- Add room Admin
+
 - Create infinite scroll in home and room page
 - Create an autocomplete users list in the invite users to room page
 
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
-- Add message replies (Add Polymorphic relationship)
 - SEO meta tags for pages
 - Add in markdown editor image upload
 
-- Add room Admin
 - Room admins can add/invite users to private rooms
 - Ability to archive(block new messages) a room by admin
 - Room participants management(Kick, Block and suspend participants of rooms by its Admin)
 - Rooms message moderation by Admins
 
-- Like/Dislike messages of a room by its participants
 - Activity notification for joined rooms
 - Glabal setting for notification settings
 - Recaptcha for login on register page

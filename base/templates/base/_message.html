@@ -1,0 +1,83 @@
+{% load static %}
+{% load markdown_extras %} 
+
+<div class="thread">
+    <div class="thread__top">
+        <div class="thread__author">
+            <a
+                href="{% url 'user-profile' message.user.username %}"
+                class="thread__authorInfo"
+            >
+                <div class="avatar avatar--small">
+                <img src="{{message.user.avatar}}" alt="user-avatar" />
+                </div>
+                <span>@{{message.user.username}}</span>
+            </a>
+            <span class="thread__date">{{message.created|timesince}} ago</span>
+        </div>
+        
+        {% if request.user == message.user %}
+        <a href="{% url 'delete-message' message.id %}">
+            <div class="thread__delete">
+            <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
+            </div>
+        </a>
+        {% endif %}
+
+    </div>
+
+    <div class="thread__details markdown-prose" style="font-size:unset;line-height:unset">
+        {{ message.body | markdown | safe }}
+    </div>
+
+    <div class="thread__footer">
+        {% for reaction in reaction_types %}
+        {% if reaction.name == '🔥' %}
+            <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
+            <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                {{message.fire_count}}
+            </span>
+        {% endif %}
+        
+        {% if reaction.name == '👍' %}
+            <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
+            <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+            {{message.like_count}}
+            </span>
+        {% endif %}
+        
+        {% if reaction.name == '💩' %}
+            <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
+            <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                {{message.poop_count}}
+            </span>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {% comment %} Replies {% endcomment %}
+    {% comment %} 
+        {% for reply in message.replies %}
+            //
+        {% endfor %} 
+    {% endcomment %}
+    <button class="btn btn--dark" id="add-reply-btn-{{message.id}}">Add Reply</button>
+
+    <div class="message_replies">
+        {% include 'base/_reply.html' %}
+    </div>
+</div>
+
+{% if request.user.is_authenticated %}
+{% block extra_scripts %}
+<script>
+    // ==================== Message Reply  ===================
+    addReplyBtn = document.getElementById("add-reply-btn-{{message.id}}")
+     
+    addReplyBtn.addEventListener('click',e => {
+        console.log('test-{{message.id}}')
+        // Open the reply modal
+    })
+</script>
+{% endblock %}
+{% endif %}

@@ -1163,6 +1163,13 @@ a {
   cursor: pointer;
 }
 
+.message_replies .thread{
+  border: 2px solid var(--color-dark);
+  padding-left: 1rem;
+  margin: 2rem 0;
+  padding: 2rem;
+}
+
 .thread {
   border-left: 2px solid var(--color-dark);
   padding-left: 1rem;
@@ -1271,6 +1278,7 @@ a {
 
 pre{
   background-color: var(--color-dark);
+  margin: 8px 0px;
 }
 
 .thread__details >>> code {
