@@ -65,6 +65,8 @@ class Message(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
+    parent = models.ForeignKey('self',related_name='replies',related_query_name='message',null=True,blank=True,on_delete=models.CASCADE)
+
     body = models.TextField()
 
     updated = models.DateTimeField(auto_now=True)
@@ -75,6 +77,7 @@ class Message(SoftDeleteModel):
 
     def __str__(self):
         return self.body[0:50]
+ 
 
 class ReactionType(models.Model):
     name = models.CharField(max_length=70,null=False,blank=False)

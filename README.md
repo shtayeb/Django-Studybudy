@@ -60,7 +60,7 @@ python manage.py runserver --setting=core.settings.production # production setti
 - [x] Make the invite user page into a modal pop up
 - [x] Like/Dislike messages of a room by its participants
 
-- Add message replies (Add Polymorphic relationship)
+- Add message replies (Add Polymorphic relationship) [lnk](https://forum.djangoproject.com/t/get-all-children-of-self-referencing-django-model-in-nested-hierarchy/16761)
 - Add room Admin
 
 - Create infinite scroll in home and room page
@@ -117,6 +117,30 @@ git commit -m "The wrong commit message"
 # Edit the last commit message
 git commit --amend -m "This is the right commit message"
 ```
+
+msgs = Message.objects.filter(parent=None).annotate(fire_count=fire_count).annotate(like_count=like_count).annotate(poop_count=poop_count).prefetch_related(Prefetch("replies"))
+
+
+msgs = get_object_or_404(
+    Room.objects.prefetch_related(
+        Prefetch("host"),
+    ).select_related(
+        "message_set",
+        "message_set__user",
+        "message_set__parent",
+        "message_set__parent__user",
+        "message_set__replies",
+        "message_set__replies__user",
+        "message_set__replies__parent",
+        "message_set__replies__parent__user",
+    ).annotate(
+        message_count=Count("message_set"),
+        fire_count=Sum("message_set__fire_count"),
+        like_count=Sum("message_set__like_count"),
+        poop_count=Sum("message_set__poop_count"),
+    ),
+    slug=slug,
+)
 
 ## Installed Packages
 - [django-easy-audit](https://github.com/soynatan/django-easy-audit)

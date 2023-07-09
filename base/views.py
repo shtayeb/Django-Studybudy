@@ -205,14 +205,17 @@ def room(request, slug):
 
     room = get_object_or_404(
         Room.objects.prefetch_related(
-            Prefetch("host"),
             Prefetch(
                 "message_set",
-                Message.objects.annotate(fire_count=fire_count)
+                Message.objects
+                .filter(parent=None)
+                .annotate(fire_count=fire_count)
                 .annotate(like_count=like_count)
-                .annotate(poop_count=poop_count),
+                .annotate(poop_count=poop_count)
+                .prefetch_related('replies','user'),
             ),
-        ),
+            Prefetch("participants"),
+        ).select_related('host'),
         slug=slug,
     )
 
@@ -232,9 +235,7 @@ def room(request, slug):
 
     # my_object = get_object_or_404(Room.objects.prefetch_related(Prefetch('related_objects', queryset=RelatedModel.objects.select_related('other_model'))), pk=my_id)
 
-    room_messages = room.message_set.prefetch_related("user").all()
 
-    participants = room.participants.all()
 
     if request.method == "POST":
         message = Message.objects.create(
@@ -245,13 +246,9 @@ def room(request, slug):
 
     reaction_types = ReactionType.objects.all()
 
-    # msg.reaction_set.filter(reaction_type__name='👍').count() # 1
-    # msg.reaction_set.filter().count() # 3
 
     context = {
         "room": room,
-        "room_messages": room_messages,
-        "participants": participants,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }

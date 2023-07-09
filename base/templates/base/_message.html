@@ -56,16 +56,14 @@
     </div>
 
     {% comment %} Replies {% endcomment %}
-    {% comment %} 
-        {% for reply in message.replies %}
-            //
-        {% endfor %} 
-    {% endcomment %}
-    <button class="btn btn--dark" id="add-reply-btn-{{message.id}}">Add Reply</button>
+     <button class="btn btn--dark" id="add-reply-btn-{{message.id}}">Add Reply</button>
 
-    <div class="message_replies">
-        {% include 'base/_reply.html' %}
-    </div>
+    {% for reply in message.replies.all %}
+        <div class="message_replies">
+            {% include 'base/_reply.html' %}
+        </div>
+    {% endfor %} 
+
 </div>
 
 {% if request.user.is_authenticated %}
