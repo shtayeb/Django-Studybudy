@@ -5,11 +5,13 @@ import jwt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage, send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
+from numpy import require
 
 from .forms import RoomForm
 from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
@@ -17,6 +19,27 @@ from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
 expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 
 SECRET_KEY = "secret_key_001"
+
+
+@login_required(login_url="/accounts/login")
+def addMessageReply(request, pk):
+    # Get the room as well and check if the room is not archived
+
+    if request.method == "POST":
+        message = Message.objects.get(pk=pk)
+        # do dome error handling
+        body = request.POST.get("body")
+        user_id = request.user.id
+        room_id = request.POST.get("room_id")
+
+        Message.objects.create(
+            room_id=room_id, user_id=user_id, parent_id=message.id, body=body
+        )
+        messages.success(request, "Reply Added Successfully !")
+    else:
+        messages.error(request, "GET request is not supported for this route !!")
+
+    return redirect("room", message.room.slug)
 
 
 @login_required(login_url="/accounts/login")
@@ -163,6 +186,7 @@ def acceptRoomInvite(request, token):
 
 def home(request):
     q = request.GET.get("q")
+    template_name = "base/home.html"
 
     if request.GET.get("q") == None:
         q = ""
@@ -191,28 +215,59 @@ def home(request):
         Q(room__topic__name__icontains=q)
     ).prefetch_related("user", "room")
 
-    context = {"rooms": rooms, "topics": topics, "room_messages": room_messages}
+    page_number = request.GET.get("page", 1)
+    paginator = Paginator(rooms, 20)  # Show 25 rooms per page.
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, "base/home.html", context)
+    try:
+        rooms = paginator.page(page_number)
+    except PageNotAnInteger:
+        rooms = paginator.page(1)
+    except EmptyPage:
+        rooms = paginator.page(paginator.num_pages)
+
+    if request.htmx:
+        # htmx template
+        print("htmx ------------ ")
+        template_name = "base/feed_component.html"
+
+    context = {
+        # "rooms": rooms,
+        "page_obj": page_obj,
+        "topics": topics,
+        "room_messages": room_messages,
+    }
+
+    return render(request, template_name, context)
 
 
 def room(request, slug):
-    # room = Room.objects.get(id=pk)
-
     fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
     like_count = Count("reaction", filter=Q(reaction__reaction_type__name="👍"))
     poop_count = Count("reaction", filter=Q(reaction__reaction_type__name="💩"))
 
     room = get_object_or_404(
         Room.objects.prefetch_related(
-            Prefetch("host"),
             Prefetch(
                 "message_set",
-                Message.objects.annotate(fire_count=fire_count)
-                .annotate(like_count=like_count)
-                .annotate(poop_count=poop_count),
+                Message.objects.filter(parent=None)
+                .annotate(
+                    fire_count=fire_count, like_count=like_count, poop_count=poop_count
+                )
+                .prefetch_related(
+                    Prefetch(
+                        "replies",
+                        Message.objects.select_related("user").annotate(
+                            fire_count=fire_count,
+                            like_count=like_count,
+                            poop_count=poop_count,
+                        ),
+                    ),
+                    "user",
+                ),
             ),
-        ),
+            Prefetch("participants"),
+        ).select_related("host"),
         slug=slug,
     )
 
@@ -230,12 +285,6 @@ def room(request, slug):
             messages.warning(request, "That room is private !")
             return redirect("home")
 
-    # my_object = get_object_or_404(Room.objects.prefetch_related(Prefetch('related_objects', queryset=RelatedModel.objects.select_related('other_model'))), pk=my_id)
-
-    room_messages = room.message_set.prefetch_related("user").all()
-
-    participants = room.participants.all()
-
     if request.method == "POST":
         message = Message.objects.create(
             user=request.user, room=room, body=request.POST.get("body")
@@ -245,13 +294,8 @@ def room(request, slug):
 
     reaction_types = ReactionType.objects.all()
 
-    # msg.reaction_set.filter(reaction_type__name='👍').count() # 1
-    # msg.reaction_set.filter().count() # 3
-
     context = {
         "room": room,
-        "room_messages": room_messages,
-        "participants": participants,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }

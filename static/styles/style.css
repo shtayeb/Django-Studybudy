@@ -1150,7 +1150,7 @@ a {
 .thread__footer{
   display: flex;
   gap: 10px;
-  margin-top: 1.5rem;
+  margin: 1.5rem 0rem 1.5rem 0rem;
 }
 
 .thread__footer .item{
@@ -1163,11 +1163,110 @@ a {
   cursor: pointer;
 }
 
-.thread {
-  border-left: 2px solid var(--color-dark);
+/* This is experimental */
+
+/* .message_replies .thread::after{
+  content: "";
+  width: 100%;
+  height: 2px;
+  background: var(--color-dark);
+  position: absolute;
+} */
+
+.message_replies .thread::before{
+  content: "";
+  width: 43px;
+  height: 2px;
+  background: var(--color-dark);
+  position: absolute;
+  left: -22px;
+  top:39px;
+  
+}
+
+.reply-body{
+  margin-left: 32px;
+  position: relative;
+}
+/* 
+.reply-body::before{
+  content: "";
+  width: 2px;
+  height: 100%;
+  background: var(--color-dark);
+  position: absolute;
+  left: -17px;
+  top:-5px;
+
+} */
+
+
+/* END */
+
+/* Adjustments for toggleable comments */
+
+.message_replies .thread{
   padding-left: 1rem;
   margin: 2rem 0;
   padding: 2rem;
+}
+
+details summary {
+    position: relative;
+    list-style: none;
+    cursor: pointer;
+}
+details::-webkit-details-marker {
+    display: none;
+}
+details.thread:not([open]) .thread__author {
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.2); */
+}
+.thread__author::after {
+    display: inline-block;
+    position: absolute;
+    right: 5px;
+    align-self: center;
+    font-size: 12px;
+}
+details.thread[open] .thread__author::after {
+    content: "Click to hide";
+    color: var(--color-light);
+}
+details.thread:not([open]) .thread__author::after {
+    content: "Click to show";
+    color: var(--color-light);
+
+}
+
+/* End */
+
+
+/* Styling the reply to comment form */
+
+.reply-form textarea {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+.d-none {
+    display: none;
+}
+
+/* END */
+
+.border-l{
+  border-left: 2px solid var(--color-dark);
+}
+
+.thread {
+  padding-left: 1rem;
+  margin: 2rem 0;
+  padding: 2rem;
+  position: relative;
 }
 
 .thread__top {
@@ -1199,12 +1298,13 @@ a {
 }
 
 .room__message {
-  padding: 2rem;
+  /* padding: 2rem; */
   /* position: absolute; */
   /* z-index: 111; */
   /* bottom: 0;
   left: 0;
   right: 0; */
+  margin: 2rem 0rem;
   background: transparent;
 }
 
@@ -1271,6 +1371,7 @@ a {
 
 pre{
   background-color: var(--color-dark);
+  margin: 8px 0px;
 }
 
 .thread__details >>> code {

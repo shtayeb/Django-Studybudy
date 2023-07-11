@@ -1,4 +1,4 @@
-{% extends 'main.html' %} {% load markdown_extras %} 
+{% extends 'main.html' %} 
 
 {% load static %}
 
@@ -53,6 +53,36 @@
           </div>
           
           <input type="submit" value="Send Invitation" class="btn btn--main generic-ajax-submit">
+      </form>
+    </div>
+
+  </div>
+</dialog>
+
+<dialog id="message-reply-dialog">
+  <div class="layout__box" style="width:unset;max-width:unset;">
+
+    <div class="layout__boxHeader">
+      <div class="layout__boxTitle">
+        <h3 class="title">Reply to Message</h3>
+      </div>
+    </div>
+
+    <div class="layout__body" style="margin:0 3rem;padding:3rem;color:white">
+      <p class="">Please add an email below. The user will receive an email with instructions.</p><br/>
+      <form id="invite-form" method="POST" action="{% url 'invite-room' room.id %}">
+          {% csrf_token %}
+          <div class="form__group">
+              <label for="id_email">Reply: </label>
+              <textarea
+                name="body"
+                rows="5"
+                placeholder="Write your message here (Supports Markdown)..."
+                required
+              ></textarea>
+          </div>
+
+          <input type="submit" value="Add Reply" class="btn btn--main generic-ajax-submit">
       </form>
     </div>
 
@@ -153,71 +183,7 @@
           </form>
         </div>
         
-        <div class="room__conversation">
-          <div class="threads scroll">
-            {% for message in room_messages %}
-              <div class="thread">
-                
-                <div class="thread__top">
-                  <div class="thread__author">
-                    <a
-                      href="{% url 'user-profile' message.user.username %}"
-                      class="thread__authorInfo"
-                    >
-                      <div class="avatar avatar--small">
-                        <img src="{{message.user.avatar}}" alt="user-avatar" />
-                      </div>
-                      <span>@{{message.user.username}}</span>
-                    </a>
-                    <span class="thread__date"
-                      >{{message.created|timesince}} ago</span
-                    >
-                  </div>
-                  
-                  {% if request.user == message.user %}
-                    <a href="{% url 'delete-message' message.id %}">
-                      <div class="thread__delete">
-                        <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
-                      </div>
-                    </a>
-                  {% endif %}
-
-                </div>
-                
-                <div class="thread__details markdown-prose" style="font-size:unset;line-height:unset">
-                  {{ message.body | markdown | safe }}
-                </div>
-
-                {% comment %} Reactions Section {% endcomment %}
-                <div class="thread__footer">
-                  {% for reaction in reaction_types %}
-                    {% if reaction.name == '🔥' %}
-                      <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
-                      <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                          {{message.fire_count}}
-                        </span>
-                    {% endif %}
-                    
-                    {% if reaction.name == '👍' %}
-                      <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
-                      <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                        {{message.like_count}}
-                      </span>
-                    {% endif %}
-                    
-                    {% if reaction.name == '💩' %}
-                      <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
-                      <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                          {{message.poop_count}}
-                        </span>
-                    {% endif %}
-                  {% endfor %}
-                </div>
-
-              </div>
-            {% endfor %}
-          </div>
-        </div>
+        {% include 'base/converstion_component.html' %}
 
       </div>
 
@@ -229,7 +195,7 @@
         Participants <span>({{participants.count}} Joined)</span>
       </h3>
       <div class="participants__list scroll">
-        {% for user in participants %}
+        {% for user in room.participants.all %}
           <a href="{% url 'user-profile' user.username %}" class="participant">
             <div class="avatar avatar--medium">
               <img src="{{user.avatar}}" alt="user-avatar" />
@@ -251,51 +217,6 @@
 
 {% if request.user.is_authenticated %}
   <script>
-      // ==================== Message Reaction  ===================
-      reaction_counts = document.querySelectorAll(".reaction_count")
-
-      document.querySelectorAll(".item").forEach(reaction => {
-        reaction.addEventListener("click", (e) => {
-          reaction_type_id = e.target.id
-          message_id = e.target.dataset.message
-
-
-          data = {
-            reaction_type_id:reaction_type_id
-          }
-
-          // message/<int:pk>/reaction
-          const URL = `/message/${message_id}/reaction`
-
-          fetch(URL,{
-            method:"POST",
-            body: JSON.stringify(data),
-            headers: { 
-              "X-CSRFToken": '{{csrf_token}}',
-              'content-type': 'application/json',
-            },
-          })
-            .then(response => response.json())
-            .then(data => {
-              console.log(data)
-              // update html --- m-1-count-1
-              countSpan = document.getElementById(`m-${message_id}-count-${reaction_type_id}`)
-
-              if(data.operation === 'added'){
-                countSpan.innerHTML = parseInt(countSpan.innerText) + 1
-              }else if(data.operation === 'removed'){
-                countSpan.innerHTML = parseInt(countSpan.innerText) - 1
-              }else{
-                // do nothing
-              }
-
-            }).catch(e => {
-              console.log(e)
-            })
-
-        })
-      })
-
       // ============= Invite User Modal ================
 
       const dialog = document.getElementById("invite-user-dialog")
@@ -308,7 +229,7 @@
         })
       }
       
-
+      
       dialog.addEventListener("click", e => {
         const dialogDimensions = dialog.getBoundingClientRect()
         if (

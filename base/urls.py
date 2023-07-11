@@ -18,5 +18,7 @@ urlpatterns = [
         views.acceptRoomInvite,
         name="accept-invite-room",
     ),
-    path('message/<int:pk>/reaction',views.toggleMessageReaction,name='message-reaction')
+    path('message/<int:pk>/reaction',views.toggleMessageReaction,name='message-reaction'),
+
+    path('message/<int:pk>/reply',views.addMessageReply,name='message-reply')
 ]
