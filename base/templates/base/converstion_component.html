@@ -13,10 +13,17 @@
       // ==================== Message Reaction  ===================
       reaction_counts = document.querySelectorAll(".reaction_count")
 
-      document.querySelectorAll(".item").forEach(reaction => {
+      document.querySelectorAll(".item-reaction").forEach(reaction => {
         reaction.addEventListener("click", (e) => {
+          
+          console.log(e)
+          console.log("reation_type_id",e.target.id)
+          console.log("message_or_reply_id",e.target.dataset.message)
+
           reaction_type_id = e.target.id
           message_id = e.target.dataset.message
+
+
 
 
           data = {

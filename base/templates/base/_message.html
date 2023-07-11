@@ -1,8 +1,8 @@
 {% load static %}
 {% load markdown_extras %} 
 
-<div class="thread">
-    <div class="thread__top">
+<details open class="thread">
+    <summary class="thread__top">
         <div class="thread__author">
             <a
                 href="{% url 'user-profile' message.user.username %}"
@@ -14,17 +14,16 @@
                 <span>@{{message.user.username}}</span>
             </a>
             <span class="thread__date">{{message.created|timesince}} ago</span>
-        </div>
-        
-        {% if request.user == message.user %}
-        <a href="{% url 'delete-message' message.id %}">
-            <div class="thread__delete">
-            <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
-            </div>
-        </a>
-        {% endif %}
 
-    </div>
+            {% if request.user == message.user %}
+            <a href="{% url 'delete-message' message.id %}">
+                <div class="thread__delete">
+                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
+                </div>
+            </a>
+            {% endif %}
+        </div>
+    </summary>
 
     <div class="thread__details markdown-prose" style="font-size:unset;line-height:unset">
         {{ message.body | markdown | safe }}
@@ -33,43 +32,82 @@
     <div class="thread__footer">
         {% for reaction in reaction_types %}
         {% if reaction.name == '🔥' %}
-            <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
-            <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                {{message.fire_count}}
-            </span>
+            <div class="item">
+                <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
+                <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                    {{message.fire_count}}
+                </span>
+            </div>
         {% endif %}
         
         {% if reaction.name == '👍' %}
-            <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
+         <div class="item">
+            <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
             <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
             {{message.like_count}}
             </span>
+        </div>
         {% endif %}
         
         {% if reaction.name == '💩' %}
-            <span class="item" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
+        <div class="item">
+            <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
             <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
                 {{message.poop_count}}
             </span>
+        </div>
         {% endif %}
         {% endfor %}
     </div>
 
     {% comment %} Replies {% endcomment %}
-     <button class="btn btn--dark" id="add-reply-btn-{{message.id}}">Add Reply</button>
+    {% comment %} <button class="btn btn--dark" id="add-reply-btn-{{message.id}}">Add Reply</button> {% endcomment %}
 
-    {% for reply in message.replies.all %}
-        <div class="message_replies">
+    <button class="btn btn--dark" 
+        id="add-reply-btn-{{message.id}}" 
+        data-toggle="reply-form" 
+        data-target="comment-{{message.id}}-replyForm"
+    >
+        Add Reply
+    </button>
+    <!-- Reply form start -->
+    <div class="room__message">
+        <form method="POST" action="{% url 'message-reply' message.id %}" class="reply-form d-none" id="comment-{{message.id}}-replyForm">
+            {% csrf_token %}
+            <textarea  name="body" placeholder="Reply to comment (Supports Markdown)" rows="5"></textarea>
+            <input type="hidden" name="room_id" value="{{room.id}}">
+            <button type="submit" class="btn btn--dark"  >Submit</button>
+            <button type="button" class="btn btn--dark"  data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">Cancel</button>
+        </form>
+    </div>
+    <!-- Reply form end -->
+
+    <details class="message_replies" open>
+        {% for reply in message.replies.all %}
             {% include 'base/_reply.html' %}
-        </div>
-    {% endfor %} 
+        {% endfor %} 
+    </details>
 
-</div>
+</details>
 
 {% if request.user.is_authenticated %}
 {% block extra_scripts %}
 <script>
-    // ==================== Message Reply  ===================
+
+    document.addEventListener(
+        "click",
+        function(event) {
+            var target = event.target;
+            var replyForm;
+            if (target.matches("[data-toggle='reply-form']")) {
+                replyForm = document.getElementById(target.getAttribute("data-target"));
+                replyForm.classList.toggle("d-none");
+            }
+        },
+        false
+    );
+
+    {% comment %} // ==================== Message Reply  ===================
     addReplyBtn = document.getElementById("add-reply-btn-{{message.id}}")
     const messageReplyDialog = document.getElementById("message-reply-dialog")
      
@@ -89,7 +127,7 @@
         ) {
           messageReplyDialog.close()
         }
-      })
+      }) {% endcomment %}
 </script>
 {% endblock %}
 {% endif %}

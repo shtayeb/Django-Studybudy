@@ -10,6 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
+from numpy import require
 
 from .forms import RoomForm
 from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
@@ -18,6 +19,28 @@ expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 
 SECRET_KEY = "secret_key_001"
 
+@login_required(login_url="/accounts/login")
+def addMessageReply(request,pk):
+    # Get the room as well and check if the room is not archived
+    
+    if request.method == "POST":
+        message = Message.objects.get(pk=pk)
+        # do dome error handling
+        body = request.POST.get('body')
+        user_id = request.user.id
+        room_id = request.POST.get('room_id')
+
+        Message.objects.create(
+            room_id=room_id,
+            user_id=user_id,
+            parent_id=message.id,
+            body=body
+        )
+        messages.success(request, "Reply Added Successfully !")
+    else:
+        messages.error(request, "GET request is not supported for this route !!")
+
+    return redirect('room',message.room.slug)
 
 @login_required(login_url="/accounts/login")
 def toggleMessageReaction(request, pk):
@@ -209,13 +232,11 @@ def room(request, slug):
                 "message_set",
                 Message.objects
                 .filter(parent=None)
-                .annotate(fire_count=fire_count)
-                .annotate(like_count=like_count)
-                .annotate(poop_count=poop_count)
+                .annotate(fire_count=fire_count,like_count=like_count,poop_count=poop_count)
                 .prefetch_related(
                     Prefetch(
                         'replies',
-                        Message.objects.select_related('user')
+                        Message.objects.select_related('user').annotate(fire_count=fire_count,like_count=like_count,poop_count=poop_count)
                     ),
                     'user'
                 ),

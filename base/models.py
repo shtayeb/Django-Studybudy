@@ -65,7 +65,14 @@ class Message(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
-    parent = models.ForeignKey('self',related_name='replies',related_query_name='message',null=True,blank=True,on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        'self',
+        related_name='replies',
+        related_query_name='message',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
 
     body = models.TextField()
 

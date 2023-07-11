@@ -121,26 +121,6 @@ git commit --amend -m "This is the right commit message"
 msgs = Message.objects.filter(parent=None).annotate(fire_count=fire_count).annotate(like_count=like_count).annotate(poop_count=poop_count).prefetch_related(Prefetch("replies"))
 
 
-msgs = get_object_or_404(
-    Room.objects.prefetch_related(
-        Prefetch("host"),
-    ).select_related(
-        "message_set",
-        "message_set__user",
-        "message_set__parent",
-        "message_set__parent__user",
-        "message_set__replies",
-        "message_set__replies__user",
-        "message_set__replies__parent",
-        "message_set__replies__parent__user",
-    ).annotate(
-        message_count=Count("message_set"),
-        fire_count=Sum("message_set__fire_count"),
-        like_count=Sum("message_set__like_count"),
-        poop_count=Sum("message_set__poop_count"),
-    ),
-    slug=slug,
-)
 
 ## Installed Packages
 - [django-easy-audit](https://github.com/soynatan/django-easy-audit)
@@ -152,3 +132,5 @@ msgs = get_object_or_404(
 - [django-prose](https://github.com/withlogicco/django-prose)
 - [django-extra-settings](https://github.com/fabiocaccamo/django-extra-settings)
 - [django-jet-reboot](https://github.com/assem-ch/django-jet-reboot)
+
+- https://github.com/markdown-it/markdown-it
