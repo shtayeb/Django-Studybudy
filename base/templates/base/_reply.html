@@ -1,7 +1,7 @@
 {% load static %}
 {% load markdown_extras %} 
 
-<details open class="thread" >
+<details open class="thread " >
     <summary class="thread__top">
         <div class="thread__author">
             <a
@@ -26,39 +26,43 @@
 
     </summary>
 
-    <div class="thread__details markdown-prose" style="font-size:unset;line-height:unset">
-        {{ reply.body | markdown | safe }}
-    </div>
+    <div class=" reply-body">
 
-    <div class="thread__footer">
-        {% for reaction in reaction_types %}
-        {% if reaction.name == '🔥' %}
-        <div class="item">
-            <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}} </span>
-            <span class="reaction_count" id="m-{{reply.id}}-count-{{reaction.id}}">
-                {{reply.fire_count}}
-            </span>
+        <div class="thread__details markdown-prose " style="font-size:unset;line-height:unset">
+            {{ reply.body | markdown | safe }}
         </div>
-        {% endif %}
-        
-        {% if reaction.name == '👍' %}
-        <div class="item">
-            <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}} </span>
-            <span class="reaction_count" id="m-{{reply.id}}-count-{{reaction.id}}">
-                {{reply.like_count}}
-            </span>
+
+        <div class="thread__footer">
+            {% for reaction in reaction_types %}
+            {% if reaction.name == '🔥' %}
+            <div class="item">
+                <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}} </span>
+                <span class="reaction_count" id="m-{{reply.id}}-count-{{reaction.id}}">
+                    {{reply.fire_count}}
+                </span>
+            </div>
+            {% endif %}
+            
+            {% if reaction.name == '👍' %}
+            <div class="item">
+                <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}} </span>
+                <span class="reaction_count" id="m-{{reply.id}}-count-{{reaction.id}}">
+                    {{reply.like_count}}
+                </span>
+            </div>
+            {% endif %}
+            
+            {% if reaction.name == '💩' %}
+            <div class="item">
+                <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}}</span>
+                <span class="reaction_count" id="m-{{reply.id}}-count-{{reaction.id}}">
+                    {{reply.poop_count}}
+                </span>
+            </div>
+            {% endif %}
+            {% endfor %}
         </div>
-        {% endif %}
-        
-        {% if reaction.name == '💩' %}
-        <div class="item">
-            <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}}</span>
-            <span class="reaction_count" id="m-{{reply.id}}-count-{{reaction.id}}">
-                {{reply.poop_count}}
-            </span>
-        </div>
-        {% endif %}
-        {% endfor %}
+
     </div>
 
 </details>

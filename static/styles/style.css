@@ -1150,7 +1150,7 @@ a {
 .thread__footer{
   display: flex;
   gap: 10px;
-  margin: 1.5rem 0rem;
+  margin: 1.5rem 0rem 1.5rem 0rem;
 }
 
 .thread__footer .item{
@@ -1163,6 +1163,45 @@ a {
   cursor: pointer;
 }
 
+/* This is experimental */
+
+/* .message_replies .thread::after{
+  content: "";
+  width: 100%;
+  height: 2px;
+  background: var(--color-dark);
+  position: absolute;
+} */
+
+.message_replies .thread::before{
+  content: "";
+  width: 43px;
+  height: 2px;
+  background: var(--color-dark);
+  position: absolute;
+  left: -22px;
+  top:39px;
+  
+}
+
+.reply-body{
+  margin-left: 32px;
+  position: relative;
+}
+/* 
+.reply-body::before{
+  content: "";
+  width: 2px;
+  height: 100%;
+  background: var(--color-dark);
+  position: absolute;
+  left: -17px;
+  top:-5px;
+
+} */
+
+
+/* END */
 
 /* Adjustments for toggleable comments */
 
@@ -1219,13 +1258,15 @@ details.thread:not([open]) .thread__author::after {
 
 /* END */
 
-
+.border-l{
+  border-left: 2px solid var(--color-dark);
+}
 
 .thread {
-  border-left: 2px solid var(--color-dark);
   padding-left: 1rem;
   margin: 2rem 0;
   padding: 2rem;
+  position: relative;
 }
 
 .thread__top {
