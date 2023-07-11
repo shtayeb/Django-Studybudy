@@ -212,7 +212,13 @@ def room(request, slug):
                 .annotate(fire_count=fire_count)
                 .annotate(like_count=like_count)
                 .annotate(poop_count=poop_count)
-                .prefetch_related('replies','user'),
+                .prefetch_related(
+                    Prefetch(
+                        'replies',
+                        Message.objects.select_related('user')
+                    ),
+                    'user'
+                ),
             ),
             Prefetch("participants"),
         ).select_related('host'),
