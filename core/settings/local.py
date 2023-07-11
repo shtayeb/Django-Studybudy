@@ -1,7 +1,7 @@
 from .base import *
 
 LOCAL_INSTALLED_APPS = [
-    'nplusone.ext.django',
+    "nplusone.ext.django",
     "debug_toolbar",
 ]
 
@@ -10,7 +10,7 @@ INSTALLED_APPS = INSTALLED_APPS + LOCAL_INSTALLED_APPS
 
 LOCAL_MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    'nplusone.ext.django.NPlusOneMiddleware',
+    "nplusone.ext.django.NPlusOneMiddleware",
 ]
 
 MIDDLEWARE = MIDDLEWARE + LOCAL_MIDDLEWARE
@@ -24,7 +24,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     },
     "postgresql": {
-        "ENGINE": "django.db.backends.postgresql",
+        # "ENGINE": "django.db.backends.postgresql",
         "NAME": env("DB_NAME", default="test"),
         "USER": env("DB_USER", default="root"),
         "PASSWORD": env("DB_PASSWORD", default=""),
@@ -33,9 +33,9 @@ DATABASES = {
     },
 }
 
-DB = env("DB",default="sqlite")
+DB = env("DB", default="sqlite")
 
-DATABASES['default'] = DATABASES[DB]
+DATABASES["default"] = DATABASES[DB]
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -49,10 +49,10 @@ STORAGES = {
     },
     "staticfiles": {
         # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # No Caching
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",  # No Caching
     },
 }
 
 #
-NPLUSONE_LOGGER = logging.getLogger('nplusone')
+NPLUSONE_LOGGER = logging.getLogger("nplusone")
 NPLUSONE_LOG_LEVEL = logging.WARN

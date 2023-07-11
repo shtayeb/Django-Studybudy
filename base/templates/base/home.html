@@ -35,16 +35,18 @@
           >
         </div>
       </div>
+      
       <div class="roomList__header">
         <div>
           <h2>Study Room</h2>
-          <p>{{rooms|length}} Rooms available</p>
+          <p>{{page_obj.object_list|length}} Rooms available</p>
         </div>
         <a class="btn btn--main" href="{% url 'create-room' %}">
           <img src="{% static 'images/icons/plus.svg'  %}" alt="plus" >
           Create Room
         </a>
       </div>
+
       {% include 'base/feed_component.html' %}
     </div>
     <!-- Room List End -->

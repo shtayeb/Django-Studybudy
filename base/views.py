@@ -20,28 +20,27 @@ expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 
 SECRET_KEY = "secret_key_001"
 
+
 @login_required(login_url="/accounts/login")
-def addMessageReply(request,pk):
+def addMessageReply(request, pk):
     # Get the room as well and check if the room is not archived
-    
+
     if request.method == "POST":
         message = Message.objects.get(pk=pk)
         # do dome error handling
-        body = request.POST.get('body')
+        body = request.POST.get("body")
         user_id = request.user.id
-        room_id = request.POST.get('room_id')
+        room_id = request.POST.get("room_id")
 
         Message.objects.create(
-            room_id=room_id,
-            user_id=user_id,
-            parent_id=message.id,
-            body=body
+            room_id=room_id, user_id=user_id, parent_id=message.id, body=body
         )
         messages.success(request, "Reply Added Successfully !")
     else:
         messages.error(request, "GET request is not supported for this route !!")
 
-    return redirect('room',message.room.slug)
+    return redirect("room", message.room.slug)
+
 
 @login_required(login_url="/accounts/login")
 def toggleMessageReaction(request, pk):
@@ -187,6 +186,7 @@ def acceptRoomInvite(request, token):
 
 def home(request):
     q = request.GET.get("q")
+    template_name = "base/home.html"
 
     if request.GET.get("q") == None:
         q = ""
@@ -215,8 +215,8 @@ def home(request):
         Q(room__topic__name__icontains=q)
     ).prefetch_related("user", "room")
 
-    page_number = request.GET.get('page', 1)
-    paginator = Paginator(rooms, 10)  # Show 25 rooms per page.
+    page_number = request.GET.get("page", 1)
+    paginator = Paginator(rooms, 20)  # Show 25 rooms per page.
     page_obj = paginator.get_page(page_number)
 
     try:
@@ -229,22 +229,19 @@ def home(request):
     if request.htmx:
         # htmx template
         print("htmx ------------ ")
-        return render(request, "base/components/room-list-elements.html", {"page_obj": page_obj})
-    else:
-        # normal template
-        print("Not htmx ------------ ")
+        template_name = "base/feed_component.html"
 
     context = {
-        "rooms": rooms,
-        "topics": topics, 
-        "room_messages": room_messages
+        # "rooms": rooms,
+        "page_obj": page_obj,
+        "topics": topics,
+        "room_messages": room_messages,
     }
 
-    return render(request, "base/home.html", context)
+    return render(request, template_name, context)
 
 
 def room(request, slug):
-
     fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
     like_count = Count("reaction", filter=Q(reaction__reaction_type__name="👍"))
     poop_count = Count("reaction", filter=Q(reaction__reaction_type__name="💩"))
@@ -253,19 +250,24 @@ def room(request, slug):
         Room.objects.prefetch_related(
             Prefetch(
                 "message_set",
-                Message.objects
-                .filter(parent=None)
-                .annotate(fire_count=fire_count,like_count=like_count,poop_count=poop_count)
+                Message.objects.filter(parent=None)
+                .annotate(
+                    fire_count=fire_count, like_count=like_count, poop_count=poop_count
+                )
                 .prefetch_related(
                     Prefetch(
-                        'replies',
-                        Message.objects.select_related('user').annotate(fire_count=fire_count,like_count=like_count,poop_count=poop_count)
+                        "replies",
+                        Message.objects.select_related("user").annotate(
+                            fire_count=fire_count,
+                            like_count=like_count,
+                            poop_count=poop_count,
+                        ),
                     ),
-                    'user'
+                    "user",
                 ),
             ),
             Prefetch("participants"),
-        ).select_related('host'),
+        ).select_related("host"),
         slug=slug,
     )
 
@@ -282,7 +284,6 @@ def room(request, slug):
         ):
             messages.warning(request, "That room is private !")
             return redirect("home")
-
 
     if request.method == "POST":
         message = Message.objects.create(
