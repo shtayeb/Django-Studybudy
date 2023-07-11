@@ -5,6 +5,7 @@ import jwt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage, send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
@@ -214,13 +215,35 @@ def home(request):
         Q(room__topic__name__icontains=q)
     ).prefetch_related("user", "room")
 
-    context = {"rooms": rooms, "topics": topics, "room_messages": room_messages}
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(rooms, 10)  # Show 25 rooms per page.
+    page_obj = paginator.get_page(page_number)
+
+    try:
+        rooms = paginator.page(page_number)
+    except PageNotAnInteger:
+        rooms = paginator.page(1)
+    except EmptyPage:
+        rooms = paginator.page(paginator.num_pages)
+
+    if request.htmx:
+        # htmx template
+        print("htmx ------------ ")
+        return render(request, "base/components/room-list-elements.html", {"page_obj": page_obj})
+    else:
+        # normal template
+        print("Not htmx ------------ ")
+
+    context = {
+        "rooms": rooms,
+        "topics": topics, 
+        "room_messages": room_messages
+    }
 
     return render(request, "base/home.html", context)
 
 
 def room(request, slug):
-    # room = Room.objects.get(id=pk)
 
     fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
     like_count = Count("reaction", filter=Q(reaction__reaction_type__name="👍"))
@@ -260,9 +283,6 @@ def room(request, slug):
             messages.warning(request, "That room is private !")
             return redirect("home")
 
-    # my_object = get_object_or_404(Room.objects.prefetch_related(Prefetch('related_objects', queryset=RelatedModel.objects.select_related('other_model'))), pk=my_id)
-
-
 
     if request.method == "POST":
         message = Message.objects.create(
@@ -272,7 +292,6 @@ def room(request, slug):
         return redirect("room", slug=room.slug)
 
     reaction_types = ReactionType.objects.all()
-
 
     context = {
         "room": room,
