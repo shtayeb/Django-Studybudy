@@ -66,10 +66,9 @@ python manage.py runserver --setting=core.settings.production # production setti
 - [x] Make the invite user page into a modal pop up
 - [x] Like/Dislike messages of a room by its participants
 - [x] Add message replies (Add Polymorphic relationship) [Resource](https://forum.djangoproject.com/t/get-all-children-of-self-referencing-django-model-in-nested-hierarchy/16761)
+- [x] Create infinite scroll in home page
 
 - Add room Admin
-
-- Create infinite scroll in home and room page
 - Create an autocomplete users list in the invite users to room page
 - Fix Modal/Dialogs scrolls with page
 

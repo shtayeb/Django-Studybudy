@@ -1179,8 +1179,8 @@ a {
   height: 2px;
   background: var(--color-dark);
   position: absolute;
-  left: -22px;
-  top:39px;
+  left: -2rem;
+  top:3.5rem;
   
 }
 
