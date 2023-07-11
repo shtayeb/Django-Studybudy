@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     # Installed apps
+    "django_htmx",
     "allauth",
     "invitations",
     "rest_framework",
@@ -89,6 +90,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
    
 ]
 

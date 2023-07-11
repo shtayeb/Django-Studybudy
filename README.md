@@ -39,6 +39,12 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
+- Seed database with fake data 
+
+```shell
+python manange.py seed
+```
+
 - Run the server
 
 ```shell
@@ -59,8 +65,8 @@ python manage.py runserver --setting=core.settings.production # production setti
 - [x] Room host can invite users to private rooms - (The added user will recieve notification and have the option to accept or reject the invite)
 - [x] Make the invite user page into a modal pop up
 - [x] Like/Dislike messages of a room by its participants
+- [x] Add message replies (Add Polymorphic relationship) [Resource](https://forum.djangoproject.com/t/get-all-children-of-self-referencing-django-model-in-nested-hierarchy/16761)
 
-- Add message replies (Add Polymorphic relationship) [lnk](https://forum.djangoproject.com/t/get-all-children-of-self-referencing-django-model-in-nested-hierarchy/16761)
 - Add room Admin
 
 - Create infinite scroll in home and room page
@@ -82,44 +88,12 @@ python manage.py runserver --setting=core.settings.production # production setti
 - roles and permissions
 
 
-## Docs
-
-With django-extensions package, you access to these commands
-
->  `apt-get install graphviz`
-
-```shell
-# List all you app urls
-python manage.py show_urls
-
-# Generate ERD of all you DB tables
-python manage.py graph_models -a -o myapp_models.png
-
-# Generate ERD of specific apps
-python manage.py graph_models base auth -o myapp_models.png
-
-python manage.py shell_plus
-python manage.py shell_plus --print-sql
-
-python manage.py list_model_info --model base.Room
-
-python manage.py list_signals
-
-python manage.py  reset_db mybucket
-
-python manage.py admin_generator <your_app_name>
-
-```
-
 ```shell
 git commit -m "The wrong commit message"
 
 # Edit the last commit message
 git commit --amend -m "This is the right commit message"
 ```
-
-msgs = Message.objects.filter(parent=None).annotate(fire_count=fire_count).annotate(like_count=like_count).annotate(poop_count=poop_count).prefetch_related(Prefetch("replies"))
-
 
 
 ## Installed Packages
