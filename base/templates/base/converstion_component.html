@@ -1,8 +1,12 @@
 <div class="room__conversation">
     <div class="threads scroll">
+      {% if room.message_set.all|length == 0 %}
+        Not messages yet !
+      {% else %}
         {% for message in room.message_set.all %}
-           {% include 'base/_message.html' %}
+          {% include 'base/_message.html' %}
         {% endfor %}
+      {% endif %}
     </div>
 </div>
 
@@ -22,9 +26,6 @@
 
           reaction_type_id = e.target.id
           message_id = e.target.dataset.message
-
-
-
 
           data = {
             reaction_type_id:reaction_type_id
