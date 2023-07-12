@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div class="layout__body" style="margin:0 3rem;padding:3rem;color:white">
+    <div class="layout__body" style="margin:0 3rem;padding:3rem;color:white;">
       <p class="">Please add an email below. The user will receive an email with instructions.</p><br/>
       <form id="invite-form" method="POST" action="{% url 'invite-room' room.id %}">
           {% csrf_token %}
@@ -68,18 +68,17 @@
   </div>
 </dialog>
 
-
 <main class="profile-page layout layout--2">
-  <div class="container" >
+  <div class="my_container " >
     <!-- Room Start -->
-    <div class="room">
+    <div class="room ">
       <div class="room__top">
 
         <div class="room__topLeft">
           <a href="{{request.META.HTTP_REFERER}}">
             <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
           </a>
-          <h3>Study Room</h3>
+          <h3 class="">Study Room</h3>
            {% if room.type == 'private' %}
             {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
             <button class="btn roomListRoom__topic" type="submit">
