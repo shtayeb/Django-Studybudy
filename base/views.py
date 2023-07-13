@@ -4,6 +4,7 @@ import json
 import jwt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage, send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Prefetch, Q
@@ -94,12 +95,16 @@ def toggleJoinRoom(request, pk):
     return redirect("room", room.slug)
 
 @login_required(login_url="/accounts/login")
-def sendRoomInvite(request, pk):
+def sendRoomInvite(request, slug):
     # room = Room.objects.get(pk=pk)
-    room = get_object_or_404(Room, pk=pk)
+    room = get_object_or_404(Room, slug=slug)
 
     if request.method == "POST":
         user_email = request.POST.get("email")
+        
+        if not user_email:
+            raise ValidationError('The Email Address is required !!')
+        
         invitee = get_object_or_404(User, email=user_email)
         # invitee = User.objects.get(email=user_email)
 

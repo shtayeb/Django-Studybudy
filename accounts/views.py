@@ -14,7 +14,7 @@ from .models import User
 def searchUser(request):
     email = request.POST.get("email")
 
-    results = User.objects.filter(email__icontains=email)
+    results = User.objects.filter(email__icontains=email)[:5]
 
     context = {'results':results}
 

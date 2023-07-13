@@ -12,7 +12,7 @@ urlpatterns = [
     path("topics/", views.topicsPage, name="topics"),
     path("activity/", views.activityPage, name="activity"),
     path("room/<int:pk>/toggle-join/", views.toggleJoinRoom, name="toggle-room-join"),
-    path("room/<int:pk>/invite/", views.sendRoomInvite, name="invite-room"),
+    path("room/<str:slug>/invite/", views.sendRoomInvite, name="invite-room"),
     path(
         "room/accept-invite/<str:token>/",
         views.acceptRoomInvite,
