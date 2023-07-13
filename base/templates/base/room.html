@@ -60,7 +60,7 @@
           {% if not request.user.id == room.host_id %}
             <form hx-post="{% url 'toggle-room-join' room.id %}" >
               {% csrf_token %}
-              <button type="submit" class="room__topics btn--main btn">
+              <button type="submit" class="room__topics  btn btn--main">
                 {% if is_joined %}
                     Leave Room
                 {% else %}

@@ -241,7 +241,6 @@ def home(request):
 
     if request.htmx:
         # htmx template
-        print("htmx ------------ ")
         template_name = "base/feed_component.html"
 
     context = {
