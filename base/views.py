@@ -11,7 +11,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
-from numpy import require
+from django.views.decorators.http import require_http_methods
 
 from .forms import RoomForm
 from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
@@ -21,6 +21,7 @@ expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 SECRET_KEY = "secret_key_001"
 
 
+@require_http_methods('POST')
 @login_required(login_url="/accounts/login")
 def addMessageReply(request, pk):
     # Get the room as well and check if the room is not archived
@@ -43,6 +44,7 @@ def addMessageReply(request, pk):
 
 
 @login_required(login_url="/accounts/login")
+@require_http_methods('POST')
 def toggleMessageReaction(request, pk):
     data = {"operation": ""}
     if request.method == "POST":
@@ -90,7 +92,6 @@ def toggleJoinRoom(request, pk):
         room.participants.add(request.user)
 
     return redirect("room", room.slug)
-
 
 @login_required(login_url="/accounts/login")
 def sendRoomInvite(request, pk):

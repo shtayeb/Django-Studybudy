@@ -92,7 +92,7 @@ a {
 }
 
 /*========== components ==========*/
-.container {
+.my_container {
   max-width: 120rem;
   width: 90%;
   margin: auto;
@@ -124,7 +124,7 @@ a {
 }
 
 .btn--main {
-  background-color: var(--color-main);
+  background-color: var(--color-main) !important;
   color: var(--color-dark);
 }
 
@@ -133,7 +133,7 @@ a {
 }
 
 .btn--dark {
-  background-color: var(--color-dark-light);
+  background-color: var(--color-dark-light) !important;
   color: var(--color-light);
 }
 
@@ -299,7 +299,7 @@ a {
   background-color: var(--color-dark);
 }
 
-.header > .container {
+.header > .my_container {
   display: flex;
   gap: 9.5rem;
 }
@@ -351,7 +351,7 @@ a {
     width: 20rem;
   }
 
-  .header > .container {
+  .header > .my_container {
     gap: 3rem;
   }
 }
@@ -424,7 +424,7 @@ a {
   
 }
 
-.layout > .container {
+.layout > .my_container {
   display: flex;
   justify-content: center;
   gap: 2.5rem;
@@ -432,24 +432,24 @@ a {
  
 }
 
-.layout--3 > .container > div:first-child {
+.layout--3 > .my_container > div:first-child {
   flex-basis: 18%;
   max-width: 22.5rem;
 }
 
-.layout--3 > .container > div:nth-child(2) {
+.layout--3 > .my_container > div:nth-child(2) {
   flex-basis: 50%;
 }
 
-.layout--3 > .container > div:last-child {
+.layout--3 > .my_container > div:last-child {
   flex-basis: 25%;
 }
 
-.layout--2 > .container > div:first-child {
+.layout--2 > .my_container > div:first-child {
   flex-basis: 72%;
 }
 
-.layout--2 > .container > div:last-child {
+.layout--2 > .my_container > div:last-child {
   flex-basis: 25%;
 }
 /*========== Layout Box ==========*/
@@ -503,11 +503,11 @@ a {
     display: none;
   }
 
-  .layout--3 > .container > div:nth-child(2) {
+  .layout--3 > .my_container > div:nth-child(2) {
     flex-basis: 100%;
   }
 
-  .layout > .container {
+  .layout > .my_container {
     display: block;
     justify-content: center;
     /* align-items: flex-start; */
@@ -993,7 +993,7 @@ a {
     display: none;
   }
 
-  .layout--2 > .container > div:first-child {
+  .layout--2 > .my_container > div:first-child {
     flex-basis: 100%;
   }
 }
@@ -1179,8 +1179,8 @@ a {
   height: 2px;
   background: var(--color-dark);
   position: absolute;
-  left: -22px;
-  top:39px;
+  left: -2rem;
+  top:3.5rem;
   
 }
 

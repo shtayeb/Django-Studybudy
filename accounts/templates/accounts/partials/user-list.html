@@ -1,0 +1,11 @@
+{% if results %}
+    <ul>
+        {% for user in results %}
+            <li>
+                {{user.username}}({{user.email}})
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results for the above query!</p>
+{% endif %}

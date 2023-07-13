@@ -1,68 +1,35 @@
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_http_methods
 
 from base.models import Topic
 
-from .forms import MyUserCreationForm, UserForm
+from .forms import UserForm
 from .models import User
 
-# def logoutUser(request):
-#     logout(request)
-#     return redirect('home')
 
+@require_http_methods('POST')
+def searchUser(request):
+    email = request.POST.get("email")
 
-# def registerPage(request):
-#     form = MyUserCreationForm()
+    results = User.objects.filter(email__icontains=email)
 
-#     if request.method == 'POST':
-#         form = MyUserCreationForm(request.POST)
+    context = {'results':results}
 
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.username = user.username.lower()
+    return render(request,'accounts/partials/user-list.html',context)
 
-#             user.save()
+# {% form.field hx-post='/accounts/check_username' hx-trigger='keyup throttle:2s' hx-target="username-error" %}
+# <div id="username-error"></div>
+def checkUsername(request):
+    username = request.POST.geT('username')
 
-#             # from django auth
-#             login(request, user)
-
-#             return redirect('home')
-#         else:
-#             messages.error(request, 'An error has occured. Try again !')
-
-#     context = {'form': form}
-#     return render(request, 'accounts/login_register.html', context)
-
-
-# def loginPage(request):
-#     page = "login"
-
-#     if request.user.is_authenticated:
-#         return redirect('home')
-
-#     if request.method == 'POST':
-#         email = request.POST.get('email').lower()
-#         password = request.POST.get('password')
-
-#         try:
-#             user = User.objects.get(email=email)
-#         except:
-#             messages.error(request, 'User does not exist')
-
-#         user = authenticate(request, email=email, password=password)
-
-#         if user is not None:
-#             login(request, user)
-#             return redirect('home')
-#         else:
-#             messages.error(request, 'Email or password does not exist')
-
-#     context = {'page': page}
-#     return render(request, 'accounts/login_register.html', context)
-
+    if User.objects.filter(username=username).exists():
+        return HttpResponse("<div style='color:red'>This username is not available</div>")
+    else:
+        return HttpResponse("<div style='color:green'>This username is available</div>")
+        
 
 def userProfile(request, username):
     user = User.objects.get(username=username)
