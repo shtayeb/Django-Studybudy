@@ -27,19 +27,11 @@
   </head>
 
   <body>
-    {% include 'navbar.html' %} 
-
-    {% if messages %}
-      <div class="layout">
-        {% for message in messages %}
-        <div  class="my_container {{ message.tags }}">
-          <ul class="messages">
-              <li>{{ message }}</li>
-            </ul>
-          </div>
-          {% endfor %}
-      </div>
-    {% endif %} 
+    {% include 'components/navbar.html' %} 
+    
+    <div id="messages">
+      {% include 'components/messages.html' %} 
+    </div>
     
     {% block content %} {% endblock %}
 

@@ -81,18 +81,25 @@ def toggleJoinRoom(request, pk):
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
 
+    template_name = 'base/partials/room_join_toggle.html'
+
     if request.user.id == room.host_id:
         messages.error(request, "You are the room's host !!")
-        return redirect("room", room.slug)
 
     is_joined = room.participants.contains(request.user)
 
     if is_joined:
         room.participants.remove(request.user)
+        messages.success(request, "You left the room !")
+
     else:
         room.participants.add(request.user)
+        messages.success(request, "You joined the room !")
 
-    return redirect("room", room.slug)
+    # Old is_joined , so in the template I have used the negation of the variable
+    context = {'is_joined':is_joined}
+
+    return render(request,template_name,context)
 
 @login_required(login_url="/accounts/login")
 def sendRoomInvite(request, slug):
