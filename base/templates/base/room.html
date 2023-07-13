@@ -58,15 +58,17 @@
           {% endif %}
 
           {% if not request.user.id == room.host_id %}
-            {% if is_joined %}
-              <a href="{% url 'toggle-room-join' room.id %}" class="room__topics btn--main btn">
-                Leave Room
-              </a>
-            {% else %}
-              <a href="{% url 'toggle-room-join' room.id %}" class="room__topics btn--main btn">
-                Join Room
-              </a>
-            {% endif %}
+            <form hx-post="{% url 'toggle-room-join' room.id %}" >
+              {% csrf_token %}
+              <button type="submit" class="room__topics  btn btn--main">
+                {% if is_joined %}
+                    Leave Room
+                {% else %}
+                    Join Room
+                {% endif %}
+              </button>
+            </form>
+            
           {% endif %}
 
           {% if room.host_id == request.user.id %}

@@ -24,11 +24,11 @@
             <p>@{{user.username}}</p>
             <div class="" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center">
               {% if request.user == user%}
-                <a href="{% url 'update-user' %}" class="btn btn--main btn--pill">Edit Profile</a>
-                <a href="{% url 'account_email' %}" class="btn btn--main btn--pill">Emails</a>
-                <a href="{% url 'account_change_password' %}" class="btn btn--main btn--pill">Change Password</a>
-                <a href="{% url 'account_reset_password' %}" class="btn btn--main btn--pill">Forgot Password ?</a>
-                <a href="{% url 'socialaccount_connections' %}" class="btn btn--main btn--pill">Social Accounts</a>
+                <a href="{% url 'update-user' %}" class="btn  btn--pill">Edit Profile</a>
+                <a href="{% url 'account_email' %}" class="btn  btn--pill">Emails</a>
+                <a href="{% url 'account_change_password' %}" class="btn  btn--pill">Change Password</a>
+                <a href="{% url 'account_reset_password' %}" class="btn  btn--pill">Forgot Password ?</a>
+                <a href="{% url 'socialaccount_connections' %}" class="btn  btn--pill">Social Accounts</a>
               {% endif %}
             </div>
           </div>
