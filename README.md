@@ -52,6 +52,24 @@ python manage.py runserver --setting=core.settings.local # local settings
 python manage.py runserver --setting=core.settings.production # production settings
 ```
 
+
+## Docs
+```python
+
+class Product(models.Model):
+    content_type = models.ForeignKey(
+        ContentType, 
+        on_delete=models.CASCADE, 
+        limit_choices_to=
+            {
+                'model__in':('book','cupboard')
+            }
+    )
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type','object_id')
+
+```
+
 ## TODO
 
 - [x] Email verification
@@ -67,14 +85,13 @@ python manage.py runserver --setting=core.settings.production # production setti
 - [x] Like/Dislike messages of a room by its participants
 - [x] Add message replies (Add Polymorphic relationship) [Resource](https://forum.djangoproject.com/t/get-all-children-of-self-referencing-django-model-in-nested-hierarchy/16761)
 - [x] Create infinite scroll in home page
+- [X] Create an autocomplete users list in the invite users to room page
+
+- Add in markdown WYSGI editor 
 
 - Add room Admin
-- Create an autocomplete users list in the invite users to room page
-- Fix Modal/Dialogs scrolls with page
-
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
 - SEO meta tags for pages
-- Add in markdown editor image upload
 
 - Room admins can add/invite users to private rooms
 - Ability to archive(block new messages) a room by admin
@@ -87,12 +104,6 @@ python manage.py runserver --setting=core.settings.production # production setti
 - roles and permissions
 
 
-```shell
-git commit -m "The wrong commit message"
-
-# Edit the last commit message
-git commit --amend -m "This is the right commit message"
-```
 
 
 ## Installed Packages
@@ -105,5 +116,3 @@ git commit --amend -m "This is the right commit message"
 - [django-prose](https://github.com/withlogicco/django-prose)
 - [django-extra-settings](https://github.com/fabiocaccamo/django-extra-settings)
 - [django-jet-reboot](https://github.com/assem-ch/django-jet-reboot)
-
-- https://github.com/markdown-it/markdown-it
