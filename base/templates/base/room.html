@@ -111,14 +111,13 @@
         
         </div>
 
+        {% comment %} The message {% endcomment %}
         <div class="room__message">
           <form action="" method="POST">
             {% csrf_token %}
-            <textarea
-              name="body"
-              rows="5"
-              placeholder="Write your message here (Supports Markdown)..."
-            ></textarea>
+            {{ msg_form.media }}
+            {{msg_form.as_p}}
+
             <button class="btn btn--dark">Submit</button>
           </form>
         </div>

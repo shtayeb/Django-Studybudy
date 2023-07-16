@@ -63,7 +63,7 @@
     {% comment %} Replies {% endcomment %}
     {% comment %} <button class="btn btn--dark" id="add-reply-btn-{{message.id}}">Add Reply</button> {% endcomment %}
 
-    <button class="btn btn--dark" 
+    <button class="btn btn--pill" 
         id="add-reply-btn-{{message.id}}" 
         data-toggle="reply-form" 
         data-target="comment-{{message.id}}-replyForm"
@@ -74,10 +74,10 @@
     <div class="room__message">
         <form method="POST" action="{% url 'message-reply' message.id %}" class="reply-form d-none" id="comment-{{message.id}}-replyForm">
             {% csrf_token %}
-            <textarea  name="body" placeholder="Reply to comment (Supports Markdown)" rows="5"></textarea>
+            <textarea  name="body" placeholder="Reply to comment (Supports Markdown)" rows="4" required></textarea>
             <input type="hidden" name="room_id" value="{{room.id}}">
-            <button type="submit" class="btn btn--dark"  >Submit</button>
-            <button type="button" class="btn btn--dark"  data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">Cancel</button>
+            <button type="submit" class="btn btn--pill"  >Submit</button>
+            <button type="button" class="btn btn--pill"  data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">Cancel</button>
         </form>
     </div>
     <!-- Reply form end -->

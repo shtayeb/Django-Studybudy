@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from .forms import RoomForm
+from .forms import MessageForm, RoomForm
 from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
 
 expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
@@ -296,18 +296,34 @@ def room(request, slug):
         ):
             messages.warning(request, "That room is private !")
             return redirect("home")
+        
+    msg_form = MessageForm()
+    reply_form = MessageForm()
 
     if request.method == "POST":
-        message = Message.objects.create(
-            user=request.user, room=room, body=request.POST.get("body")
-        )
-        room.participants.add(request.user)
+        msg_form = MessageForm(request.POST)
+
+        if msg_form.is_valid():
+            message = msg_form.save(commit=False)
+            message.user=request.user
+            message.room = room
+
+            message.save()
+
+            room.participants.add(request.user)
+
+        # message = Message.objects.create(
+        #     user=request.user, room=room, body=request.POST.get("body")
+        # )
+        
         return redirect("room", slug=room.slug)
 
     reaction_types = ReactionType.objects.all()
 
     context = {
         "room": room,
+        "msg_form":msg_form,
+        'reply_form':reply_form,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }

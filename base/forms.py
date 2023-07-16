@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
+from mdeditor.fields import MDTextFormField
 
-from .models import Room, RoomInvitation
+from .models import Message, Room, RoomInvitation
 
 
 class RoomForm(ModelForm):
@@ -11,3 +12,10 @@ class RoomForm(ModelForm):
         exclude = ['host', 'participants']
 
 
+class MessageForm(ModelForm):
+    body = MDTextFormField(label='')
+
+    class Meta:
+        model = Message
+        fields = ['body']
+        # exclude = ['user','room']

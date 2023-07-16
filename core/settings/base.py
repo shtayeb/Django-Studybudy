@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
     "django_extensions",
     "easyaudit",
+    "mdeditor",
     
     # my apps
     "accounts.apps.AccountsConfig",
@@ -211,3 +212,35 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 
 
+X_FRAME_OPTIONS = 'SAMEORIGIN' 
+
+MDEDITOR_CONFIGS = {
+    'default':{
+        'width': '100% ',  # Custom edit box width
+        'height': 200,  # Custom edit box height
+        'toolbar': ["undo", "redo", "|",
+                    "bold", "italic", "quote", "ucwords", "|",
+                    "h1", "h2","|",
+                    "list-ul", "list-ol", "hr", "|",
+                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table",
+                    "emoji", "html-entities",
+                    "||", "preview", "watch", "fullscreen"],  # custom edit box toolbar 
+        "imageUpload":False,
+        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # image upload format type
+        'image_folder': 'editor',  # image save the folder name
+        'theme': 'dark',  # edit box theme, dark / default
+        'preview_theme': 'dark',  # Preview area theme, dark / default
+        'editor_theme': 'pastel-on-dark',  # edit area theme, pastel-on-dark / default
+        'toolbar_autofixed': True,  # Whether the toolbar capitals
+        'search_replace': True,  # Whether to open the search for replacement
+        'emoji': True,  # whether to open the expression function
+        'tex': True,  # whether to open the tex chart function
+        'flow_chart': True,  # whether to open the flow chart function
+        'sequence': True, # Whether to open the sequence diagram function
+        'watch': True,  # Live preview
+        'lineWrapping': False,  # lineWrapping
+        'lineNumbers': True,  # lineNumbers
+        'language': 'en'  # zh / en / es 
+    }
+    
+}
