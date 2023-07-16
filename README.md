@@ -27,6 +27,12 @@ source ./.venv/bin/activate
 pip install -r requirements.txt
 ```
 
+- Create `.env` file
+
+```shell
+cp .env.sample .env
+```
+
 - Migrate the database
 
 ```shell
@@ -83,11 +89,12 @@ class Product(models.Model):
 - [x] Room host can invite users to private rooms - (The added user will recieve notification and have the option to accept or reject the invite)
 - [x] Make the invite user page into a modal pop up
 - [x] Like/Dislike messages of a room by its participants
-- [x] Add message replies (Add Polymorphic relationship) [Resource](https://forum.djangoproject.com/t/get-all-children-of-self-referencing-django-model-in-nested-hierarchy/16761)
+- [x] Add message replies (Self referential) [Resource](https://forum.djangoproject.com/t/get-all-children-of-self-referencing-django-model-in-nested-hierarchy/16761)
 - [x] Create infinite scroll in home page
 - [X] Create an autocomplete users list in the invite users to room page
+- [x] Add in markdown WYSGI editor 
 
-- Add in markdown WYSGI editor 
+- HTMX form and reactivity for adding new messages/replies
 
 - Add room Admin
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
