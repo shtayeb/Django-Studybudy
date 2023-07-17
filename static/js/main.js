@@ -1,3 +1,7 @@
+import htmx from "htmx.org";
+
+window.htmx = htmx;
+
 // Menu
 const dropdownMenu = document.querySelector(".dropdown-menu");
 const dropdownButton = document.querySelector(".dropdown-button");

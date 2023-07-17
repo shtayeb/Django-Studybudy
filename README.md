@@ -24,7 +24,11 @@ source ./.venv/bin/activate
 - Install requirements
 
 ```shell
+# Django packages
 pip install -r requirements.txt
+
+# npm packages
+npm install
 ```
 
 - Create `.env` file
@@ -56,6 +60,12 @@ python manange.py seed
 ```shell
 python manage.py runserver --setting=core.settings.local # local settings
 python manage.py runserver --setting=core.settings.production # production settings
+```
+
+- Run the vite server
+
+```shell
+npm run dev
 ```
 
 
@@ -93,6 +103,7 @@ class Product(models.Model):
 - [x] Create infinite scroll in home page
 - [X] Create an autocomplete users list in the invite users to room page
 - [x] Add in markdown WYSGI editor 
+- [x] Add vite for asset bundling
 
 - HTMX form and reactivity for adding new messages/replies
 
