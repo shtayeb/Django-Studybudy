@@ -18,9 +18,14 @@
     <title>StudyBuddy - Find study partners around the world!</title>
 
     {% block extra_heads %} {% endblock extra_heads %}
+
   </head>
 
-  <body>
+  <body hx-ext="debug">
+    <div class="progress bg-dark" style="height: 3px;">
+      <div class="indeterminate bg-dark-light" style=""></div>
+    </div>
+
     {% include 'components/navbar.html' %} 
     
     <div id="messages">

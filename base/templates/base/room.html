@@ -40,7 +40,7 @@
             {% endif %}
 
             {% if not request.user.id == room.host_id %}
-              <form hx-post="{% url 'toggle-room-join' room.id %}" >
+              <form hx-post="{% url 'toggle-room-join' room.id %}" hx-indicator=".progress"  >
                 {% csrf_token %}
                 <button type="submit" class="room__topics  btn btn--main">
                   {% if is_joined %}
@@ -95,11 +95,20 @@
 
           {% comment %} The message {% endcomment %}
           <div class="room__message">
-            <form hx-post="{% url 'room-add-message' room.id %}" hx-target="#messages-list" hx-swap="beforeend show:#messages-list:bottom">
+            <form 
+              hx-post="{% url 'room-add-message' room.id %}" 
+              hx-target="#messages-list" 
+              hx-swap="beforeend show:#messages-list:bottom"
+              hx-indicator=".progress" 
+              hx-ext="disable-element"
+              hx-disable-element="#sumbit-btn-message"
+            >
               {% csrf_token %}
               {{ msg_form.media }}
               {{msg_form.as_p}}
-              <button class="btn btn--dark">Submit</button>
+              <button id="sumbit-btn-message" hx-disable-element="self" class="btn btn--dark disabled:bg-gray" >
+                Add Message
+              </button>
             </form>
           </div>
           

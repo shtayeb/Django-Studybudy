@@ -1,6 +1,8 @@
 import htmx from "htmx.org";
+import "./htmx-extensions.js";
 
 window.htmx = htmx;
+
 
 // Menu
 const dropdownMenu = document.querySelector(".dropdown-menu");
