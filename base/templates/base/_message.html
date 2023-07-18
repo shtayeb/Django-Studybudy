@@ -16,7 +16,7 @@
             <span class="thread__date">{{message.created|timesince}} ago</span>
 
             {% if request.user == message.user %}
-            <a href="{% url 'delete-message' message.id %}">
+            <a class="hover:bg-dark" href="{% url 'delete-message' message.id %}">
                 <div class="thread__delete">
                     <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
                 </div>
@@ -73,7 +73,7 @@
         <form 
             hx-post="{% url 'message-reply' message.id %}" 
             hx-target="#message-{{message.id}}-replies-list" 
-            hx-swap="beforeend" 
+            hx-swap="beforeend show:#message-{{message.id}}-replies-list:bottom" 
             class="reply-form d-none" 
             id="comment-{{message.id}}-replyForm"
         >

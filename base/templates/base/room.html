@@ -95,7 +95,7 @@
 
           {% comment %} The message {% endcomment %}
           <div class="room__message">
-            <form hx-post="{% url 'room-add-message' room.id %}" hx-target="#messages-list" hx-swap="beforeend">
+            <form hx-post="{% url 'room-add-message' room.id %}" hx-target="#messages-list" hx-swap="beforeend show:#messages-list:bottom">
               {% csrf_token %}
               {{ msg_form.media }}
               {{msg_form.as_p}}
