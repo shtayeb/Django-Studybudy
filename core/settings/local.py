@@ -56,3 +56,9 @@ STORAGES = {
 #
 NPLUSONE_LOGGER = logging.getLogger("nplusone")
 NPLUSONE_LOG_LEVEL = logging.WARN
+
+DJANGO_VITE_PLUGIN = {
+    'BUILD_DIR': 'staticfiles/build',
+    'BUILD_URL_PREFIX':STATIC_URL + "build",
+    'DEV_MODE':True,
+}
