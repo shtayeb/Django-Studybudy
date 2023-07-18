@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 {% load static %}
+{% load vite %}
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
     
     <meta name="theme-color" content="cyan" />
-
     {% comment %} <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" /> {% endcomment %}
+    
+    {% vite 'styles/tailwind.css' %}
+
+    <title>StudyBuddy - Find study partners around the world!</title>
 
     {% block extra_heads %} {% endblock extra_heads %}
 
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
-    <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
-
-    {% comment %} TailwindCss {% endcomment %}
-    <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
-
-    <script src="{% static 'js/htmx/htmx.js' %}" defer></script>
-    <script src="{% static 'js/htmx/ext/event-header.js' %}" defer></script>
-    <script src="{% static 'js/htmx/ext/debug.js' %}" defer></script>
-
-    <title>StudyBuddy - Find study partners around the world!</title>
   </head>
 
-  <body>
+  <body hx-ext="debug">
+    <div class="progress bg-dark" style="height: 3px;">
+      <div class="indeterminate bg-dark-light" style=""></div>
+    </div>
+
     {% include 'components/navbar.html' %} 
     
     <div id="messages">
@@ -35,8 +34,8 @@
     
     {% block content %} {% endblock %}
 
-    <script src="{% static 'js/script.js' %}"></script>
 
+    {% vite 'js/main.js' %}
     {% block extra_scripts %} {% endblock extra_scripts %}
   
   </body>
