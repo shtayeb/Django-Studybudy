@@ -29,13 +29,14 @@
         {{ message.body | markdown | safe }}
     </div>
 
+    {% comment %} Reactions {% endcomment %}
     <div class="thread__footer">
         {% for reaction in reaction_types %}
         {% if reaction.name == '🔥' %}
             <div class="item">
                 <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
                 <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                    {{message.fire_count}}
+                    {{message.fire_count | default:0}}
                 </span>
             </div>
         {% endif %}
@@ -44,7 +45,7 @@
          <div class="item">
             <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
             <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-            {{message.like_count}}
+            {{message.like_count | default:0}}
             </span>
         </div>
         {% endif %}
@@ -53,15 +54,12 @@
         <div class="item">
             <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
             <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                {{message.poop_count}}
+                {{message.poop_count | default:0}}
             </span>
         </div>
         {% endif %}
         {% endfor %}
     </div>
-
-    {% comment %} Replies {% endcomment %}
-    {% comment %} <button class="btn btn--dark" id="add-reply-btn-{{message.id}}">Add Reply</button> {% endcomment %}
 
     <button class="btn btn--pill" 
         id="add-reply-btn-{{message.id}}" 
@@ -72,17 +70,23 @@
     </button>
     <!-- Reply form start -->
     <div class="room__message">
-        <form method="POST" action="{% url 'message-reply' message.id %}" class="reply-form d-none" id="comment-{{message.id}}-replyForm">
+        <form 
+            hx-post="{% url 'message-reply' message.id %}" 
+            hx-target="#message-{{message.id}}-replies-list" 
+            hx-swap="beforeend" 
+            class="reply-form d-none" 
+            id="comment-{{message.id}}-replyForm"
+        >
             {% csrf_token %}
             <textarea  name="body" placeholder="Reply to comment (Supports Markdown)" rows="4" required></textarea>
-            <input type="hidden" name="room_id" value="{{room.id}}">
+            <input type="hidden" name="room_id" value="{{message.room_id}}">
             <button type="submit" class="btn btn--pill"  >Submit</button>
             <button type="button" class="btn btn--pill"  data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">Cancel</button>
         </form>
     </div>
     <!-- Reply form end -->
 
-    <details class="message_replies" open>
+    <details class="message_replies" open id="message-{{message.id}}-replies-list">
         {% for reply in message.replies.all %}
             {% include 'base/_reply.html' %}
         {% endfor %} 
@@ -90,23 +94,58 @@
 
 </details>
 
-{% if request.user.is_authenticated %}
-{% block extra_scripts %}
-<script>
+{% comment %} Add the reaction event listners when returned from htmx partial {% endcomment %}
+{% if request.user.is_authenticated and request.htmx %}
+    {% block extra_scripts %}
+        <script>
+            // ==================== Message Reaction  ===================
+            messagesList = document.getElementById("messages-list")
+            // ! BUG: The will add the eventlistner two times for replies
+            messagesList.querySelectorAll(".item-reaction").forEach(reaction => {
+            reaction.addEventListener("click", (e) => {
+                
+                console.log(e)
+                console.log("reation_type_id",e.target.id)
+                console.log("message_or_reply_id",e.target.dataset.message)
 
-    document.addEventListener(
-        "click",
-        function(event) {
-            var target = event.target;
-            var replyForm;
-            if (target.matches("[data-toggle='reply-form']")) {
-                replyForm = document.getElementById(target.getAttribute("data-target"));
-                replyForm.classList.toggle("d-none");
-            }
-        },
-        false
-    );
+                reaction_type_id = e.target.id
+                message_id = e.target.dataset.message
 
-</script>
-{% endblock %}
+                data = {
+                reaction_type_id:reaction_type_id
+                }
+
+                // message/<int:pk>/reaction
+                const URL = `/message/${message_id}/reaction`
+
+                fetch(URL,{
+                method:"POST",
+                body: JSON.stringify(data),
+                headers: { 
+                    "X-CSRFToken": '{{csrf_token}}',
+                    'content-type': 'application/json',
+                },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    // update html --- m-1-count-1
+                    countSpan = document.getElementById(`m-${message_id}-count-${reaction_type_id}`)
+
+                    if(data.operation === 'added'){
+                    countSpan.innerHTML = parseInt(countSpan.innerText) + 1
+                    }else if(data.operation === 'removed'){
+                    countSpan.innerHTML = parseInt(countSpan.innerText) - 1
+                    }else{
+                    // do nothing
+                    }
+
+                }).catch(e => {
+                    console.log(e)
+                })
+
+            })
+            })
+        </script>
+    {% endblock %}
 {% endif %}

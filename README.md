@@ -104,8 +104,7 @@ class Product(models.Model):
 - [X] Create an autocomplete users list in the invite users to room page
 - [x] Add in markdown WYSGI editor 
 - [x] Add vite for asset bundling
-
-- HTMX form and reactivity for adding new messages/replies
+- [x] HTMX form and reactivity for adding new messages/replies
 
 - Add room Admin
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null

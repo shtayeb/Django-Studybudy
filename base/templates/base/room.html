@@ -6,156 +6,137 @@
   <title>{{ room.name }}</title>
   <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
   <link rel="stylesheet" href="{% static 'styles/markdown.css' %}" />
-
-  <style>
-    /* The dialog element should be center by default but it didnt work, I used position to force */
-    dialog {
-      z-index: 10;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-height:100vh;
-      border: none;
-      border-radius: 1rem;
-    }
-    dialog::backdrop {
-      background-color: hsla(240, 4%, 19%, 0.7);
-    }
-  </style>
 {% endblock extra_heads %}
 
 {% block content %}
+  <main class="profile-page layout layout--2">
+    <div class="my_container " >
+      <!-- Room Start -->
+      <div class="room ">
+        <div class="room__top">
 
-<main class="profile-page layout layout--2">
-  <div class="my_container " >
-    <!-- Room Start -->
-    <div class="room ">
-      <div class="room__top">
-
-        <div class="room__topLeft">
-          <a href="{{request.META.HTTP_REFERER}}">
-            <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
-          </a>
-          <h3 class="">Study Room</h3>
-           {% if room.type == 'private' %}
-            {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
-            <button class="btn roomListRoom__topic" type="submit">
-               <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
-            </button>
-          {% endif %}
-        </div>
-
-        <div class="room__topRight">
-          {% if room.host == request.user %}
-          <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
-            <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
-          </a>
-
-          <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
-            <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
-          </a>
-          {% endif %}
-
-          {% if not request.user.id == room.host_id %}
-            <form hx-post="{% url 'toggle-room-join' room.id %}" >
-              {% csrf_token %}
-              <button type="submit" class="room__topics  btn btn--main">
-                {% if is_joined %}
-                    Leave Room
-                {% else %}
-                    Join Room
-                {% endif %}
+          <div class="room__topLeft">
+            <a href="{{request.META.HTTP_REFERER}}">
+              <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
+            </a>
+            <h3 class="">Study Room</h3>
+            {% if room.type == 'private' %}
+              {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
+              <button class="btn roomListRoom__topic" type="submit">
+                <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
               </button>
-            </form>
-            
-          {% endif %}
+            {% endif %}
+          </div>
 
-          {% if room.host_id == request.user.id %}
-            <a href="{% url 'invite-room' room.slug %}" class="room__topics btn--main btn" id="invite-user-btn">
-              Invite Users
+          <div class="room__topRight">
+            {% if room.host == request.user %}
+            <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
+              <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
             </a>
-          {% endif %}
 
-        </div>
-
-      </div>
-
-      <div class="room__box scroll">
-
-        <div class="room__header scroll">
-
-          <div class="room__info">
-            <h3>{{room.name}}</h3>
-            <span>{{room.created|timesince}} ago</span>
-          </div>
-
-          <div class="room__hosted">
-            <p>Hosted By</p>
-            <a
-              href="{% url 'user-profile' room.host.username %}"
-              class="room__author"
-            >
-              <div class="avatar avatar--small">
-                <img src="{{room.host.avatar}}" alt="user-avatar" />
-              </div>
-              <span>@{{ room.host.username }}</span>
+            <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
+              <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
             </a>
+            {% endif %}
+
+            {% if not request.user.id == room.host_id %}
+              <form hx-post="{% url 'toggle-room-join' room.id %}" >
+                {% csrf_token %}
+                <button type="submit" class="room__topics  btn btn--main">
+                  {% if is_joined %}
+                      Leave Room
+                  {% else %}
+                      Join Room
+                  {% endif %}
+                </button>
+              </form>
+              
+            {% endif %}
+
+            {% if room.host_id == request.user.id %}
+              <a href="{% url 'invite-room' room.slug %}" class="room__topics btn--main btn" id="invite-user-btn">
+                Invite Users
+              </a>
+            {% endif %}
+
           </div>
-          
-          <div class="room__details">
-            {{room.description}}
-          </div>
-          
-          <span class="room__topics">{{room.topic}}</span>
-        
+
         </div>
 
-        {% comment %} The message {% endcomment %}
-        <div class="room__message">
-          <form action="" method="POST">
-            {% csrf_token %}
-            {{ msg_form.media }}
-            {{msg_form.as_p}}
+        <div class="room__box scroll">
 
-            <button class="btn btn--dark">Submit</button>
-          </form>
-        </div>
-        
-        {% include 'base/converstion_component.html' %}
+          <div class="room__header scroll">
 
-      </div>
-
-    </div>
-
-    <!--   participants -->
-    <div class="sticky_right_panel sticky_panel  ">
-      <h3 class="participants__top">
-        Participants <span>({{participants.count}} Joined)</span>
-      </h3>
-      <div class="participants__list scroll">
-        {% for user in room.participants.all %}
-          <a href="{% url 'user-profile' user.username %}" class="participant">
-            <div class="avatar avatar--medium">
-              <img src="{{user.avatar}}" alt="user-avatar" />
+            <div class="room__info">
+              <h3>{{room.name}}</h3>
+              <span>{{room.created|timesince}} ago</span>
             </div>
-            <p>
-              {{user.username}}
-              <span>@{{user.username}}</span>
-            </p>
-          </a>
-        {% endfor %}
+
+            <div class="room__hosted">
+              <p>Hosted By</p>
+              <a
+                href="{% url 'user-profile' room.host.username %}"
+                class="room__author"
+              >
+                <div class="avatar avatar--small">
+                  <img src="{{room.host.avatar}}" alt="user-avatar" />
+                </div>
+                <span>@{{ room.host.username }}</span>
+              </a>
+            </div>
+            
+            <div class="room__details">
+              {{room.description}}
+            </div>
+            
+            <span class="room__topics">{{room.topic}}</span>
+          
+          </div>
+
+          {% comment %} The message {% endcomment %}
+          <div class="room__message">
+            <form hx-post="{% url 'room-add-message' room.id %}" hx-target="#messages-list" hx-swap="beforeend">
+              {% csrf_token %}
+              {{ msg_form.media }}
+              {{msg_form.as_p}}
+              <button class="btn btn--dark">Submit</button>
+            </form>
+          </div>
+          
+          {% include 'base/converstion_component.html' %}
+
+        </div>
+
       </div>
+
+      <!--   participants -->
+      <div class="sticky_right_panel sticky_panel  ">
+        <h3 class="participants__top">
+          Participants <span>({{participants.count}} Joined)</span>
+        </h3>
+        <div class="participants__list scroll">
+          {% for user in room.participants.all %}
+            <a href="{% url 'user-profile' user.username %}" class="participant">
+              <div class="avatar avatar--medium">
+                <img src="{{user.avatar}}" alt="user-avatar" />
+              </div>
+              <p>
+                {{user.username}}
+                <span>@{{user.username}}</span>
+              </p>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+      <!--  End -->
     </div>
-    <!--  End -->
-  </div>
-</main>
+  </main>
 {% endblock content %}
 
-{% block extra_scripts %}
+{% comment %} {% block extra_scripts %}
   {% if request.user.is_authenticated %}
     <script>
       
     </script>
   {% endif %}
-{% endblock extra_scripts %}
+{% endblock extra_scripts %} {% endcomment %}
