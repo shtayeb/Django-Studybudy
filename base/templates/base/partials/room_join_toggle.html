@@ -1,0 +1,15 @@
+{% csrf_token %}
+
+{% if not is_joined %}
+    <button type="submit" class="room__topics btn--main btn">
+        Leave Room
+    </button>
+{% else %}
+    <button type="submit" class="room__topics btn--main btn">
+        Join Room
+    </button>
+{% endif %}
+
+<div id="messages" hx-swap-oob="true" hx-swap="innerHTML">
+    {% include 'components/messages.html' %} 
+</div>

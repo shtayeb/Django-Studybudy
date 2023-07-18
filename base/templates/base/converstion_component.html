@@ -1,5 +1,5 @@
 <div class="room__conversation">
-    <div class="threads scroll">
+    <div class="threads scroll" id="messages-list">
       {% if room.message_set.all|length == 0 %}
         Not messages yet !
       {% else %}
@@ -12,12 +12,12 @@
 
 
 {% if request.user.is_authenticated %}
-{% block extra_scripts %}
-<script>
+  {% block extra_scripts %}
+    <script>
       // ==================== Message Reaction  ===================
-      reaction_counts = document.querySelectorAll(".reaction_count")
+      messagesList = document.getElementById("messages-list")
 
-      document.querySelectorAll(".item-reaction").forEach(reaction => {
+      messagesList.querySelectorAll(".item-reaction").forEach(reaction => {
         reaction.addEventListener("click", (e) => {
           
           console.log(e)
@@ -62,6 +62,19 @@
 
         })
       })
-</script>
-{% endblock %}
+
+      document.addEventListener(
+            "click",
+            function(event) {
+                var target = event.target;
+                var replyForm;
+                if (target.matches("[data-toggle='reply-form']")) {
+                    replyForm = document.getElementById(target.getAttribute("data-target"));
+                    replyForm.classList.toggle("d-none");
+                }
+            },
+            false
+        );
+    </script>
+  {% endblock %}
 {% endif %}

@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django_extensions.db.fields import AutoSlugField
 from django_softdelete.models import SoftDeleteModel
+from mdeditor.fields import MDTextField
 
 from accounts.models import User
 
@@ -75,6 +76,7 @@ class Message(SoftDeleteModel):
     )
 
     body = models.TextField()
+    body = MDTextField()
 
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)

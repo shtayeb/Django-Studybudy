@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from .forms import RoomForm
+from .forms import MessageForm, RoomForm
 from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
 
 expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
@@ -26,22 +26,24 @@ SECRET_KEY = "secret_key_001"
 @login_required(login_url="/accounts/login")
 def addMessageReply(request, pk):
     # Get the room as well and check if the room is not archived
+    message = Message.objects.get(pk=pk)
+    # do dome error handling
+    body = request.POST.get("body")
+    user_id = request.user.id
+    room_id = request.POST.get("room_id")
 
-    if request.method == "POST":
-        message = Message.objects.get(pk=pk)
-        # do dome error handling
-        body = request.POST.get("body")
-        user_id = request.user.id
-        room_id = request.POST.get("room_id")
+    reply = Message.objects.create(
+        room_id=room_id, user_id=user_id, parent_id=message.id, body=body
+    )
+    # messages.success(request, "Reply Added Successfully !")
 
-        Message.objects.create(
-            room_id=room_id, user_id=user_id, parent_id=message.id, body=body
-        )
-        messages.success(request, "Reply Added Successfully !")
-    else:
-        messages.error(request, "GET request is not supported for this route !!")
+    reaction_types = ReactionType.objects.all()
 
-    return redirect("room", message.room.slug)
+    context = {
+        "reply":reply,
+        "reaction_types":reaction_types
+    }
+    return render(request,'base/_reply.html',context)
 
 
 @login_required(login_url="/accounts/login")
@@ -81,18 +83,25 @@ def toggleJoinRoom(request, pk):
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
 
+    template_name = 'base/partials/room_join_toggle.html'
+
     if request.user.id == room.host_id:
         messages.error(request, "You are the room's host !!")
-        return redirect("room", room.slug)
 
     is_joined = room.participants.contains(request.user)
 
     if is_joined:
         room.participants.remove(request.user)
+        messages.success(request, "You left the room !")
+
     else:
         room.participants.add(request.user)
+        messages.success(request, "You joined the room !")
 
-    return redirect("room", room.slug)
+    # is_joined is old, so in the template I have used the negation of the variable
+    context = {'is_joined':is_joined}
+
+    return render(request,template_name,context)
 
 @login_required(login_url="/accounts/login")
 def sendRoomInvite(request, slug):
@@ -234,7 +243,6 @@ def home(request):
 
     if request.htmx:
         # htmx template
-        print("htmx ------------ ")
         template_name = "base/feed_component.html"
 
     context = {
@@ -246,6 +254,28 @@ def home(request):
 
     return render(request, template_name, context)
 
+@login_required(login_url="/accounts/login")
+@require_http_methods('POST')
+def addMessage(request,room_id):
+    room = get_object_or_404(Room,pk=room_id)
+
+    msg_form = MessageForm(request.POST)
+
+    # if request.htmx:
+
+    if msg_form.is_valid():
+        message = msg_form.save(commit=False)
+        message.user=request.user
+        message.room = room
+
+        message.save()
+
+        room.participants.add(request.user)
+
+    reaction_types = ReactionType.objects.all()
+
+    context = {"message":message,'reaction_types':reaction_types}
+    return render(request,'base/_message.html',context)
 
 def room(request, slug):
     fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
@@ -290,18 +320,16 @@ def room(request, slug):
         ):
             messages.warning(request, "That room is private !")
             return redirect("home")
-
-    if request.method == "POST":
-        message = Message.objects.create(
-            user=request.user, room=room, body=request.POST.get("body")
-        )
-        room.participants.add(request.user)
-        return redirect("room", slug=room.slug)
+        
+    msg_form = MessageForm()
+    reply_form = MessageForm()
 
     reaction_types = ReactionType.objects.all()
 
     context = {
         "room": room,
+        "msg_form":msg_form,
+        'reply_form':reply_form,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }
@@ -392,7 +420,7 @@ def deleteMessage(request, pk):
     if request.method == "POST":
         message.delete()
 
-        return redirect("home")
+        return redirect("room",message.room.slug)
 
     return render(request, "base/delete.html", {"obj": message})
 

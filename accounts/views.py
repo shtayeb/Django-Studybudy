@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -42,9 +43,13 @@ def userProfile(request, username):
 
     topics = Topic.objects.annotate(rooms_count=Count("room"))[:5]
 
+    page_number = request.GET.get("page", 1)
+    paginator = Paginator(rooms, 20)  # Show 25 rooms per page.
+    page_obj = paginator.get_page(page_number)
+
     context = {
+        "page_obj": page_obj,
         "user": user,
-        "rooms": rooms,
         "room_messages": room_messages,
         "topics": topics,
     }
