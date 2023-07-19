@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     djangoVite({
       input: ["./static/js/main.js", "./static/styles/tailwind.css"],
-      pyArgs: ['--settings', 'core.settings.production']
+      pyArgs: ["--settings", "core.settings.local"],
     }),
   ],
 });
