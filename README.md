@@ -105,8 +105,10 @@ class Product(models.Model):
 - [x] Add in markdown WYSGI editor 
 - [x] Add vite for asset bundling
 - [x] HTMX form and reactivity for adding new messages/replies
+- [x] Add room Admin
 
-- Add room Admin
+- Room admin CRUD
+- Deactivate room message when unauthenticated
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
 - SEO meta tags for pages
 
