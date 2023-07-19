@@ -11,7 +11,7 @@ DATABASES = {
         "PASSWORD": env("DB_PASSWORD", default=""),
         "HOST": env("DB_HOST", default="localhost"),
         "PORT": env("DB_PORT", default="3306"),
-        "OPTIONS": {"charset": "utf8mb4"}
+        "OPTIONS": {"charset": "utf8mb4"},
     },
 }
 
@@ -21,13 +21,13 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",  # with cashing
         # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # No Caching
     },
 }
 
 DJANGO_VITE_PLUGIN = {
-    'BUILD_DIR': 'staticfiles/build',
-    'BUILD_URL_PREFIX':STATIC_URL + "build",
-    'DEV_MODE':False,
+    "BUILD_DIR": "staticfiles/build",
+    "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
+    "DEV_MODE": True,
 }

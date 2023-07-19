@@ -22,7 +22,7 @@ expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 SECRET_KEY = "secret_key_001"
 
 
-@require_http_methods('POST')
+@require_http_methods("POST")
 @login_required(login_url="/accounts/login")
 def addMessageReply(request, pk):
     # Get the room as well and check if the room is not archived
@@ -39,15 +39,12 @@ def addMessageReply(request, pk):
 
     reaction_types = ReactionType.objects.all()
 
-    context = {
-        "reply":reply,
-        "reaction_types":reaction_types
-    }
-    return render(request,'base/_reply.html',context)
+    context = {"reply": reply, "reaction_types": reaction_types}
+    return render(request, "base/_reply.html", context)
 
 
 @login_required(login_url="/accounts/login")
-@require_http_methods('POST')
+@require_http_methods("POST")
 def toggleMessageReaction(request, pk):
     data = {"operation": ""}
     if request.method == "POST":
@@ -83,7 +80,7 @@ def toggleJoinRoom(request, pk):
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
 
-    template_name = 'base/partials/room_join_toggle.html'
+    template_name = "base/partials/room_join_toggle.html"
 
     if request.user.id == room.host_id:
         messages.error(request, "You are the room's host !!")
@@ -99,9 +96,10 @@ def toggleJoinRoom(request, pk):
         messages.success(request, "You joined the room !")
 
     # is_joined is old, so in the template I have used the negation of the variable
-    context = {'is_joined':is_joined}
+    context = {"is_joined": is_joined}
 
-    return render(request,template_name,context)
+    return render(request, template_name, context)
+
 
 @login_required(login_url="/accounts/login")
 def sendRoomInvite(request, slug):
@@ -110,10 +108,10 @@ def sendRoomInvite(request, slug):
 
     if request.method == "POST":
         user_email = request.POST.get("email")
-        
+
         if not user_email:
-            raise ValidationError('The Email Address is required !!')
-        
+            raise ValidationError("The Email Address is required !!")
+
         invitee = get_object_or_404(User, email=user_email)
         # invitee = User.objects.get(email=user_email)
 
@@ -254,10 +252,11 @@ def home(request):
 
     return render(request, template_name, context)
 
+
 @login_required(login_url="/accounts/login")
-@require_http_methods('POST')
-def addMessage(request,room_id):
-    room = get_object_or_404(Room,pk=room_id)
+@require_http_methods("POST")
+def addMessage(request, room_id):
+    room = get_object_or_404(Room, pk=room_id)
 
     msg_form = MessageForm(request.POST)
 
@@ -265,7 +264,7 @@ def addMessage(request,room_id):
 
     if msg_form.is_valid():
         message = msg_form.save(commit=False)
-        message.user=request.user
+        message.user = request.user
         message.room = room
 
         message.save()
@@ -274,8 +273,9 @@ def addMessage(request,room_id):
 
     reaction_types = ReactionType.objects.all()
 
-    context = {"message":message,'reaction_types':reaction_types}
-    return render(request,'base/_message.html',context)
+    context = {"message": message, "reaction_types": reaction_types}
+    return render(request, "base/_message.html", context)
+
 
 def room(request, slug):
     fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
@@ -320,7 +320,7 @@ def room(request, slug):
         ):
             messages.warning(request, "That room is private !")
             return redirect("home")
-        
+
     msg_form = MessageForm()
     reply_form = MessageForm()
 
@@ -328,8 +328,8 @@ def room(request, slug):
 
     context = {
         "room": room,
-        "msg_form":msg_form,
-        'reply_form':reply_form,
+        "msg_form": msg_form,
+        "reply_form": reply_form,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }
@@ -420,9 +420,25 @@ def deleteMessage(request, pk):
     if request.method == "POST":
         message.delete()
 
-        return redirect("room",message.room.slug)
+        return redirect("room", message.room.slug)
 
     return render(request, "base/delete.html", {"obj": message})
+
+
+@require_http_methods("POST")
+def searchTopic(request):
+    q = request.POST.get("q")
+
+    if request.POST.get("q") == None:
+        q = ""
+
+    topics = Topic.objects.filter(name__icontains=q).annotate(
+        rooms_count=Count("room")
+    )[:10]
+
+    context = {"topics": topics}
+
+    return render(request, "base/partials/topic_list.html", context)
 
 
 def topicsPage(request):
