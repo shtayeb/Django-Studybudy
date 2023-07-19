@@ -37,18 +37,18 @@ class RoomFactory(DjangoModelFactory):
         return x
 
     @factory.post_generation
-    def participants(self, create, extracted, **kwargs):
+    def members(self, create, extracted, **kwargs):
         if not create:
             return
 
         if extracted:
             for user in extracted:
-                self.participants.add(user)
+                self.members.add(user)
 
         users = User.objects.all()[:5]
 
         for user in users:
-            self.participants.add(user)
+            self.members.add(user)
 
 
     

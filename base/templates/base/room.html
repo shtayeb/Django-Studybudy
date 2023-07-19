@@ -118,21 +118,23 @@
 
       </div>
 
-      <!--   participants -->
+      <!--   Members -->
       <div class="sticky_right_panel sticky_panel  ">
         <h3 class="participants__top">
-          Participants <span>({{participants.count}} Joined)</span>
+          Members <span>({{members.count}} Joined)</span>
         </h3>
         <div class="participants__list scroll">
-          {% for user in room.participants.all %}
-            <a href="{% url 'user-profile' user.username %}" class="participant">
+          {% for membership in room.membership_set.all %}
+            <a href="{% url 'user-profile' user.username %}" class="participant {% if membership.is_admin %} bg-dark-light p-3 rounded-md {% endif %}">
               <div class="avatar avatar--medium">
-                <img src="{{user.avatar}}" alt="user-avatar" />
+                <img src="{{membership.user.avatar}}" alt="user-avatar" />
               </div>
               <p>
-                {{user.username}}
-                <span>@{{user.username}}</span>
+                {{membership.user.username}}
+                <span>@{{membership.user.username}}</span>
               </p>
+             
+              
             </a>
           {% endfor %}
         </div>

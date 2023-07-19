@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from .forms import MessageForm, RoomForm
-from .models import Message, ReactionType, Room, RoomInvitation, Topic, User
+from .models import Membership, Message, ReactionType, Room, RoomInvitation, Topic, User
 
 expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 
@@ -85,14 +85,14 @@ def toggleJoinRoom(request, pk):
     if request.user.id == room.host_id:
         messages.error(request, "You are the room's host !!")
 
-    is_joined = room.participants.contains(request.user)
+    is_joined = room.members.contains(request.user)
 
     if is_joined:
-        room.participants.remove(request.user)
+        room.members.remove(request.user)
         messages.success(request, "You left the room !")
 
     else:
-        room.participants.add(request.user)
+        room.members.add(request.user)
         messages.success(request, "You joined the room !")
 
     # is_joined is old, so in the template I have used the negation of the variable
@@ -182,11 +182,11 @@ def acceptRoomInvite(request, token):
     room_id = decoded_token["room_id"]
     invitee_id = decoded_token["invitee_id"]
 
-    # Add the user to the room participants
+    # Add the user to the room members
     room = get_object_or_404(Room, pk=room_id)
     invitee = get_object_or_404(User, pk=invitee_id)
 
-    room.participants.add(invitee)
+    room.members.add(invitee)
 
     # update the invitation
     room_invitation = RoomInvitation.objects.get(token=token)
@@ -215,11 +215,12 @@ def home(request):
             | Q(host_id=request.user.id)
         )
         .prefetch_related("host", "topic")
-        .annotate(participants_count=Count("participants"))
+        .annotate(members_count=Count("members"))
     )
 
     if request.user.is_authenticated:
-        joined_private_rooms = request.user.participants.filter(Q(type="private"))
+        # joined_private_rooms = request.user.membership_set.filter(Q(room__type="private"))
+        joined_private_rooms = Room.objects.filter(type="private",members=request.user)
         rooms = rooms | joined_private_rooms
 
     topics = Topic.objects.annotate(rooms_count=Count("room"))[0:5]
@@ -269,7 +270,7 @@ def addMessage(request, room_id):
 
         message.save()
 
-        room.participants.add(request.user)
+        room.members.add(request.user)
 
     reaction_types = ReactionType.objects.all()
 
@@ -302,7 +303,9 @@ def room(request, slug):
                     "user",
                 ),
             ),
-            Prefetch("participants"),
+            Prefetch("membership_set",
+                Membership.objects.select_related('user')
+            ),
         ).select_related("host"),
         slug=slug,
     )
@@ -311,12 +314,12 @@ def room(request, slug):
 
     # TODO : Move this to a directive
     if request.user.is_authenticated:
-        is_joined = room.participants.contains(request.user)
+        is_joined = room.members.contains(request.user)
 
         if (
             not (room.host_id == request.user.id)
             and room.type == "private"
-            and (not room.participants.contains(request.user))
+            and (not room.members.contains(request.user))
         ):
             messages.warning(request, "That room is private !")
             return redirect("home")
