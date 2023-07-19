@@ -10,7 +10,6 @@ from accounts.models import User
 
 class Topic(SoftDeleteModel):
     name = models.CharField(max_length=200, blank=False, null=False)
-    # slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
     slug = AutoSlugField(populate_from=["name"])
     description = models.TextField(null=True, blank=True)
     github_url = models.URLField(null=True, blank=True)
@@ -27,13 +26,13 @@ class Topic(SoftDeleteModel):
         return self.name
 
 
+
 class Room(SoftDeleteModel):
-    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,related_name="host")
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
-    participants = models.ManyToManyField(User, related_name="participants", blank=True)
+    members = models.ManyToManyField(User, blank=True,through="Membership")
 
     name = models.CharField(max_length=200, blank=False, null=False)
-    # slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
     slug = AutoSlugField(populate_from=["name"])
     description = models.TextField(null=True, blank=True)
 
@@ -61,6 +60,16 @@ class Room(SoftDeleteModel):
     def __str__(self):
         return self.name
 
+class Membership(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    is_admin = models.BooleanField(default=False)
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"'{self.user.username}' in room '{self.room.name}'" 
 
 class Message(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -75,7 +84,6 @@ class Message(SoftDeleteModel):
         on_delete=models.CASCADE
     )
 
-    body = models.TextField()
     body = MDTextField()
 
     updated = models.DateTimeField(auto_now=True)

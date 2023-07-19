@@ -6,19 +6,38 @@ from django.urls import path, reverse
 
 from .models import Message, ReactionType, Room, RoomInvitation, Topic
 
-admin.site.register(Message)
 admin.site.register(RoomInvitation)
 admin.site.register(ReactionType)
 
+class MessageAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "room",
+        "created",
+    )
 
-class ParticipantsInline(admin.TabularInline):
-    model = Room.participants.through
+    search_fields = ("user__username", "room__name")
+
+admin.site.register(Message,MessageAdmin)
+class MembersInline(admin.TabularInline):
+    model = Room.members.through
 
 
 class RoomAdmin(admin.ModelAdmin):
     # prepopulated_fields = {'slug': ('name',)}
+    list_display = (
+        "id",
+        "name",
+        "host",
+        "type"
+    )
+
+    list_filter = ('type',)
+    search_fields = ("host__username", "name")
+    
     inlines = [
-        ParticipantsInline,
+        MembersInline,
     ]
 
 
@@ -32,6 +51,7 @@ class CsvImportForm(forms.Form):
 class TopicAdmin(admin.ModelAdmin):
     list_display = ["name", "description", "github_url"]
     # prepopulated_fields = {'slug': ('name',)}
+    search_fields = ("name",)
 
     def get_urls(self):
         urls = super().get_urls()

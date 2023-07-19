@@ -18,4 +18,4 @@ def post_save_user(sender,instance,**kwargs):
         topic_id=1,
     )[0];
 
-    room.participants.add(instance)
+    room.members.add(instance)

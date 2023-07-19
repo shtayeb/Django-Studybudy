@@ -36,7 +36,7 @@ def userProfile(request, username):
     user = User.objects.get(username=username)
 
     rooms = user.room_set.select_related("host", "topic").annotate(
-        participants_count=Count("participants")
+        participants_count=Count("members")
     )
 
     room_messages = user.message_set.prefetch_related("user", "room")
