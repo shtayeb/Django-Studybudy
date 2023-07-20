@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage, send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Prefetch, Q, When
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -115,6 +115,14 @@ def sendRoomInvite(request, slug):
         invitee = get_object_or_404(User, email=user_email)
         # invitee = User.objects.get(email=user_email)
 
+        # Check if there already exist an invite for the user
+        # invitee_id, room_id
+        # old_invitation = RoomInvitation.objects.get(room=room, invitee=invitee)
+        old_invitation = RoomInvitation.objects.filter(room=room, invitee=invitee)
+
+        if old_invitation.exists():
+            old_invitation.delete()
+
         # encode room_id and invitee_id in the token
         # TODO : make the SECRET_KEY a secret in the .env file
         token = jwt.encode(
@@ -128,9 +136,9 @@ def sendRoomInvite(request, slug):
         )
 
         invitation = RoomInvitation.objects.create(
-            inviter_id=request.user,
-            invitee_id=invitee,
-            room_id=room,
+            inviter_id=request.user.id,
+            invitee_id=invitee.id,
+            room_id=room.id,
             token=token,
             is_accepted=False,
         )
@@ -220,14 +228,20 @@ def home(request):
 
     if request.user.is_authenticated:
         # joined_private_rooms = request.user.membership_set.filter(Q(room__type="private"))
-        joined_private_rooms = Room.objects.filter(type="private",members=request.user)
+        joined_private_rooms = Room.objects.filter(type="private", members=request.user)
         rooms = rooms | joined_private_rooms
 
     topics = Topic.objects.annotate(rooms_count=Count("room"))[0:5]
 
     room_messages = Message.objects.filter(
-        Q(room__topic__name__icontains=q)
-    ).prefetch_related("user", "room")
+        Q(room__topic__name__icontains=q),
+        Q(room__is_deleted=False),
+    ).exclude(room__type="private")
+
+    if request.user.is_authenticated:
+        room_messages = room_messages.filter(
+            room__members=request.user
+        ).prefetch_related("user", "room")[:10]
 
     page_number = request.GET.get("page", 1)
     paginator = Paginator(rooms, 20)  # Show 25 rooms per page.
@@ -303,9 +317,7 @@ def room(request, slug):
                     "user",
                 ),
             ),
-            Prefetch("membership_set",
-                Membership.objects.select_related('user')
-            ),
+            Prefetch("membership_set", Membership.objects.select_related("user")),
         ).select_related("host"),
         slug=slug,
     )

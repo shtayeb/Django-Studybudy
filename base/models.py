@@ -112,13 +112,13 @@ class Reaction(models.Model):
 
 
 class RoomInvitation(models.Model):
-    inviter_id = models.ForeignKey(
+    inviter = models.ForeignKey(
         User, related_name="inviter", on_delete=models.CASCADE
     )
-    invitee_id = models.ForeignKey(
+    invitee = models.ForeignKey(
         User, related_name="invitee", on_delete=models.CASCADE
     )
-    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     token = models.CharField(max_length=100, null=False, blank=False)
     is_accepted = models.BooleanField(default=False)
@@ -128,4 +128,4 @@ class RoomInvitation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{self.room_id} - {self.inviter_id}"
+        return f"{self.room.name} - {self.inviter.username}"
