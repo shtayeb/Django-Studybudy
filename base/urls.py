@@ -18,6 +18,17 @@ urlpatterns = [
         name="accept-invite-room",
     ),
     path("room/<slug:slug>/settings", views.settingsRoom, name="room-settings"),
+    path("room/<slug:slug>/members", views.roomMembers, name="room-members"),
+    #
+    path("membership/<int:pk>/delete", views.deleteMember, name="delete-member"),
+    #
+    path("room/<slug:slug>/invitations", views.roomInvitation, name="room-invitations"),
+    #
+    path(
+        "room_invitation/<int:pk>/delete",
+        views.roomInvitationDelete,
+        name="delete-invitation",
+    ),
     # message
     path(
         "message/<int:pk>/reaction",

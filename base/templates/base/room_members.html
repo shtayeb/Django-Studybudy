@@ -1,0 +1,66 @@
+{% extends 'base/room_settings_base.html' %} 
+
+{% load static %}
+
+{% block extra_heads %}
+<title>Room Memebers</title>
+{% endblock extra_heads %}
+
+{% block settings_content %}
+<section class="sticky_right_panel rounded-md">
+    <h3 class="participants__top">
+        Members <span>({{room.membership_set.all.count}} Joined)</span>
+    </h3>
+    <ul 
+        class="participants__list scroll" 
+        hx-confirm="Are you sure?" 
+        hx-target="closest li" 
+        hx-swap="outerHTML swap:1s"
+    >
+        {% for membership in room.membership_set.all %}
+            <li 
+                class="participant justify-between w-full {% if membership.is_admin %} bg-dark-light p-3 rounded-md {% endif %}"
+            >
+                <a href="{% url 'user-profile' membership.user.username %}"  class="flex gap-5">
+                    <div class="avatar avatar--medium">
+                        <img src="{{membership.user.avatar}}" alt="user-avatar" />
+                    </div>
+                    <p>
+                        {{membership.user.name}}
+                        <span>@{{membership.user.username}}</span>
+                        <span class="text-gray my-2">
+                            Joined {{membership.created|timesince}} ago
+                        </span>
+                    </p>
+                </a>
+                <div class="flex gap-2">
+                    <span 
+                        class="roomListRoom__topic cursor-pointer hover:bg-dark-light disabled:bg-dark"
+                        hx-delete="{% url 'delete-member' membership.id %}"
+                        hx-indicator=".progress" 
+                        hx-ext="disable-element"
+                        hx-disable-element="this"
+                    >
+                        Remove
+                    </span>
+                    <span class="roomListRoom__topic cursor-pointer hover:bg-dark-light">
+                        Make Admin
+                    </span>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+
+</section>
+{% endblock settings_content %}
+
+{% block extra_scripts %}
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        // console.log(event.detail.verb)
+        if(event.detail.verb == 'delete'){
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        }
+    })
+</script>
+{% endblock extra_scripts %}

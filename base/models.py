@@ -26,11 +26,12 @@ class Topic(SoftDeleteModel):
         return self.name
 
 
-
 class Room(SoftDeleteModel):
-    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,related_name="host")
+    host = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name="host"
+    )
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
-    members = models.ManyToManyField(User, blank=True,through="Membership")
+    members = models.ManyToManyField(User, blank=True, through="Membership")
 
     name = models.CharField(max_length=200, blank=False, null=False)
     slug = AutoSlugField(populate_from=["name"])
@@ -60,6 +61,7 @@ class Room(SoftDeleteModel):
     def __str__(self):
         return self.name
 
+
 class Membership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
@@ -69,19 +71,20 @@ class Membership(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"'{self.user.username}' in room '{self.room.name}'" 
+        return f"'{self.user.username}' in room '{self.room.name}'"
+
 
 class Message(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     parent = models.ForeignKey(
-        'self',
-        related_name='replies',
-        related_query_name='message',
+        "self",
+        related_name="replies",
+        related_query_name="message",
         null=True,
         blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
 
     body = MDTextField()
@@ -94,17 +97,18 @@ class Message(SoftDeleteModel):
 
     def __str__(self):
         return self.body[0:50]
- 
+
 
 class ReactionType(models.Model):
-    name = models.CharField(max_length=70,null=False,blank=False)
-    
+    name = models.CharField(max_length=70, null=False, blank=False)
+
     def __str__(self):
         return f"{self.name}"
 
+
 class Reaction(models.Model):
     reaction_type = models.ForeignKey(ReactionType, on_delete=models.CASCADE)
-    message =  models.ForeignKey(Message, on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -112,12 +116,8 @@ class Reaction(models.Model):
 
 
 class RoomInvitation(models.Model):
-    inviter = models.ForeignKey(
-        User, related_name="inviter", on_delete=models.CASCADE
-    )
-    invitee = models.ForeignKey(
-        User, related_name="invitee", on_delete=models.CASCADE
-    )
+    inviter = models.ForeignKey(User, related_name="inviter", on_delete=models.CASCADE)
+    invitee = models.ForeignKey(User, related_name="invitee", on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     token = models.CharField(max_length=100, null=False, blank=False)

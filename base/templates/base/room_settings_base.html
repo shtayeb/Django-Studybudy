@@ -8,7 +8,7 @@
 
 {% block content %}
 <main class="layout layout--2-v2">
-    <div class="my_container justify-normal">
+    <div class="my_container justify-normal items-start">
 
         <div class="sticky_panel sticky_right_panel ">
             <div class="activities__header">
@@ -22,23 +22,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="{% url 'room-members' room.slug %}">
                         Members
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="{% url 'room-invitations' room.slug %}">
                         Invitations
-                    </a>
-                </li>
-                <li>
-                    <a href="">
-                        Privacy
-                    </a>
-                </li>
-                <li>
-                    <a href="">
-                        Notifications
                     </a>
                 </li>
             </ul>

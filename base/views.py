@@ -368,14 +368,72 @@ def room(request, slug):
 
     return render(request, "base/room.html", context)
 
+
+@require_http_methods(["DELETE"])
+def deleteMember(request, pk):
+    membership = Membership.objects.get(pk=pk)
+
+    membership.delete()
+
+    context = {}
+
+    return render(request, "components/messages.html", context)
+
+
+def roomInvitation(request, slug):
+    room = get_object_or_404(
+        Room.objects.prefetch_related(
+            Prefetch(
+                "roominvitation_set",
+                RoomInvitation.objects.select_related("invitee", "inviter").order_by(
+                    "created"
+                ),
+            )
+        ),
+        slug=slug,
+    )
+
+    context = {"room": room}
+
+    return render(request, "base/room_invitation.html", context)
+
+
+@require_http_methods(["DELETE"])
+def roomInvitationDelete(request, pk):
+    room_invitation = RoomInvitation.objects.get(pk=pk)
+
+    room_invitation.delete()
+
+    context = {}
+
+    return render(request, "components/messages.html", context)
+
+
+def roomMembers(request, slug):
+    room = get_object_or_404(
+        Room.objects.prefetch_related(
+            Prefetch(
+                "membership_set",
+                Membership.objects.select_related("user").order_by("created"),
+            )
+        ),
+        slug=slug,
+    )
+
+    context = {"room": room}
+
+    return render(request, "base/room_members.html", context)
+
+
 def settingsRoom(request, slug):
-    room = get_object_or_404(Room,slug=slug)
+    room = get_object_or_404(Room, slug=slug)
 
     context = {
         "room": room,
     }
 
     return render(request, "base/room_settings.html", context)
+
 
 @login_required(login_url="/accounts/login")
 def createRoom(request):
@@ -407,6 +465,7 @@ def createRoom(request):
     context = {"form": form, "topics": topics}
 
     return render(request, "base/create_room.html", context)
+
 
 @login_required(login_url="/accounts/login")
 def updateRoom(request, slug):
