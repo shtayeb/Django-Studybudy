@@ -30,6 +30,10 @@
 
           <div class="room__topRight">
             {% if room.host == request.user %}
+            <a href="{% url 'room-settings' room.slug %}" class="room__topics btn--main btn">
+              Settings
+            </a>
+
             <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
               <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
             </a>

@@ -368,6 +368,14 @@ def room(request, slug):
 
     return render(request, "base/room.html", context)
 
+def settingsRoom(request, slug):
+    room = get_object_or_404(Room,slug=slug)
+
+    context = {
+        "room": room,
+    }
+
+    return render(request, "base/room_settings.html", context)
 
 @login_required(login_url="/accounts/login")
 def createRoom(request):
@@ -398,8 +406,7 @@ def createRoom(request):
 
     context = {"form": form, "topics": topics}
 
-    return render(request, "base/room_form.html", context)
-
+    return render(request, "base/create_room.html", context)
 
 @login_required(login_url="/accounts/login")
 def updateRoom(request, slug):
@@ -424,7 +431,7 @@ def updateRoom(request, slug):
         return redirect("home")
 
     context = {"form": form, "topics": topics, "room": room}
-    return render(request, "base/room_form.html", context)
+    return render(request, "base/update_room.html", context)
 
 
 @login_required(login_url="/accounts/login")

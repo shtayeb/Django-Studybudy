@@ -1,0 +1,13 @@
+{% extends 'base/room_settings_base.html' %} 
+
+{% load static %}
+
+{% block extra_heads %}
+<title>Update Room</title>
+{% endblock extra_heads %}
+
+{% block settings_content %}
+<section class="create-room layout">
+    {% include 'base/room_form.html' %}
+</section>
+{% endblock settings_content %}
