@@ -108,14 +108,16 @@ class Product(models.Model):
 - [x] Add room Admin
 - [x] Deactivate room message when unauthenticated
 
-- Room admin CRUD
-- Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
-- SEO meta tags for pages
-
+- Create room settings page where admins can see all members, manage members, see invitations and its statuses, add new admins, invite users, edit room, archive, delete, block room members
 - Room admins can add/invite users to private rooms
 - Ability to archive(block new messages) a room by admin
 - Room members management(Kick, Block and suspend members of rooms by its Admin)
 - Rooms message moderation by Admins
+- Room admin CRUD
+
+- SEO meta tags for pages
+- Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
+
 
 - Activity notification for joined rooms
 - Glabal setting for notification settings

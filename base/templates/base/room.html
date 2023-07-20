@@ -124,7 +124,7 @@
       <!--   Members -->
       <div class="sticky_right_panel sticky_panel  ">
         <h3 class="participants__top">
-          Members <span>({{members.count}} Joined)</span>
+          Latest Members <span>({{room.membership_set.all.count}} Joined)</span>
         </h3>
         <div class="participants__list scroll">
           {% for membership in room.membership_set.all %}

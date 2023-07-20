@@ -47,7 +47,6 @@ def addMessageReply(request, pk):
 @login_required(login_url="/accounts/login")
 @require_http_methods("POST")
 def toggleMessageReaction(request, pk):
-
     if not request.user.is_authenticated:
         next_url = request.htmx.current_url_abs_path or ""
         return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
@@ -82,11 +81,10 @@ def toggleMessageReaction(request, pk):
 
 
 def toggleJoinRoom(request, pk):
-
     if not request.user.is_authenticated:
         next_url = request.htmx.current_url_abs_path or ""
         return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
-    
+
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
 
@@ -281,11 +279,10 @@ def home(request):
 @login_required(login_url="/accounts/login")
 @require_http_methods("POST")
 def addMessage(request, room_id):
-
     if not request.user.is_authenticated:
         next_url = request.htmx.current_url_abs_path or ""
         return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
-    
+
     room = get_object_or_404(Room, pk=room_id)
 
     msg_form = MessageForm(request.POST)
@@ -332,7 +329,12 @@ def room(request, slug):
                     "user",
                 ),
             ),
-            Prefetch("membership_set", Membership.objects.select_related("user")),
+            Prefetch(
+                "membership_set",
+                Membership.objects.select_related("user")
+                .filter(created__gte=datetime.date.today() - datetime.timedelta(days=7))
+                .order_by("created"),
+            ),
         ).select_related("host"),
         slug=slug,
     )
