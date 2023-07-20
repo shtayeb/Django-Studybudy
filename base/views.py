@@ -13,6 +13,7 @@ from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django_htmx.http import HttpResponseClientRedirect
 
 from .forms import MessageForm, RoomForm
 from .models import Membership, Message, ReactionType, Room, RoomInvitation, Topic, User
@@ -46,6 +47,11 @@ def addMessageReply(request, pk):
 @login_required(login_url="/accounts/login")
 @require_http_methods("POST")
 def toggleMessageReaction(request, pk):
+
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
     data = {"operation": ""}
     if request.method == "POST":
         message = Message.objects.get(pk=pk)
@@ -75,8 +81,12 @@ def toggleMessageReaction(request, pk):
     return JsonResponse(data, safe=False)
 
 
-@login_required(login_url="/accounts/login")
 def toggleJoinRoom(request, pk):
+
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+    
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
 
@@ -271,6 +281,11 @@ def home(request):
 @login_required(login_url="/accounts/login")
 @require_http_methods("POST")
 def addMessage(request, room_id):
+
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+    
     room = get_object_or_404(Room, pk=room_id)
 
     msg_form = MessageForm(request.POST)

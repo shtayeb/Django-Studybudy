@@ -94,23 +94,26 @@
           </div>
 
           {% comment %} The message {% endcomment %}
-          <div class="room__message">
-            <form 
-              hx-post="{% url 'room-add-message' room.id %}" 
-              hx-target="#messages-list" 
-              hx-swap="beforeend show:#messages-list:bottom"
-              hx-indicator=".progress" 
-              hx-ext="disable-element"
-              hx-disable-element="#sumbit-btn-message"
-            >
-              {% csrf_token %}
-              {{ msg_form.media }}
-              {{msg_form.as_p}}
-              <button id="sumbit-btn-message" hx-disable-element="self" class="btn btn--dark disabled:bg-gray" >
-                Add Message
-              </button>
-            </form>
-          </div>
+          {% if request.user.is_authenticated %}
+            <div class="room__message">
+              <form 
+                hx-post="{% url 'room-add-message' room.id %}" 
+                hx-target="#messages-list" 
+                hx-swap="beforeend show:#messages-list:bottom"
+                hx-indicator=".progress" 
+                hx-ext="disable-element"
+                hx-disable-element="#sumbit-btn-message"
+              >
+                {% csrf_token %}
+                {{ msg_form.media }}
+                {{msg_form.as_p}}
+                <button id="sumbit-btn-message" hx-disable-element="self" class="btn btn--dark disabled:bg-gray" >
+                  Add Message
+                </button>
+              </form>
+            </div>
+          {% endif %}
+
           
           {% include 'base/converstion_component.html' %}
 
@@ -133,8 +136,6 @@
                 {{membership.user.username}}
                 <span>@{{membership.user.username}}</span>
               </p>
-             
-              
             </a>
           {% endfor %}
         </div>
