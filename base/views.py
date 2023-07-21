@@ -232,6 +232,7 @@ def home(request):
         )
         .prefetch_related("host", "topic")
         .annotate(members_count=Count("members"))
+        .order_by("-created")
     )
 
     if request.user.is_authenticated:
@@ -340,10 +341,15 @@ def room(request, slug):
     )
 
     is_joined = False
-
+    is_admin = False
     # TODO : Move this to a directive
     if request.user.is_authenticated:
         is_joined = room.members.contains(request.user)
+
+        user_membership = room.membership_set.filter(user_id=request.user.id)
+
+        if user_membership.exists():
+            is_admin = user_membership.first().is_admin
 
         if (
             not (room.host_id == request.user.id)
@@ -362,6 +368,7 @@ def room(request, slug):
         "room": room,
         "msg_form": msg_form,
         "reply_form": reply_form,
+        "is_admin": is_admin,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }
@@ -425,14 +432,69 @@ def roomMembers(request, slug):
     return render(request, "base/room_members.html", context)
 
 
+@require_http_methods(["GET"])
+def searchMember(request, room):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    member = request.GET.get("member")
+
+    print(f"---- member == {member}")
+
+    print(f"---- room == {room}")
+
+    if request.GET.get("member") == None:
+        member = ""
+
+    membership_set = (
+        Membership.objects.filter(
+            Q(room=room)
+            & (Q(user__email__icontains=member) | Q(user__username__icontains=member))
+        )
+        .select_related("user")
+        .order_by("created")
+    )
+
+    print(membership_set)
+
+    context = {"membership_set": membership_set}
+
+    return render(request, "base/partials/membership_list.html", context)
+
+
 def settingsRoom(request, slug):
-    room = get_object_or_404(Room, slug=slug)
+    room = get_object_or_404(
+        Room.objects.select_related("host", "topic"),
+        slug=slug,
+    )
 
     context = {
         "room": room,
     }
 
     return render(request, "base/room_settings.html", context)
+
+
+@require_http_methods(["POST"])
+def toggleRoomAdmin(request, pk):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    # room = Room.objects.get(slug=slug)
+
+    membership = Membership.objects.select_related("user", "room").get(pk=pk)
+
+    membership.is_admin = not membership.is_admin
+
+    membership.save()
+
+    messages.success(request, "User removed from admins !")
+
+    context = {"membership": membership}
+
+    return render(request, "base/partials/membership_item.html", context=context)
 
 
 @login_required(login_url="/accounts/login")
@@ -464,17 +526,24 @@ def createRoom(request):
 
     context = {"form": form, "topics": topics}
 
-    return render(request, "base/create_room.html", context)
+    return render(request, "base/room_create.html", context)
 
 
 @login_required(login_url="/accounts/login")
 def updateRoom(request, slug):
-    # room = Room.objects.get(id=pk)
     room = get_object_or_404(Room, slug=slug)
+
     form = RoomForm(instance=room)
     topics = Topic.objects.all()
 
-    if request.user != room.host:
+    user_membership = room.membership_set.filter(user_id=request.user.id)
+
+    is_admin = False
+
+    if user_membership.exists():
+        is_admin = user_membership.first().is_admin
+
+    if request.user != room.host and not is_admin:
         return HttpResponse("You are not allowed here !!")
 
     if request.method == "POST":
@@ -490,7 +559,7 @@ def updateRoom(request, slug):
         return redirect("home")
 
     context = {"form": form, "topics": topics, "room": room}
-    return render(request, "base/update_room.html", context)
+    return render(request, "base/room_update.html", context)
 
 
 @login_required(login_url="/accounts/login")

@@ -6,6 +6,11 @@ urlpatterns = [
     path("", views.home, name="home"),
     # room
     path("room/create/", views.createRoom, name="create-room"),
+    path(
+        "room/<int:room>/search-member",
+        views.searchMember,
+        name="room-member-search",
+    ),
     path("room/<int:room_id>/add-message", views.addMessage, name="room-add-message"),
     path("room/<slug:slug>/", views.room, name="room"),
     path("room/<int:pk>/toggle-join/", views.toggleJoinRoom, name="toggle-room-join"),
@@ -21,6 +26,11 @@ urlpatterns = [
     path("room/<slug:slug>/members", views.roomMembers, name="room-members"),
     #
     path("membership/<int:pk>/delete", views.deleteMember, name="delete-member"),
+    path(
+        "membership/<int:pk>/toggle-admin",
+        views.toggleRoomAdmin,
+        name="room-toggle-admin",
+    ),
     #
     path("room/<slug:slug>/invitations", views.roomInvitation, name="room-invitations"),
     #

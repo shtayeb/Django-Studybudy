@@ -29,18 +29,18 @@
           </div>
 
           <div class="room__topRight">
-            {% if room.host == request.user %}
-            <a href="{% url 'room-settings' room.slug %}" class="room__topics btn--main btn">
-              Settings
-            </a>
+            {% if room.host == request.user or is_admin  %}
+              <a href="{% url 'room-settings' room.slug %}" class="room__topics btn--main btn">
+                Settings
+              </a>
 
-            <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
-              <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
-            </a>
+              <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
+                <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
+              </a>
 
-            <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
-              <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
-            </a>
+              <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
+                <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
+              </a>
             {% endif %}
 
             {% if not request.user.id == room.host_id %}
@@ -54,7 +54,6 @@
                   {% endif %}
                 </button>
               </form>
-              
             {% endif %}
 
             {% if room.host_id == request.user.id %}
@@ -80,7 +79,7 @@
               <p>Hosted By</p>
               <a
                 href="{% url 'user-profile' room.host.username %}"
-                class="room__author"
+                class="room__author w-fit"
               >
                 <div class="avatar avatar--small">
                   <img src="{{room.host.avatar}}" alt="user-avatar" />

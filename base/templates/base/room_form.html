@@ -1,15 +1,15 @@
 {% load static %}
 
-<div class="layout__box">
-  <div class="layout__boxHeader">
+<div class="p-10">
+  {% comment %} <div class="layout__boxHeader">
     <div class="layout__boxTitle">
       <a href="{{request.META.HTTP_REFERER}}">
         <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
       </a>
       <h3>Create/Update Study Room</h3>
     </div>
-  </div>
-  <div class="layout__body p-5">
+  </div> {% endcomment %}
+  <div class="">
     <form class="form" action="" method="POST">
       {% csrf_token %}
 

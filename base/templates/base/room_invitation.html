@@ -8,9 +8,22 @@
 
 {% block settings_content %}
 <section class="sticky_right_panel rounded-md">
-    <h3 class="participants__top">
-        Invitations <span>({{room.roominvitation_set.all.count}} Joined)</span>
-    </h3>
+    <div class="participants__top flex justify-between">
+        <h3 class="">
+            Invitations <span>({{room.roominvitation_set.all.count}} Joined)</span>
+        </h3>
+       
+        {% comment %} <form class="header__search" method="GET" action="{% url 'home' %}">
+            <label class="p-4">
+                <img class="" src="{% static 'images/icons/search.svg' %}" alt="search" />
+                <input placeholder="Search for rooms..." name="q" />
+            </label>
+        </form> {% endcomment %}
+
+        <a <a href="{% url 'invite-room' room.slug %}" class="roomListRoom__topic cursor-pointer hover:bg-dark disabled:bg-dark ">
+            Invite Users
+        </a>
+    </div>
     <ul 
         class="participants__list scroll" 
         hx-confirm="Are you sure?" 
@@ -21,7 +34,7 @@
             <li 
                 class="participant justify-between w-full"
             >
-                <a href="{% url 'user-profile' invitation.invitee.username %}"  class="flex gap-5">
+                <a href="{% url 'user-profile' invitation.invitee.username %}"  class="participant mb-0 flex gap-5">
                     <div class="avatar avatar--medium">
                         <img src="{{invitation.invitee.avatar}}" alt="user-avatar" />
                     </div>
