@@ -107,13 +107,13 @@ class Product(models.Model):
 - [x] HTMX form and reactivity for adding new messages/replies
 - [x] Add room Admin
 - [x] Deactivate room message when unauthenticated
+- [x] Create room settings page where admins can see all members, manage members, see invitations and its statuses, add new admins, invite users, edit room,
+- [x] Room admins can add/invite users to private rooms
 
-- Create room settings page where admins can see all members, manage members, see invitations and its statuses, add new admins, invite users, edit room, archive, delete, block room members
-- Room admins can add/invite users to private rooms
-- Ability to archive(block new messages) a room by admin
-- Room members management(Kick, Block and suspend members of rooms by its Admin)
+- Ability to archive(block new messages) a room by admin/host(room.status = active,archived)
+- [] block room members
 - Rooms message moderation by Admins
-- Room admin CRUD
+- Room members management(Kick, Block and suspend members of rooms by its Admin)
 
 - SEO meta tags for pages
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null

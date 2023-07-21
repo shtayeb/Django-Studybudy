@@ -111,8 +111,17 @@ def toggleJoinRoom(request, pk):
 
 @login_required(login_url="/accounts/login")
 def sendRoomInvite(request, slug):
-    # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, slug=slug)
+
+    room_admin = False
+
+    user_membership = room.membership_set.filter(user_id=request.user.id)
+
+    if user_membership.exists():
+        room_admin = user_membership.first().is_admin
+
+    if not request.user.id == room.host_id and not room_admin:
+        raise ValidationError("Only room admin and host can invite users !")
 
     if request.method == "POST":
         user_email = request.POST.get("email")
@@ -121,11 +130,8 @@ def sendRoomInvite(request, slug):
             raise ValidationError("The Email Address is required !!")
 
         invitee = get_object_or_404(User, email=user_email)
-        # invitee = User.objects.get(email=user_email)
 
         # Check if there already exist an invite for the user
-        # invitee_id, room_id
-        # old_invitation = RoomInvitation.objects.get(room=room, invitee=invitee)
         old_invitation = RoomInvitation.objects.filter(room=room, invitee=invitee)
 
         if old_invitation.exists():
@@ -567,7 +573,7 @@ def deleteRoom(request, pk):
     room = Room.objects.get(id=pk)
 
     if request.user != room.host:
-        return HttpResponse("You are not allowed here !!")
+        return HttpResponse("You are not authorized to perform this action !!")
 
     if request.method == "POST":
         room.delete()

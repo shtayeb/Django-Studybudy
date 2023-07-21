@@ -1,5 +1,7 @@
 {% extends 'base/room_settings_base.html' %} 
 
+{% load static %}
+
 {% block settings_content %}
 <section class="bg-dark">
 
@@ -107,6 +109,17 @@
             </div>
             
         </div>
+
+        <div class="flex flex-col gap-16">
+            <div class="flex justify-between items-center border-t border-dark-medium pb-5 ">
+                <span>Delete Room</span>
+                <a href="{% url 'delete-room' room.id %}" class="room__topics btn bg-red-700 flex gap-3">
+                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
+                    Delete
+                </a>
+            </div>
+        </div>
+
     </div>
 </section>
 {% endblock settings_content %}

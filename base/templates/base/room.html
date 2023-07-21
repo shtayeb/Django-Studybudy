@@ -30,23 +30,20 @@
 
           <div class="room__topRight">
             {% if room.host == request.user or is_admin  %}
-              <a href="{% url 'room-settings' room.slug %}" class="room__topics btn--main btn">
+              <a href="{% url 'room-settings' room.slug %}" class="room__topics btn bg-dark-medium">
                 Settings
               </a>
 
-              <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
+              <a href="{% url 'update-room' room.slug %}" class="room__topics btn bg-dark-medium">
                 <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
               </a>
 
-              <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
-                <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
-              </a>
             {% endif %}
 
             {% if not request.user.id == room.host_id %}
               <form hx-post="{% url 'toggle-room-join' room.id %}" hx-indicator=".progress"  >
                 {% csrf_token %}
-                <button type="submit" class="room__topics  btn btn--main">
+                <button type="submit" class="room__topics  btn bg-dark-medium">
                   {% if is_joined %}
                       Leave Room
                   {% else %}
@@ -56,8 +53,8 @@
               </form>
             {% endif %}
 
-            {% if room.host_id == request.user.id %}
-              <a href="{% url 'invite-room' room.slug %}" class="room__topics btn--main btn" id="invite-user-btn">
+            {% if room.host_id == request.user.id or is_admin %}
+              <a href="{% url 'invite-room' room.slug %}" class="room__topics btn bg-dark-medium" id="invite-user-btn">
                 Invite Users
               </a>
             {% endif %}
