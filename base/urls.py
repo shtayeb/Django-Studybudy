@@ -14,7 +14,12 @@ urlpatterns = [
     path("room/<int:room_id>/add-message", views.addMessage, name="room-add-message"),
     path("room/<slug:slug>/", views.room, name="room"),
     path("room/<int:pk>/toggle-join/", views.toggleJoinRoom, name="toggle-room-join"),
-    path("room/<str:slug>/invite/", views.sendRoomInvite, name="invite-room"),
+    path(
+        "room/<slug:slug>/toggle-archived/",
+        views.toggleRoomArchive,
+        name="toggle-room-archived",
+    ),
+    path("room/<slug:slug>/invite/", views.sendRoomInvite, name="invite-room"),
     path("room/<slug:slug>/update", views.updateRoom, name="update-room"),
     path("room/<int:pk>/delete", views.deleteRoom, name="delete-room"),
     path(
@@ -30,6 +35,11 @@ urlpatterns = [
         "membership/<int:pk>/toggle-admin",
         views.toggleRoomAdmin,
         name="room-toggle-admin",
+    ),
+    path(
+        "membership/<int:pk>/toggle-blocked",
+        views.toggleRoomMemberBlock,
+        name="room-toggle-blocked",
     ),
     #
     path("room/<slug:slug>/invitations", views.roomInvitation, name="room-invitations"),

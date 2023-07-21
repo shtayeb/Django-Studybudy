@@ -44,6 +44,8 @@ class Room(SoftDeleteModel):
 
     type = models.TextField(null=False, choices=TYPES, default="public")
 
+    is_archived = models.BooleanField(default=False)
+
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -65,7 +67,9 @@ class Room(SoftDeleteModel):
 class Membership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
     is_admin = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
 
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)

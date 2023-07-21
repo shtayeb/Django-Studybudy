@@ -109,12 +109,11 @@ class Product(models.Model):
 - [x] Deactivate room message when unauthenticated
 - [x] Create room settings page where admins can see all members, manage members, see invitations and its statuses, add new admins, invite users, edit room,
 - [x] Room admins can add/invite users to private rooms
+- [x] Ability to archive(block new messages) a room by admin/host(room.is_archived)
+- [x] block room members
+- [x] Room members management(Kick, Block and suspend members of rooms by its Admin)
 
-- Ability to archive(block new messages) a room by admin/host(room.status = active,archived)
-- [] block room members
 - Rooms message moderation by Admins
-- Room members management(Kick, Block and suspend members of rooms by its Admin)
-
 - SEO meta tags for pages
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
 

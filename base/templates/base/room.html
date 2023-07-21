@@ -94,7 +94,7 @@
           </div>
 
           {% comment %} The message {% endcomment %}
-          {% if request.user.is_authenticated %}
+          {% if request.user.is_authenticated and not is_blocked and not room.is_archived %}
             <div class="room__message">
               <form 
                 hx-post="{% url 'room-add-message' room.id %}" 

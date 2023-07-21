@@ -19,19 +19,35 @@
         
         <div class="flex flex-col gap-16">
             <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <span>Type</span>
+                <div class="space-y-2">
+                    <span class="font-medium">Type</span>
+                    <p class="text-xl">
+                    </p>
+                </div>
                 <p class="roomListRoom__topic  ">{{room.type}}</p>
             </div>
             <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <span>Created At</span>
+                <div class="space-y-2">
+                    <span class="font-medium">Created At</span>
+                    <p class="text-xl">
+                    </p>
+                </div>
                 <p>{{room.created|timesince}}</p>
             </div>
             <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <span>Topic</span>
+                <div class="space-y-2">
+                    <span class="font-medium">Topic</span>
+                    <p class="text-xl">
+                    </p>
+                </div>
                 <p class="roomListRoom__topic ">{{room.topic}}</p>
             </div>
             <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <span>Host</span>
+                <div class="space-y-2">
+                    <span class="font-medium">Host</span>
+                    <p class="text-xl">
+                    </p>
+                </div>
                 <a href="{% url 'user-profile' room.host.username %}"  class="participant mb-0 flex gap-5">
                     <div class="avatar avatar--medium">
                         <img src="{{room.host.avatar}}" alt="user-avatar" />
@@ -111,8 +127,25 @@
         </div>
 
         <div class="flex flex-col gap-16">
-            <div class="flex justify-between items-center border-t border-dark-medium pb-5 ">
-                <span>Delete Room</span>
+            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
+                <div class="space-y-2">
+                    <span class="font-medium">Archive Room</span>
+                    <p class="text-xl">
+                        Archiving the room will close the room for new messages/replies and joining the room.
+                    </p>
+                </div>
+                <div id="archive-toggle">
+                    {% include 'base/partials/toggle_archived.html' %}
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
+                <div class="space-y-2">
+                    <span class="font-medium">Delete Room</span>
+                    <p class="text-xl">
+                        Deleting a room will delete all its members and messages/replies.
+                    </p>
+                </div>
                 <a href="{% url 'delete-room' room.id %}" class="room__topics btn bg-red-700 flex gap-3">
                     <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
                     Delete

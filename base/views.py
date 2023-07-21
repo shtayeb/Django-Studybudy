@@ -26,6 +26,8 @@ SECRET_KEY = "secret_key_001"
 @require_http_methods("POST")
 @login_required(login_url="/accounts/login")
 def addMessageReply(request, pk):
+    # TODO - Check if user is not blocked in the room
+
     # Get the room as well and check if the room is not archived
     message = Message.objects.get(pk=pk)
     # do dome error handling
@@ -292,6 +294,8 @@ def addMessage(request, room_id):
 
     room = get_object_or_404(Room, pk=room_id)
 
+    # TODO - Check if user is not blocked in the room
+
     msg_form = MessageForm(request.POST)
 
     # if request.htmx:
@@ -348,6 +352,7 @@ def room(request, slug):
 
     is_joined = False
     is_admin = False
+    is_blocked = False
     # TODO : Move this to a directive
     if request.user.is_authenticated:
         is_joined = room.members.contains(request.user)
@@ -356,6 +361,7 @@ def room(request, slug):
 
         if user_membership.exists():
             is_admin = user_membership.first().is_admin
+            is_blocked = user_membership.first().is_blocked
 
         if (
             not (room.host_id == request.user.id)
@@ -375,6 +381,7 @@ def room(request, slug):
         "msg_form": msg_form,
         "reply_form": reply_form,
         "is_admin": is_admin,
+        "is_blocked": is_blocked,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }
@@ -483,6 +490,46 @@ def settingsRoom(request, slug):
 
 
 @require_http_methods(["POST"])
+def toggleRoomArchive(request, slug):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    room = Room.objects.get(slug=slug)
+
+    room.is_archived = not room.is_archived
+
+    room.save()
+
+    messages.success(request, "Room Un/Archived !")
+
+    context = {"room": room}
+
+    return render(request, "base/partials/toggle_archived.html", context=context)
+
+
+@require_http_methods(["POST"])
+def toggleRoomMemberBlock(request, pk):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    membership = Membership.objects.select_related("user", "room").get(pk=pk)
+
+    membership.is_blocked = not membership.is_blocked
+
+    membership.save()
+
+    messages.success(
+        request, f"User has been {'Blocked' if membership.is_blocked else 'Unblocked'}!"
+    )
+
+    context = {"membership": membership}
+
+    return render(request, "base/partials/membership_item.html", context=context)
+
+
+@require_http_methods(["POST"])
 def toggleRoomAdmin(request, pk):
     if not request.user.is_authenticated:
         next_url = request.htmx.current_url_abs_path or ""
@@ -507,18 +554,26 @@ def toggleRoomAdmin(request, pk):
 def createRoom(request):
     form = RoomForm()
     topics = Topic.objects.all()
+
     if request.method == "POST":
         topic_name = request.POST.get("topic")
         topic, created = Topic.objects.get_or_create(name=topic_name)
 
-        Room.objects.create(
+        room = Room.objects.create(
             host=request.user,
             topic=topic,
             name=request.POST.get("name"),
             description=request.POST.get("description"),
             type=request.POST.get("type"),
         )
-        return redirect("home")
+
+        # Make host a member and admin
+        membership = Membership.objects.create(
+            room=room, user=request.user, is_admin=True
+        )
+        room.membership_set.add(membership)
+
+        return redirect("room", room.slug)
 
         # form = RoomForm(request.POST)
 

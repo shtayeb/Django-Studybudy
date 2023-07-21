@@ -61,33 +61,37 @@
         {% endfor %}
     </div>
 
-    <button class="btn btn--pill" 
-        id="add-reply-btn-{{message.id}}" 
-        data-toggle="reply-form" 
-        data-target="comment-{{message.id}}-replyForm"
-    >
-        Add Reply
-    </button>
-    <!-- Reply form start -->
-    <div class="room__message">
-        <form 
-            hx-post="{% url 'message-reply' message.id %}" 
-            hx-target="#message-{{message.id}}-replies-list" 
-            hx-swap="beforeend show:#message-{{message.id}}-replies-list:bottom" 
-            hx-indicator=".progress" 
-            hx-ext="disable-element"
-            hx-disable-element="#sumbit-btn-reply"
-            class="reply-form d-none" 
-            id="comment-{{message.id}}-replyForm"
+    {% if not is_blocked %}
+     
+        <button class="btn btn--pill" 
+            id="add-reply-btn-{{message.id}}" 
+            data-toggle="reply-form" 
+            data-target="comment-{{message.id}}-replyForm"
         >
-            {% csrf_token %}
-            <textarea  name="body" placeholder="Reply to comment (Supports Markdown)" rows="4" required></textarea>
-            <input type="hidden" name="room_id" value="{{message.room_id}}">
-            <button type="submit" id="sumbit-btn-reply" class="btn btn--pill disabled:bg-gray"  >Submit</button>
-            <button type="button" class="btn btn--pill"  data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">Cancel</button>
-        </form>
-    </div>
-    <!-- Reply form end -->
+            Add Reply
+        </button>
+        <!-- Reply form start -->
+        <div class="room__message">
+            <form 
+                hx-post="{% url 'message-reply' message.id %}" 
+                hx-target="#message-{{message.id}}-replies-list" 
+                hx-swap="beforeend show:#message-{{message.id}}-replies-list:bottom" 
+                hx-indicator=".progress" 
+                hx-ext="disable-element"
+                hx-disable-element="#sumbit-btn-reply"
+                class="reply-form d-none" 
+                id="comment-{{message.id}}-replyForm"
+            >
+                {% csrf_token %}
+                <textarea  name="body" placeholder="Reply to comment (Supports Markdown)" rows="4" required></textarea>
+                <input type="hidden" name="room_id" value="{{message.room_id}}">
+                <button type="submit" id="sumbit-btn-reply" class="btn btn--pill disabled:bg-gray"  >Submit</button>
+                <button type="button" class="btn btn--pill"  data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">Cancel</button>
+            </form>
+        </div>
+        <!-- Reply form end -->
+
+    {% endif %}
 
     <details class="message_replies" open id="message-{{message.id}}-replies-list">
         {% for reply in message.replies.all %}
