@@ -20,22 +20,35 @@
             </div>
 
             <ul class="activities_list p-5 space-y-5 scroll ">
-                <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium">
+                <li 
+                    class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium
+                    {% if request.resolver_match.view_name == 'room-settings' %}bg-dark-medium rounded-md {% endif %}
+                    "
+                >
                     <a href="{% url 'room-settings' room.slug %}" class="w-full">
-                        Info
+                        Info 
                     </a>
                 </li>
-                <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium">
+                <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium
+                        {% if request.resolver_match.view_name == 'update-room' %}bg-dark-medium rounded-md {% endif %}
+                    "
+                >
                     <a href="{% url 'update-room' room.slug %}" class="w-full">
-                        Edit Room
+                        Edit Room 
                     </a>
                 </li>
-                <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium">
+                <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium
+                    {% if request.resolver_match.view_name == 'room-members' %}bg-dark-medium rounded-md {% endif %}
+                "
+                >
                     <a href="{% url 'room-members' room.slug %}" class="w-full">
                         Members
                     </a>
                 </li>
-                <li class="hover:bg-dark-medium p-3 hover:rounded-md ">
+                <li class="hover:bg-dark-medium p-3 hover:rounded-md 
+                    {% if request.resolver_match.view_name == 'room-invitations' %}bg-dark-medium rounded-md {% endif %}}
+                "
+                >
                     <a href="{% url 'room-invitations' room.slug %}" class="w-full">
                         Invitations
                     </a>

@@ -58,9 +58,14 @@
                     </span>
                 </div>
             </li>
+        {% empty %}
+            <li 
+                class="participant justify-between w-full"
+            >
+                <span>No Invitations Yet !</span>
+            </li>
         {% endfor %}
-        </ul>
-
+    </ul>
 </section>
 {% endblock settings_content %}
 
