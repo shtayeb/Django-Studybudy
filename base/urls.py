@@ -4,14 +4,13 @@ from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    # room
+    # Room
     path("room/create/", views.createRoom, name="create-room"),
     path(
         "room/<int:room>/search-member",
         views.searchMember,
         name="room-member-search",
     ),
-    path("room/<int:room_id>/add-message", views.addMessage, name="room-add-message"),
     path("room/<slug:slug>/", views.room, name="room"),
     path("room/<int:pk>/toggle-join/", views.toggleJoinRoom, name="toggle-room-join"),
     path(
@@ -29,7 +28,7 @@ urlpatterns = [
     ),
     path("room/<slug:slug>/settings", views.settingsRoom, name="room-settings"),
     path("room/<slug:slug>/members", views.roomMembers, name="room-members"),
-    #
+    # Room Membership
     path("membership/<int:pk>/delete", views.deleteMember, name="delete-member"),
     path(
         "membership/<int:pk>/toggle-admin",
@@ -41,15 +40,15 @@ urlpatterns = [
         views.toggleRoomMemberBlock,
         name="room-toggle-blocked",
     ),
-    #
+    # RoomInvitation
     path("room/<slug:slug>/invitations", views.roomInvitation, name="room-invitations"),
-    #
     path(
         "room_invitation/<int:pk>/delete",
         views.roomInvitationDelete,
         name="delete-invitation",
     ),
-    # message
+    # Message
+    path("room/<int:room_id>/add-message", views.addMessage, name="room-add-message"),
     path(
         "message/<int:pk>/reaction",
         views.toggleMessageReaction,
@@ -57,7 +56,8 @@ urlpatterns = [
     ),
     path("message/<int:pk>/delete", views.deleteMessage, name="delete-message"),
     path("message/<int:pk>/reply", views.addMessageReply, name="message-reply"),
-    # topic
+    path("message/<int:pk>/", views.showMessage, name="message-show"),
+    # Topic
     path("topics/", views.topicsPage, name="topics"),
     path("topics/search-topic", views.searchTopic, name="search-topic"),
     #

@@ -29,6 +29,8 @@
         {{ message.body | markdown | safe }}
     </div>
 
+    <a href="{% url 'message-show' message.id %}">Show Message</a>
+
     {% comment %} Reactions {% endcomment %}
     <div class="thread__footer">
         {% for reaction in reaction_types %}

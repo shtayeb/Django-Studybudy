@@ -400,6 +400,7 @@ def deleteMember(request, pk):
     return render(request, "components/messages.html", context)
 
 
+@login_required(login_url="/accounts/login")
 def roomInvitation(request, slug):
     room = get_object_or_404(
         Room.objects.prefetch_related(
@@ -429,6 +430,7 @@ def roomInvitationDelete(request, pk):
     return render(request, "components/messages.html", context)
 
 
+@login_required(login_url="/accounts/login")
 def roomMembers(request, slug):
     room = get_object_or_404(
         Room.objects.prefetch_related(
@@ -476,6 +478,7 @@ def searchMember(request, room):
     return render(request, "base/partials/membership_list.html", context)
 
 
+@login_required(login_url="/accounts/login")
 def settingsRoom(request, slug):
     room = get_object_or_404(
         Room.objects.select_related("host", "topic"),
@@ -638,6 +641,14 @@ def deleteRoom(request, pk):
     return render(request, "base/delete.html", {"obj": room})
 
 
+def showMessage(request, pk):
+    message = get_object_or_404(Message, pk=pk)
+
+    context = {"message": message}
+
+    return render(request, "base/show_message.html", context)
+
+
 @login_required(login_url="/accounts/login")
 def deleteMessage(request, pk):
     message = Message.objects.get(id=pk)
@@ -690,7 +701,9 @@ def activityPage(request):
     # topics = Topic.objects.filter(name__icontains=q)
     # context = {'topics':topics}
 
-    room_messages = Message.objects.prefetch_related("user", "room")
+    room_messages = Message.objects.prefetch_related("user", "room").exclude(
+        Q(room__type="private")
+    )
 
     context = {"room_messages": room_messages}
     return render(request, "base/activity.html", context)
