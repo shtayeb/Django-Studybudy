@@ -653,8 +653,19 @@ def showMessage(request, pk):
 def deleteMessage(request, pk):
     message = Message.objects.get(id=pk)
 
-    if request.user != message.user:
-        return HttpResponse("You are not allowed here 33 !!")
+    # (Find a better way to do this) Check if the request.user is admin of the room
+    user_membership = message.room.membership_set.filter(user_id=request.user.id)
+    print(user_membership)
+
+    is_admin = False
+
+    if user_membership.exists():
+        is_admin = user_membership.first().is_admin
+
+    if request.user != message.user and not is_admin:
+        return HttpResponse("You do not have permission to perform this action !")
+    # endCheck
+
 
     if request.method == "POST":
         message.delete()

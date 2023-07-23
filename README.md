@@ -112,15 +112,14 @@ class Product(models.Model):
 - [x] Ability to archive(block new messages) a room by admin/host(room.is_archived)
 - [x] block room members
 - [x] Room members management(Kick, Block and suspend members of rooms by its Admin)
+- [x] Rooms message moderation by Admins
 
-- Rooms message moderation by Admins
 - SEO meta tags for pages
 - Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
-
+- Recaptcha for login and register page
 
 - Activity notification for joined rooms
 - Glabal setting for notification settings
-- Recaptcha for login on register page
 - roles and permissions
 
 

@@ -17,12 +17,12 @@
             </a>
             
 
-            {% if request.user == message.user %}
-            <a class="hover:bg-dark" href="{% url 'delete-message' message.id %}">
-                <div class="thread__delete">
-                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
-                </div>
-            </a>
+            {% if request.user == message.user or is_admin %}
+                <a class="hover:bg-dark" href="{% url 'delete-message' message.id %}">
+                    <div class="thread__delete">
+                        <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
+                    </div>
+                </a>
             {% endif %}
             <a href="{% url 'message-show' message.id %}" class="underline hover:font-semibold">Show Message</a>
         </div>
@@ -93,7 +93,14 @@
                 id="comment-{{message.id}}-replyForm"
             >
                 {% csrf_token %}
-                <textarea class="bg-transparent focus:outline-none m-0 outline-none p-5 " name="body" placeholder="Reply to comment" rows="4" required></textarea>
+                <textarea 
+                    class="bg-transparent focus:outline-none m-0 outline-none p-5 " 
+                    name="body" 
+                    placeholder="Reply to comment" 
+                    rows="4" 
+                    required
+                >
+                </textarea>
 
                 <input type="hidden" name="room_id" value="{{message.room_id}}">
 
