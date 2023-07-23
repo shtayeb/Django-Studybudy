@@ -15,14 +15,14 @@
       <div class="room ">
         <div class="room__top">
 
-          <div class="room__topLeft">
+          <div class="room__topLeft items-center">
             <a href="{{request.META.HTTP_REFERER}}">
               <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
             </a>
             <h3 class="">Study Room</h3>
             {% if room.type == 'private' %}
               {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
-              <button class="btn roomListRoom__topic" type="submit">
+              <button class="bg-dark-medium px-4 py-2 rounded-full border border-dark-light" type="submit">
                 <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
               </button>
             {% endif %}
@@ -85,11 +85,11 @@
               </a>
             </div>
             
-            <div class="room__details">
+            <div class="room__details my-2">
               {{room.description}}
             </div>
             
-            <span class="room__topics">{{room.topic}}</span>
+            <span class="room__topics bg-dark-medium my-2">{{room.topic}}</span>
           
           </div>
 

@@ -25,7 +25,8 @@
                     {% if request.resolver_match.view_name == 'room-settings' %}bg-dark-medium rounded-md {% endif %}
                     "
                 >
-                    <a href="{% url 'room-settings' room.slug %}" class="w-full">
+                    <a href="{% url 'room-settings' room.slug %}" class="w-full flex items-center gap-5">
+                        <img class="w-6 h-6" src="{% static 'images/icons/tool.svg' %}" alt="tool-icon" >
                         Info 
                     </a>
                 </li>
@@ -33,7 +34,8 @@
                         {% if request.resolver_match.view_name == 'update-room' %}bg-dark-medium rounded-md {% endif %}
                     "
                 >
-                    <a href="{% url 'update-room' room.slug %}" class="w-full">
+                    <a href="{% url 'update-room' room.slug %}" class="w-full flex items-center gap-5">
+                        <img class="w-6 h-6" src="{% static 'images/icons/pen.svg' %}" alt="pen-icon" >
                         Edit Room 
                     </a>
                 </li>
@@ -41,7 +43,8 @@
                     {% if request.resolver_match.view_name == 'room-members' %}bg-dark-medium rounded-md {% endif %}
                 "
                 >
-                    <a href="{% url 'room-members' room.slug %}" class="w-full">
+                    <a href="{% url 'room-members' room.slug %}" class="w-full flex items-center gap-5">
+                        <img class="w-6 h-6" src="{% static 'images/icons/user-group.svg' %}" alt="user-group-icon" >
                         Members
                     </a>
                 </li>
@@ -49,7 +52,8 @@
                     {% if request.resolver_match.view_name == 'room-invitations' %}bg-dark-medium rounded-md {% endif %}}
                 "
                 >
-                    <a href="{% url 'room-invitations' room.slug %}" class="w-full">
+                    <a href="{% url 'room-invitations' room.slug %}" class="w-full flex items-center gap-5">
+                        <img class="w-6 h-6" src="{% static 'images/icons/invite.svg' %}" alt="invite-icon" >
                         Invitations
                     </a>
                 </li>
