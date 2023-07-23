@@ -10,7 +10,6 @@ from accounts.models import User
 
 class Topic(SoftDeleteModel):
     name = models.CharField(max_length=200, blank=False, null=False)
-    # slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
     slug = AutoSlugField(populate_from=["name"])
     description = models.TextField(null=True, blank=True)
     github_url = models.URLField(null=True, blank=True)
@@ -28,12 +27,13 @@ class Topic(SoftDeleteModel):
 
 
 class Room(SoftDeleteModel):
-    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    host = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name="host"
+    )
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
-    participants = models.ManyToManyField(User, related_name="participants", blank=True)
+    members = models.ManyToManyField(User, blank=True, through="Membership")
 
     name = models.CharField(max_length=200, blank=False, null=False)
-    # slug = models.SlugField(max_length=200,unique=True,blank=False,null=False)
     slug = AutoSlugField(populate_from=["name"])
     description = models.TextField(null=True, blank=True)
 
@@ -43,6 +43,8 @@ class Room(SoftDeleteModel):
     ]
 
     type = models.TextField(null=False, choices=TYPES, default="public")
+
+    is_archived = models.BooleanField(default=False)
 
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -62,20 +64,33 @@ class Room(SoftDeleteModel):
         return self.name
 
 
+class Membership(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    is_admin = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"'{self.user.username}' in room '{self.room.name}'"
+
+
 class Message(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     parent = models.ForeignKey(
-        'self',
-        related_name='replies',
-        related_query_name='message',
+        "self",
+        related_name="replies",
+        related_query_name="message",
         null=True,
         blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
 
-    body = models.TextField()
     body = MDTextField()
 
     updated = models.DateTimeField(auto_now=True)
@@ -86,17 +101,18 @@ class Message(SoftDeleteModel):
 
     def __str__(self):
         return self.body[0:50]
- 
+
 
 class ReactionType(models.Model):
-    name = models.CharField(max_length=70,null=False,blank=False)
-    
+    name = models.CharField(max_length=70, null=False, blank=False)
+
     def __str__(self):
         return f"{self.name}"
 
+
 class Reaction(models.Model):
     reaction_type = models.ForeignKey(ReactionType, on_delete=models.CASCADE)
-    message =  models.ForeignKey(Message, on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -104,13 +120,9 @@ class Reaction(models.Model):
 
 
 class RoomInvitation(models.Model):
-    inviter_id = models.ForeignKey(
-        User, related_name="inviter", on_delete=models.CASCADE
-    )
-    invitee_id = models.ForeignKey(
-        User, related_name="invitee", on_delete=models.CASCADE
-    )
-    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    inviter = models.ForeignKey(User, related_name="inviter", on_delete=models.CASCADE)
+    invitee = models.ForeignKey(User, related_name="invitee", on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     token = models.CharField(max_length=100, null=False, blank=False)
     is_accepted = models.BooleanField(default=False)
@@ -120,4 +132,4 @@ class RoomInvitation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{self.room_id} - {self.inviter_id}"
+        return f"{self.room.name} - {self.inviter.username}"

@@ -1,0 +1,23 @@
+{% extends 'main.html' %} 
+
+{% load static %}
+
+{% block extra_heads %}
+<title>Create Room</title>
+{% endblock extra_heads %}
+
+{% block content %}
+<div class="layout__box my_container create-room layout">
+  <div class="layout__boxHeader">
+    <div class="layout__boxTitle">
+      <a href="{{request.META.HTTP_REFERER}}">
+        <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
+      </a>
+      <h3>Create Study Room</h3>
+    </div>
+  </div>
+  <div class="layout__body p-5">
+    {% include 'base/room_form.html' %}
+  </div>
+</div>
+{% endblock content %}

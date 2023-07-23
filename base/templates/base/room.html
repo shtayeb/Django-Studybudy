@@ -15,34 +15,35 @@
       <div class="room ">
         <div class="room__top">
 
-          <div class="room__topLeft">
+          <div class="room__topLeft items-center">
             <a href="{{request.META.HTTP_REFERER}}">
               <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
             </a>
             <h3 class="">Study Room</h3>
             {% if room.type == 'private' %}
               {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
-              <button class="btn roomListRoom__topic" type="submit">
+              <button class="bg-dark-medium px-4 py-2 rounded-full border border-dark-light" type="submit">
                 <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
               </button>
             {% endif %}
           </div>
 
           <div class="room__topRight">
-            {% if room.host == request.user %}
-            <a href="{% url 'update-room' room.slug %}" class="room__topics btn--main btn">
-              <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
-            </a>
+            {% if room.host == request.user or is_admin  %}
+              <a href="{% url 'room-settings' room.slug %}" class="room__topics btn bg-dark-medium">
+                Settings
+              </a>
 
-            <a href="{% url 'delete-room' room.id %}" class="room__topics btn--main btn">
-              <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
-            </a>
+              <a href="{% url 'update-room' room.slug %}" class="room__topics btn bg-dark-medium">
+                <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
+              </a>
+
             {% endif %}
 
             {% if not request.user.id == room.host_id %}
               <form hx-post="{% url 'toggle-room-join' room.id %}" hx-indicator=".progress"  >
                 {% csrf_token %}
-                <button type="submit" class="room__topics  btn btn--main">
+                <button type="submit" class="room__topics  btn bg-dark-medium">
                   {% if is_joined %}
                       Leave Room
                   {% else %}
@@ -50,11 +51,10 @@
                   {% endif %}
                 </button>
               </form>
-              
             {% endif %}
 
-            {% if room.host_id == request.user.id %}
-              <a href="{% url 'invite-room' room.slug %}" class="room__topics btn--main btn" id="invite-user-btn">
+            {% if room.host_id == request.user.id or is_admin %}
+              <a href="{% url 'invite-room' room.slug %}" class="room__topics btn bg-dark-medium" id="invite-user-btn">
                 Invite Users
               </a>
             {% endif %}
@@ -76,7 +76,7 @@
               <p>Hosted By</p>
               <a
                 href="{% url 'user-profile' room.host.username %}"
-                class="room__author"
+                class="room__author w-fit"
               >
                 <div class="avatar avatar--small">
                   <img src="{{room.host.avatar}}" alt="user-avatar" />
@@ -85,32 +85,47 @@
               </a>
             </div>
             
-            <div class="room__details">
+            <div class="room__details my-2">
               {{room.description}}
             </div>
             
-            <span class="room__topics">{{room.topic}}</span>
+            <span class="room__topics bg-dark-medium my-2">{{room.topic}}</span>
           
           </div>
 
           {% comment %} The message {% endcomment %}
-          <div class="room__message">
-            <form 
-              hx-post="{% url 'room-add-message' room.id %}" 
-              hx-target="#messages-list" 
-              hx-swap="beforeend show:#messages-list:bottom"
-              hx-indicator=".progress" 
-              hx-ext="disable-element"
-              hx-disable-element="#sumbit-btn-message"
+          {% if request.user.is_authenticated and not is_blocked and not room.is_archived %}
+            <div class="room__message">
+              <form 
+                hx-post="{% url 'room-add-message' room.id %}" 
+                hx-target="#messages-list" 
+                hx-swap="beforeend show:#messages-list:bottom"
+                hx-indicator=".progress" 
+                hx-ext="disable-element"
+                hx-disable-element="#sumbit-btn-message"
+                class="reply-form  bg-bg border border-gray-600 rounded-xl " 
             >
-              {% csrf_token %}
-              {{ msg_form.media }}
-              {{msg_form.as_p}}
-              <button id="sumbit-btn-message" hx-disable-element="self" class="btn btn--dark disabled:bg-gray" >
-                Add Message
-              </button>
+                {% csrf_token %}
+                {{ msg_form.media }}
+                {{msg_form.as_p}}
+
+                <div class="flex items-center justify-between gap-3 border-t border-dark  p-5">   
+                    <p class="text-gray-400">
+                        Supports Markdown
+                    </p>
+                    <button 
+                        type="submit" 
+                        class="disabled:bg-gray btn btn--dark hover:bg-dark-medium"
+                        id="sumbit-btn-message" 
+                        hx-disable-element="self"
+                    >
+                        Add Message
+                    </button>
+                </div>
             </form>
-          </div>
+            </div>
+          {% endif %}
+
           
           {% include 'base/converstion_component.html' %}
 
@@ -118,20 +133,20 @@
 
       </div>
 
-      <!--   participants -->
+      <!--   Members -->
       <div class="sticky_right_panel sticky_panel  ">
         <h3 class="participants__top">
-          Participants <span>({{participants.count}} Joined)</span>
+          Latest Members <span>({{room.membership_set.all.count}} Joined)</span>
         </h3>
         <div class="participants__list scroll">
-          {% for user in room.participants.all %}
-            <a href="{% url 'user-profile' user.username %}" class="participant">
+          {% for membership in room.membership_set.all %}
+            <a href="{% url 'user-profile' membership.user.username %}" class="participant {% if membership.is_admin %} bg-dark-light p-3 rounded-md {% endif %}">
               <div class="avatar avatar--medium">
-                <img src="{{user.avatar}}" alt="user-avatar" />
+                <img src="{{membership.user.avatar}}" alt="user-avatar" />
               </div>
               <p>
-                {{user.username}}
-                <span>@{{user.username}}</span>
+                {{membership.user.username}}
+                <span>@{{membership.user.username}}</span>
               </p>
             </a>
           {% endfor %}

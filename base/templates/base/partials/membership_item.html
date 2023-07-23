@@ -1,0 +1,66 @@
+<li 
+    class="participant justify-between w-full {% if membership.is_admin %} border border-dark-light p-3 rounded-md {% endif %}"
+>
+    <a href="{% url 'user-profile' membership.user.username %}"  class="participant mb-0 flex gap-5">
+        <div class="avatar avatar--medium">
+            <img src="{{membership.user.avatar}}" alt="user-avatar" />
+        </div>
+        <div>
+            <span class="flex gap-2">
+                <span>{{membership.user.name}}</span> <span class="text-gray-500">(@{{membership.user.username}})</span>
+                {% if membership.is_admin %} <span class="bg-dark-medium rounded-full text-gray-400 p-1">Admin</span> {% endif %}
+            </span>
+            
+            <span class="text-gray my-2 text-gray-500">
+                Joined {{membership.created|timesince}} ago
+            </span>
+        </div>
+    </a>
+    <div class="flex gap-2">
+        <span 
+            class="roomListRoom__topic cursor-pointer hover:bg-dark-light disabled:bg-dark"
+            hx-delete="{% url 'delete-member' membership.id %}"
+            hx-indicator=".progress" 
+            hx-ext="disable-element"
+            hx-disable-element="this"
+        >
+            Remove
+        </span>
+
+        <form>
+            {% csrf_token %}
+            <span 
+                class="roomListRoom__topic cursor-pointer hover:bg-dark-light disabled:bg-dark"
+                hx-post="{% url 'room-toggle-blocked' membership.id %}"
+                hx-indicator=".progress" 
+                hx-ext="disable-element"
+                hx-disable-element="this"
+                hx-confirm="Are you sure?" 
+            >
+                {% if membership.is_blocked  %}
+                Unblock
+                {% else  %}
+                Block
+                {% endif %}
+            </span>
+        </form>
+        
+        <form>
+            {% csrf_token %}
+            <span class="roomListRoom__topic cursor-pointer hover:bg-dark-light"
+                hx-post="{% url 'room-toggle-admin' membership.id %}"
+                hx-indicator=".progress" 
+                hx-ext="disable-element"
+                hx-disable-element="this"
+                hx-confirm="Are you sure?" 
+            >
+                {% if not membership.is_admin  %}
+                    Make Admin
+                {% else  %}
+                    Remove Admin
+                {% endif %}
+            </span>
+        </form>
+
+    </div>
+</li>

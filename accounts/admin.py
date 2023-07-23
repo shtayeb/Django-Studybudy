@@ -13,7 +13,8 @@ class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'is_staff']
+    list_display = ['id','username', 'email', 'is_staff']
+    search_fields = ("username", "name","email")
     def get_urls(self):
         urls = super().get_urls()
         new_urls = [path('upload-csv/', self.upload_csv),]

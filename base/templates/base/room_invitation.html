@@ -1,0 +1,81 @@
+{% extends 'base/room_settings_base.html' %} 
+
+{% load static %}
+
+{% block extra_heads %}
+<title>Room Invitations</title>
+{% endblock extra_heads %}
+
+{% block settings_content %}
+<section class="sticky_right_panel rounded-md">
+    <div class="participants__top flex justify-between">
+        <h3 class="">
+            Invitations <span>({{room.roominvitation_set.all.count}} Joined)</span>
+        </h3>
+       
+        {% comment %} <form class="header__search" method="GET" action="{% url 'home' %}">
+            <label class="p-4">
+                <img class="" src="{% static 'images/icons/search.svg' %}" alt="search" />
+                <input placeholder="Search for rooms..." name="q" />
+            </label>
+        </form> {% endcomment %}
+
+        <a <a href="{% url 'invite-room' room.slug %}" class="roomListRoom__topic cursor-pointer hover:bg-dark disabled:bg-dark ">
+            Invite Users
+        </a>
+    </div>
+    <ul 
+        class="participants__list scroll" 
+        hx-confirm="Are you sure?" 
+        hx-target="closest li" 
+        hx-swap="outerHTML swap:1s"
+    >
+        {% for invitation in room.roominvitation_set.all %}
+            <li 
+                class="participant justify-between w-full"
+            >
+                <a href="{% url 'user-profile' invitation.invitee.username %}"  class="participant mb-0 flex gap-5">
+                    <div class="avatar avatar--medium">
+                        <img src="{{invitation.invitee.avatar}}" alt="user-avatar" />
+                    </div>
+                    <p>
+                        {{invitation.invitee.name}}
+                        <span>@{{invitation.invitee.username}}</span>
+                        <span class="text-gray my-2">
+                            Invited By @{{invitation.inviter}}
+                        </span>
+                    </p>
+                </a>
+                <div class="flex gap-2">
+                    <span 
+                        class="roomListRoom__topic cursor-pointer hover:bg-dark-light disabled:bg-dark"
+                        hx-delete="{% url 'delete-invitation' invitation.id %}"
+                        hx-indicator=".progress" 
+                        hx-ext="disable-element"
+                        hx-disable-element="this"
+                    >
+                        Remove
+                    </span>
+                </div>
+            </li>
+        {% empty %}
+            <li 
+                class="participant justify-between w-full"
+            >
+                <span>No Invitations Yet !</span>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock settings_content %}
+
+{% block extra_scripts %}
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        // console.log(event.detail.verb)
+        if(event.detail.verb == 'delete'){
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        }
+    })
+</script>
+{% endblock extra_scripts %}
