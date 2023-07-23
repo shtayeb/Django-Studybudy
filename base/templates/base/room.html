@@ -103,14 +103,26 @@
                 hx-indicator=".progress" 
                 hx-ext="disable-element"
                 hx-disable-element="#sumbit-btn-message"
-              >
+                class="reply-form  bg-bg border border-gray-600 rounded-xl " 
+            >
                 {% csrf_token %}
                 {{ msg_form.media }}
                 {{msg_form.as_p}}
-                <button id="sumbit-btn-message" hx-disable-element="self" class="btn btn--dark disabled:bg-gray" >
-                  Add Message
-                </button>
-              </form>
+
+                <div class="flex items-center justify-between gap-3 border-t border-dark  p-5">   
+                    <p class="text-gray-400">
+                        Supports Markdown
+                    </p>
+                    <button 
+                        type="submit" 
+                        class="disabled:bg-gray btn btn--dark hover:bg-dark-medium"
+                        id="sumbit-btn-message" 
+                        hx-disable-element="self"
+                    >
+                        Add Message
+                    </button>
+                </div>
+            </form>
             </div>
           {% endif %}
 
