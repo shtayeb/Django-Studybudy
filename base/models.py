@@ -69,7 +69,9 @@ class Membership(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     is_admin = models.BooleanField(default=False)
+
     is_blocked = models.BooleanField(default=False)
+    blocked_at = models.DateTimeField(null=True,blank=True)
 
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -106,6 +108,9 @@ class Message(SoftDeleteModel):
 class ReactionType(models.Model):
     name = models.CharField(max_length=70, null=False, blank=False)
 
+    updated = models.DateTimeField(blank=True,null=True,auto_now=True)
+    created = models.DateTimeField(blank=True,null=True,auto_now_add=True)
+
     def __str__(self):
         return f"{self.name}"
 
@@ -114,6 +119,9 @@ class Reaction(models.Model):
     reaction_type = models.ForeignKey(ReactionType, on_delete=models.CASCADE)
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    updated = models.DateTimeField(blank=True,null=True,auto_now=True)
+    created = models.DateTimeField(blank=True,null=True,auto_now_add=True)
 
     def __str__(self):
         return f"{self.reaction_type.name} to {self.user.username}'s message"

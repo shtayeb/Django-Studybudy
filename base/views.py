@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
+from pytz import timezone
 
 from .forms import MessageForm, RoomForm
 from .models import Membership, Message, ReactionType, Room, RoomInvitation, Topic, User
@@ -520,6 +521,12 @@ def toggleRoomMemberBlock(request, pk):
     membership = Membership.objects.select_related("user", "room").get(pk=pk)
 
     membership.is_blocked = not membership.is_blocked
+
+    if membership.is_blocked:
+        membership.blocked_at = datetime.datetime.now()
+    else:
+        membership.blocked_at = None
+        
 
     membership.save()
 
