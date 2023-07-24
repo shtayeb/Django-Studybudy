@@ -29,21 +29,21 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 SECRET_KEY = env("SECRET_KEY")
-APP_ENV = env("APP_ENV",default="local")
+APP_ENV = env("APP_ENV", default="local")
 DEBUG = False if env("DEBUG") == "False" else True
-DJANGO_SETTINGS_MODULE = env('DJANGO_SETTINGS_MODULE',default='core.settings.local')
+DJANGO_SETTINGS_MODULE = env("DJANGO_SETTINGS_MODULE", default="core.settings.local")
 
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "study-buddy-app.up.railway.app",
     "www.study-buddy-app.up.railway.app",
-    "*"
+    "*",
 ]
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 CSRF_TRUSTED_ORIGINS = [
     "https://study-buddy-app.up.railway.app",
@@ -53,7 +53,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic', 
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -66,7 +66,6 @@ INSTALLED_APPS = [
     "allauth",
     "invitations",
     "rest_framework",
-   
     "corsheaders",
     "allauth.account",
     "allauth.socialaccount",
@@ -75,7 +74,6 @@ INSTALLED_APPS = [
     "easyaudit",
     "mdeditor",
     "django_vite_plugin",
-    
     # my apps
     "accounts.apps.AccountsConfig",
     "base.apps.BaseConfig",
@@ -83,18 +81,16 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-   
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
-   
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -116,7 +112,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
-
 
 
 # Password validation
@@ -180,6 +175,7 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 EMAIL_USE_TLS = env("EMAIL_USE_TLS")
+EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=True)
 
 
 # ---------- DJANGO ALL AUTH ------------
@@ -210,40 +206,67 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_USERNAME_REQUIRED = True
 # USERNAME_FIELD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 
-
-
-X_FRAME_OPTIONS = 'SAMEORIGIN' 
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 MDEDITOR_CONFIGS = {
-    'default':{
-        'width': '100% ',  # Custom edit box width
-        'height': 200,  # Custom edit box height
-        'toolbar': ["undo", "redo", "|",
-                    "bold", "italic", "quote", "ucwords", "|",
-                    "h1", "h2","|",
-                    "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table",
-                    "emoji", "html-entities",
-                    "||", "preview", "watch", "fullscreen"],  # custom edit box toolbar 
-        "imageUpload":False,
-        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # image upload format type
-        'image_folder': 'editor',  # image save the folder name
-        'theme': 'dark',  # edit box theme, dark / default
-        'preview_theme': 'dark',  # Preview area theme, dark / default
-        'editor_theme': 'pastel-on-dark',  # edit area theme, pastel-on-dark / default
-        'toolbar_autofixed': True,  # Whether the toolbar capitals
-        'search_replace': True,  # Whether to open the search for replacement
-        'emoji': True,  # whether to open the expression function
-        'tex': True,  # whether to open the tex chart function
-        'flow_chart': True,  # whether to open the flow chart function
-        'sequence': True, # Whether to open the sequence diagram function
-        'watch': True,  # Live preview
-        'lineWrapping': False,  # lineWrapping
-        'lineNumbers': True,  # lineNumbers
-        'language': 'en'  # zh / en / es 
+    "default": {
+        "width": "100% ",  # Custom edit box width
+        "height": 200,  # Custom edit box height
+        "toolbar": [
+            "undo",
+            "redo",
+            "|",
+            "bold",
+            "italic",
+            "quote",
+            "ucwords",
+            "|",
+            "h1",
+            "h2",
+            "|",
+            "list-ul",
+            "list-ol",
+            "hr",
+            "|",
+            "link",
+            "reference-link",
+            "image",
+            "code",
+            "preformatted-text",
+            "code-block",
+            "table",
+            "emoji",
+            "html-entities",
+            "||",
+            "preview",
+            "watch",
+            "fullscreen",
+        ],  # custom edit box toolbar
+        "imageUpload": False,
+        "upload_image_formats": [
+            "jpg",
+            "jpeg",
+            "gif",
+            "png",
+            "bmp",
+            "webp",
+        ],  # image upload format type
+        "image_folder": "editor",  # image save the folder name
+        "theme": "dark",  # edit box theme, dark / default
+        "preview_theme": "dark",  # Preview area theme, dark / default
+        "editor_theme": "pastel-on-dark",  # edit area theme, pastel-on-dark / default
+        "toolbar_autofixed": True,  # Whether the toolbar capitals
+        "search_replace": True,  # Whether to open the search for replacement
+        "emoji": True,  # whether to open the expression function
+        "tex": True,  # whether to open the tex chart function
+        "flow_chart": True,  # whether to open the flow chart function
+        "sequence": True,  # Whether to open the sequence diagram function
+        "watch": True,  # Live preview
+        "lineWrapping": False,  # lineWrapping
+        "lineNumbers": True,  # lineNumbers
+        "language": "en",  # zh / en / es
     }
-    
 }

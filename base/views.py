@@ -7,12 +7,14 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage, send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Prefetch, Q, When
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django_htmx.http import HttpResponseClientRedirect
+from pytz import timezone
 
 from .forms import MessageForm, RoomForm
 from .models import Membership, Message, ReactionType, Room, RoomInvitation, Topic, User
@@ -25,6 +27,8 @@ SECRET_KEY = "secret_key_001"
 @require_http_methods("POST")
 @login_required(login_url="/accounts/login")
 def addMessageReply(request, pk):
+    # TODO - Check if user is not blocked in the room
+
     # Get the room as well and check if the room is not archived
     message = Message.objects.get(pk=pk)
     # do dome error handling
@@ -46,6 +50,10 @@ def addMessageReply(request, pk):
 @login_required(login_url="/accounts/login")
 @require_http_methods("POST")
 def toggleMessageReaction(request, pk):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
     data = {"operation": ""}
     if request.method == "POST":
         message = Message.objects.get(pk=pk)
@@ -75,8 +83,11 @@ def toggleMessageReaction(request, pk):
     return JsonResponse(data, safe=False)
 
 
-@login_required(login_url="/accounts/login")
 def toggleJoinRoom(request, pk):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
     # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, pk=pk)
 
@@ -103,8 +114,17 @@ def toggleJoinRoom(request, pk):
 
 @login_required(login_url="/accounts/login")
 def sendRoomInvite(request, slug):
-    # room = Room.objects.get(pk=pk)
     room = get_object_or_404(Room, slug=slug)
+
+    room_admin = False
+
+    user_membership = room.membership_set.filter(user_id=request.user.id)
+
+    if user_membership.exists():
+        room_admin = user_membership.first().is_admin
+
+    if not request.user.id == room.host_id and not room_admin:
+        raise ValidationError("Only room admin and host can invite users !")
 
     if request.method == "POST":
         user_email = request.POST.get("email")
@@ -113,7 +133,12 @@ def sendRoomInvite(request, slug):
             raise ValidationError("The Email Address is required !!")
 
         invitee = get_object_or_404(User, email=user_email)
-        # invitee = User.objects.get(email=user_email)
+
+        # Check if there already exist an invite for the user
+        old_invitation = RoomInvitation.objects.filter(room=room, invitee=invitee)
+
+        if old_invitation.exists():
+            old_invitation.delete()
 
         # encode room_id and invitee_id in the token
         # TODO : make the SECRET_KEY a secret in the .env file
@@ -128,9 +153,9 @@ def sendRoomInvite(request, slug):
         )
 
         invitation = RoomInvitation.objects.create(
-            inviter_id=request.user,
-            invitee_id=invitee,
-            room_id=room,
+            inviter_id=request.user.id,
+            invitee_id=invitee.id,
+            room_id=room.id,
             token=token,
             is_accepted=False,
         )
@@ -216,18 +241,25 @@ def home(request):
         )
         .prefetch_related("host", "topic")
         .annotate(members_count=Count("members"))
+        .order_by("-created")
     )
 
     if request.user.is_authenticated:
         # joined_private_rooms = request.user.membership_set.filter(Q(room__type="private"))
-        joined_private_rooms = Room.objects.filter(type="private",members=request.user)
+        joined_private_rooms = Room.objects.filter(type="private", members=request.user)
         rooms = rooms | joined_private_rooms
 
     topics = Topic.objects.annotate(rooms_count=Count("room"))[0:5]
 
     room_messages = Message.objects.filter(
-        Q(room__topic__name__icontains=q)
-    ).prefetch_related("user", "room")
+        Q(room__topic__name__icontains=q),
+        Q(room__is_deleted=False),
+    ).exclude(room__type="private")
+
+    if request.user.is_authenticated:
+        room_messages = room_messages.filter(
+            room__members=request.user
+        ).prefetch_related("user", "room")[:10]
 
     page_number = request.GET.get("page", 1)
     paginator = Paginator(rooms, 20)  # Show 25 rooms per page.
@@ -257,7 +289,13 @@ def home(request):
 @login_required(login_url="/accounts/login")
 @require_http_methods("POST")
 def addMessage(request, room_id):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
     room = get_object_or_404(Room, pk=room_id)
+
+    # TODO - Check if user is not blocked in the room
 
     msg_form = MessageForm(request.POST)
 
@@ -303,18 +341,28 @@ def room(request, slug):
                     "user",
                 ),
             ),
-            Prefetch("membership_set",
-                Membership.objects.select_related('user')
+            Prefetch(
+                "membership_set",
+                Membership.objects.select_related("user")
+                .filter(created__gte=datetime.date.today() - datetime.timedelta(days=7))
+                .order_by("created"),
             ),
         ).select_related("host"),
         slug=slug,
     )
 
     is_joined = False
-
+    is_admin = False
+    is_blocked = False
     # TODO : Move this to a directive
     if request.user.is_authenticated:
         is_joined = room.members.contains(request.user)
+
+        user_membership = room.membership_set.filter(user_id=request.user.id)
+
+        if user_membership.exists():
+            is_admin = user_membership.first().is_admin
+            is_blocked = user_membership.first().is_blocked
 
         if (
             not (room.host_id == request.user.id)
@@ -333,6 +381,8 @@ def room(request, slug):
         "room": room,
         "msg_form": msg_form,
         "reply_form": reply_form,
+        "is_admin": is_admin,
+        "is_blocked": is_blocked,
         "is_joined": is_joined,
         "reaction_types": reaction_types,
     }
@@ -340,22 +390,200 @@ def room(request, slug):
     return render(request, "base/room.html", context)
 
 
+@require_http_methods(["DELETE"])
+def deleteMember(request, pk):
+    membership = Membership.objects.get(pk=pk)
+
+    membership.delete()
+
+    context = {}
+
+    return render(request, "components/messages.html", context)
+
+
+@login_required(login_url="/accounts/login")
+def roomInvitation(request, slug):
+    room = get_object_or_404(
+        Room.objects.prefetch_related(
+            Prefetch(
+                "roominvitation_set",
+                RoomInvitation.objects.select_related("invitee", "inviter").order_by(
+                    "created"
+                ),
+            )
+        ),
+        slug=slug,
+    )
+
+    context = {"room": room}
+
+    return render(request, "base/room_invitation.html", context)
+
+
+@require_http_methods(["DELETE"])
+def roomInvitationDelete(request, pk):
+    room_invitation = RoomInvitation.objects.get(pk=pk)
+
+    room_invitation.delete()
+
+    context = {}
+
+    return render(request, "components/messages.html", context)
+
+
+@login_required(login_url="/accounts/login")
+def roomMembers(request, slug):
+    room = get_object_or_404(
+        Room.objects.prefetch_related(
+            Prefetch(
+                "membership_set",
+                Membership.objects.select_related("user").order_by("created"),
+            )
+        ),
+        slug=slug,
+    )
+
+    context = {"room": room}
+
+    return render(request, "base/room_members.html", context)
+
+
+@require_http_methods(["GET"])
+def searchMember(request, room):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    member = request.GET.get("member")
+
+    print(f"---- member == {member}")
+
+    print(f"---- room == {room}")
+
+    if request.GET.get("member") == None:
+        member = ""
+
+    membership_set = (
+        Membership.objects.filter(
+            Q(room=room)
+            & (Q(user__email__icontains=member) | Q(user__username__icontains=member))
+        )
+        .select_related("user")
+        .order_by("created")
+    )
+
+    print(membership_set)
+
+    context = {"membership_set": membership_set}
+
+    return render(request, "base/partials/membership_list.html", context)
+
+
+@login_required(login_url="/accounts/login")
+def settingsRoom(request, slug):
+    room = get_object_or_404(
+        Room.objects.select_related("host", "topic"),
+        slug=slug,
+    )
+
+    context = {
+        "room": room,
+    }
+
+    return render(request, "base/room_settings.html", context)
+
+
+@require_http_methods(["POST"])
+def toggleRoomArchive(request, slug):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    room = Room.objects.get(slug=slug)
+
+    room.is_archived = not room.is_archived
+
+    room.save()
+
+    messages.success(request, "Room Un/Archived !")
+
+    context = {"room": room}
+
+    return render(request, "base/partials/toggle_archived.html", context=context)
+
+
+@require_http_methods(["POST"])
+def toggleRoomMemberBlock(request, pk):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    membership = Membership.objects.select_related("user", "room").get(pk=pk)
+
+    membership.is_blocked = not membership.is_blocked
+
+    if membership.is_blocked:
+        membership.blocked_at = datetime.datetime.now()
+    else:
+        membership.blocked_at = None
+        
+
+    membership.save()
+
+    messages.success(
+        request, f"User has been {'Blocked' if membership.is_blocked else 'Unblocked'}!"
+    )
+
+    context = {"membership": membership}
+
+    return render(request, "base/partials/membership_item.html", context=context)
+
+
+@require_http_methods(["POST"])
+def toggleRoomAdmin(request, pk):
+    if not request.user.is_authenticated:
+        next_url = request.htmx.current_url_abs_path or ""
+        return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
+
+    # room = Room.objects.get(slug=slug)
+
+    membership = Membership.objects.select_related("user", "room").get(pk=pk)
+
+    membership.is_admin = not membership.is_admin
+
+    membership.save()
+
+    messages.success(request, "User removed from admins !")
+
+    context = {"membership": membership}
+
+    return render(request, "base/partials/membership_item.html", context=context)
+
+
 @login_required(login_url="/accounts/login")
 def createRoom(request):
     form = RoomForm()
     topics = Topic.objects.all()
+
     if request.method == "POST":
         topic_name = request.POST.get("topic")
         topic, created = Topic.objects.get_or_create(name=topic_name)
 
-        Room.objects.create(
+        room = Room.objects.create(
             host=request.user,
             topic=topic,
             name=request.POST.get("name"),
             description=request.POST.get("description"),
             type=request.POST.get("type"),
         )
-        return redirect("home")
+
+        # Make host a member and admin
+        membership = Membership.objects.create(
+            room=room, user=request.user, is_admin=True
+        )
+        room.membership_set.add(membership)
+
+        return redirect("room", room.slug)
 
         # form = RoomForm(request.POST)
 
@@ -369,17 +597,24 @@ def createRoom(request):
 
     context = {"form": form, "topics": topics}
 
-    return render(request, "base/room_form.html", context)
+    return render(request, "base/room_create.html", context)
 
 
 @login_required(login_url="/accounts/login")
 def updateRoom(request, slug):
-    # room = Room.objects.get(id=pk)
     room = get_object_or_404(Room, slug=slug)
+
     form = RoomForm(instance=room)
     topics = Topic.objects.all()
 
-    if request.user != room.host:
+    user_membership = room.membership_set.filter(user_id=request.user.id)
+
+    is_admin = False
+
+    if user_membership.exists():
+        is_admin = user_membership.first().is_admin
+
+    if request.user != room.host and not is_admin:
         return HttpResponse("You are not allowed here !!")
 
     if request.method == "POST":
@@ -395,7 +630,7 @@ def updateRoom(request, slug):
         return redirect("home")
 
     context = {"form": form, "topics": topics, "room": room}
-    return render(request, "base/room_form.html", context)
+    return render(request, "base/room_update.html", context)
 
 
 @login_required(login_url="/accounts/login")
@@ -403,7 +638,7 @@ def deleteRoom(request, pk):
     room = Room.objects.get(id=pk)
 
     if request.user != room.host:
-        return HttpResponse("You are not allowed here !!")
+        return HttpResponse("You are not authorized to perform this action !!")
 
     if request.method == "POST":
         room.delete()
@@ -413,12 +648,31 @@ def deleteRoom(request, pk):
     return render(request, "base/delete.html", {"obj": room})
 
 
+def showMessage(request, pk):
+    message = get_object_or_404(Message, pk=pk)
+
+    context = {"message": message}
+
+    return render(request, "base/show_message.html", context)
+
+
 @login_required(login_url="/accounts/login")
 def deleteMessage(request, pk):
     message = Message.objects.get(id=pk)
 
-    if request.user != message.user:
-        return HttpResponse("You are not allowed here 33 !!")
+    # (Find a better way to do this) Check if the request.user is admin of the room
+    user_membership = message.room.membership_set.filter(user_id=request.user.id)
+    print(user_membership)
+
+    is_admin = False
+
+    if user_membership.exists():
+        is_admin = user_membership.first().is_admin
+
+    if request.user != message.user and not is_admin:
+        return HttpResponse("You do not have permission to perform this action !")
+    # endCheck
+
 
     if request.method == "POST":
         message.delete()
@@ -465,7 +719,9 @@ def activityPage(request):
     # topics = Topic.objects.filter(name__icontains=q)
     # context = {'topics':topics}
 
-    room_messages = Message.objects.prefetch_related("user", "room")
+    room_messages = Message.objects.prefetch_related("user", "room").exclude(
+        Q(room__type="private")
+    )
 
     context = {"room_messages": room_messages}
     return render(request, "base/activity.html", context)

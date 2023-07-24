@@ -32,7 +32,7 @@
             {{ reply.body | markdown | safe }}
         </div>
 
-        <div class="thread__footer">
+        <div class="thread__footer border-y border-gray-700 py-5 flex">
             {% for reaction in reaction_types %}
             {% if reaction.name == '🔥' %}
             <div class="item">

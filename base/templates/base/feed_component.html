@@ -35,7 +35,7 @@
       {% if room.type == 'private' %}
         {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
 
-        <button class="btn roomListRoom__topic" type="submit">
+        <button class="bg-dark-medium px-4 py-2 rounded-full border border-dark-light" type="submit">
           <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
         </button>
       {% endif %}

@@ -4,24 +4,27 @@
 <details open class="thread border-l">
     <summary class="thread__top">
         <div class="thread__author">
+
             <a
                 href="{% url 'user-profile' message.user.username %}"
-                class="thread__authorInfo"
+                class="flex items-center gap-4"
             >
                 <div class="avatar avatar--small">
-                <img src="{{message.user.avatar}}" alt="user-avatar" />
+                    <img src="{{message.user.avatar}}" alt="user-avatar" />
                 </div>
-                <span>@{{message.user.username}}</span>
+                <p>@{{message.user.username}}</p>
+                <p class="text-gray-600">({{message.created|timesince}} ago)</p>
             </a>
-            <span class="thread__date">{{message.created|timesince}} ago</span>
+            
 
-            {% if request.user == message.user %}
-            <a class="hover:bg-dark" href="{% url 'delete-message' message.id %}">
-                <div class="thread__delete">
-                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
-                </div>
-            </a>
+            {% if request.user == message.user or is_admin %}
+                <a class="hover:bg-dark" href="{% url 'delete-message' message.id %}">
+                    <div class="thread__delete">
+                        <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
+                    </div>
+                </a>
             {% endif %}
+            <a href="{% url 'message-show' message.id %}" class="underline hover:font-semibold">Show Message</a>
         </div>
     </summary>
 
@@ -29,67 +32,105 @@
         {{ message.body | markdown | safe }}
     </div>
 
+
     {% comment %} Reactions {% endcomment %}
-    <div class="thread__footer">
-        {% for reaction in reaction_types %}
-        {% if reaction.name == '🔥' %}
+    <div class="thread__footer border-y border-gray-700 py-5 flex justify-between">
+        <div class="flex gap-3">
+            {% for reaction in reaction_types %}
+            {% if reaction.name == '🔥' %}
+                <div class="item">
+                    <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
+                    <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                        {{message.fire_count | default:0}}
+                    </span>
+                </div>
+            {% endif %}
+            
+            {% if reaction.name == '👍' %}
             <div class="item">
                 <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
                 <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                    {{message.fire_count | default:0}}
+                {{message.like_count | default:0}}
                 </span>
             </div>
-        {% endif %}
-        
-        {% if reaction.name == '👍' %}
-         <div class="item">
-            <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
-            <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-            {{message.like_count | default:0}}
-            </span>
+            {% endif %}
+            
+            {% if reaction.name == '💩' %}
+            <div class="item">
+                <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
+                <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                    {{message.poop_count | default:0}}
+                </span>
+            </div>
+            {% endif %}
+            {% endfor %}
         </div>
-        {% endif %}
-        
-        {% if reaction.name == '💩' %}
-        <div class="item">
-            <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
-            <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                {{message.poop_count | default:0}}
-            </span>
+
+        <div>
+            {% if not is_blocked %}
+                <button class="border border-dark-light rounded-full px-4 hover:bg-dark-light" 
+                    id="add-reply-btn-{{message.id}}" 
+                    data-toggle="reply-form" 
+                    data-target="comment-{{message.id}}-replyForm"
+                >
+                    Add Reply
+                </button>
+            {% endif %}
         </div>
-        {% endif %}
-        {% endfor %}
     </div>
 
-    <button class="btn btn--pill" 
-        id="add-reply-btn-{{message.id}}" 
-        data-toggle="reply-form" 
-        data-target="comment-{{message.id}}-replyForm"
-    >
-        Add Reply
-    </button>
-    <!-- Reply form start -->
-    <div class="room__message">
-        <form 
-            hx-post="{% url 'message-reply' message.id %}" 
-            hx-target="#message-{{message.id}}-replies-list" 
-            hx-swap="beforeend show:#message-{{message.id}}-replies-list:bottom" 
-            hx-indicator=".progress" 
-            hx-ext="disable-element"
-            hx-disable-element="#sumbit-btn-reply"
-            class="reply-form d-none" 
-            id="comment-{{message.id}}-replyForm"
-        >
-            {% csrf_token %}
-            <textarea  name="body" placeholder="Reply to comment (Supports Markdown)" rows="4" required></textarea>
-            <input type="hidden" name="room_id" value="{{message.room_id}}">
-            <button type="submit" id="sumbit-btn-reply" class="btn btn--pill disabled:bg-gray"  >Submit</button>
-            <button type="button" class="btn btn--pill"  data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">Cancel</button>
-        </form>
-    </div>
-    <!-- Reply form end -->
+    {% if not is_blocked %}
+        <!-- Reply form start -->
+        <div class="">
+            <form 
+                hx-post="{% url 'message-reply' message.id %}" 
+                hx-target="#message-{{message.id}}-replies-list" 
+                hx-swap="beforeend show:#message-{{message.id}}-replies-list:bottom" 
+                hx-indicator=".progress" 
+                hx-ext="disable-element"
+                hx-disable-element="#sumbit-btn-reply"
+                class="reply-form d-none bg-dark/50 border border-gray-600 rounded-md " 
+                id="comment-{{message.id}}-replyForm"
+            >
+                {% csrf_token %}
+                <textarea 
+                    class="bg-transparent focus:outline-none m-0 outline-none p-5 " 
+                    name="body" 
+                    placeholder="Reply to comment" 
+                    rows="4" 
+                    required
+                ></textarea>
 
-    <details class="message_replies" open id="message-{{message.id}}-replies-list">
+                <input type="hidden" name="room_id" value="{{message.room_id}}">
+
+                <div class="flex items-center justify-between gap-3 border-t border-gray-600 p-5">   
+                    <p class="text-gray-500">
+                        Supports Markdown
+                    </p>
+                    <div>
+                        <button 
+                            type="button" 
+                            class="border border-dark-light px-4 rounded-md hover:bg-dark-medium"  
+                            data-toggle="reply-form" 
+                            data-target="comment-{{message.id}}-replyForm"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="submit" 
+                            id="sumbit-btn-reply" 
+                            class="disabled:bg-gray bg-dark-light px-4 rounded-md hover:bg-dark-medium"
+                        >
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Reply form end -->
+    {% endif %}
+
+    <details class="message_replies py-5" open id="message-{{message.id}}-replies-list">
         {% for reply in message.replies.all %}
             {% include 'base/_reply.html' %}
         {% endfor %} 

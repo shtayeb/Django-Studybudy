@@ -1,0 +1,57 @@
+{% extends 'base/room_settings_base.html' %} 
+
+{% load static %}
+
+{% block extra_heads %}
+<title>Room Memebers</title>
+{% endblock extra_heads %}
+
+{% block settings_content %}
+<section class="sticky_right_panel rounded-md">
+
+    <div class="participants__top flex justify-between">
+        <h3 class="">
+             Members <span>({{room.membership_set.all.count}} Joined)</span>
+        </h3>
+       
+        <form 
+            class="header__search" 
+            method="GET" 
+        >
+            <label class="p-4">
+                <img class="" src="{% static 'images/icons/search.svg' %}" alt="search" />
+                <input 
+                    placeholder="username/email..." 
+                    name="member"
+                    hx-get="{% url 'room-member-search' room.id %}"
+                    hx-trigger="keyup changed delay:300ms" 
+                    hx-target="#members-list"
+                />
+            </label>
+        </form>
+
+    </div>
+
+    <ul 
+        class="participants__list scroll" 
+        hx-confirm="Are you sure?" 
+        hx-target="closest li" 
+        hx-swap="outerHTML swap:1s"
+        id="members-list"
+    >
+        {% include 'base/partials/membership_list.html' %}    
+    </ul>
+
+</section>
+{% endblock settings_content %}
+
+{% block extra_scripts %}
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        // console.log(event.detail.verb)
+        if(event.detail.verb == 'delete'){
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        }
+    })
+</script>
+{% endblock extra_scripts %}

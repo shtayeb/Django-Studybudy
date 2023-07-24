@@ -4,6 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* htmx progress */
 .progress {
   position: fixed;
   top: 0;
@@ -106,6 +108,14 @@
     right: -8%;
   }
 }
+/* End of htmx progress */
 
+.wmd-wrapper{
+  
+  border: none;
+}
 
+.editormd{
+  margin-bottom: 0px !important;
+}
 
