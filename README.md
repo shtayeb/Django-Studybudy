@@ -114,8 +114,8 @@ class Product(models.Model):
 - [x] Room members management(Kick, Block and suspend members of rooms by its Admin)
 - [x] Rooms message moderation by Admins
 - [x] SEO meta tags for pages
+- [x] Automatically Create a meta tag banner for a room (use GET blog.shahryartayeb.com/generate_banner?text=Title)
 
-- Automatically Create a meta tag banner for a room (use GET blog.shahryartayeb.com/generate_banner?text=Title)
 - Account removal request, user is soft deleted
     - After one month its hard deleted and its room and message are set to null or to anonymous
     

@@ -1,3 +1,6 @@
+import urllib
+
+import requests
 from allauth.account.adapter import get_adapter
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -12,6 +15,17 @@ from base.models import Topic
 from .forms import UserForm
 from .models import User
 
+
+def test(request):
+    # get the response from the URL
+    response = requests.get('https://blog.shahryartayeb.com/generate_banner?text=Title')
+
+    gg = urllib.request.urlretrieve("https://blog.shahryartayeb.com/generate_banner?text=Title", 'media/room_thumb/test.jpg') 
+
+    # print(response)
+    print(gg)
+
+    return HttpResponse(response,content_type='image/png')
 
 @login_required(login_url="/accounts/login")
 def deleteUser(request, username):

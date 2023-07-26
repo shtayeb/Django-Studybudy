@@ -18,14 +18,21 @@
   <meta property="og:url" content="{{request.build_absolute_uri}}" />
   <meta property="og:title" content="{{room.title}}" />
   <meta property="og:description" content="{{room.description.strip|slice:":100"}}" />
-  <meta property="og:image" content="https://blog.shahryartayeb.com/assets/images/shtb3.webp" />
+  <meta property="og:image"
+    content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/media/room_thumb/{{room.slug}}.png" />
+
+  {% comment %}
+  <meta property="og:image" content="https://blog.shahryartayeb.com/generate_banner?text={{room.slug}}" />
+  {% endcomment %}
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="{{request.build_absolute_uri}}" />
   <meta property="twitter:title" content="{{room.title}}" />
   <meta property="twitter:description" content="{{room.description.strip|slice:":100"}}" />
-  <meta property="twitter:image" content='https://blog.shahryartayeb.com/assets/images/shtb3.webp' />
+  <meta property="twitter:image"
+    content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/media/room_thumb/{{room.slug}}.png" />
+
 {% endblock meta_tags %}
 
 
