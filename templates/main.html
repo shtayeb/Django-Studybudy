@@ -15,9 +15,31 @@
     
     {% vite 'styles/tailwind.css' %}
 
-    <title>StudyBuddy - Find study partners around the world!</title>
+    {% block meta_tags %}
+      <meta name="title" content="StudyBuddy - Find study partners around the world!" head-key="title"/>
+      <meta name="description" content="StudyBuddy - Find study partners around the world!" head-key="description"/>
 
-    {% block extra_heads %} {% endblock extra_heads %}
+      <!-- Open Graph / Facebook -->
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="{{request.build_absolute_uri}}" />
+      <meta property="og:title" content="StudyBuddy - Find study partners around the world!" />
+      <meta property="og:description" content="StudyBuddy - Find study partners around the world!" />
+      <meta property="og:image" content="https://blog.shahryartayeb.com/assets/images/shtb3.webp" />
+
+      <!-- Twitter -->
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:url" content="{{request.build_absolute_uri}}" />
+      <meta property="twitter:title" content="StudyBuddy - Find study partners around the world!" />
+      <meta property="twitter:description" content="StudyBuddy - Find study partners around the world!" />
+      <meta property="twitter:image" content='https://blog.shahryartayeb.com/assets/images/shtb3.webp' />
+    {% endblock meta_tags %}
+
+    {% block extra_heads %}
+    {% endblock extra_heads %}
+
+    {% block title %}
+    <title>StudyBuddy - Find study partners around the world!</title>
+    {% endblock title %}
 
   </head>
 

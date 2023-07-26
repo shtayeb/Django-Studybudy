@@ -3,10 +3,31 @@
 {% load static %}
 
 {% block extra_heads %}
-  <title>{{ room.name }}</title>
   <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
   <link rel="stylesheet" href="{% static 'styles/markdown.css' %}" />
 {% endblock extra_heads %}
+
+{% block meta_tags %}
+  <title>{{ room.name }}</title>
+  
+  <meta name="title" content="{{room.title}}" head-key="title"/>
+  <meta name="description" content="{{room.description.strip|slice:":100"}}" head-key="description"/>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{request.build_absolute_uri}}" />
+  <meta property="og:title" content="{{room.title}}" />
+  <meta property="og:description" content="{{room.description.strip|slice:":100"}}" />
+  <meta property="og:image" content="https://blog.shahryartayeb.com/assets/images/shtb3.webp" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="{{request.build_absolute_uri}}" />
+  <meta property="twitter:title" content="{{room.title}}" />
+  <meta property="twitter:description" content="{{room.description.strip|slice:":100"}}" />
+  <meta property="twitter:image" content='https://blog.shahryartayeb.com/assets/images/shtb3.webp' />
+{% endblock meta_tags %}
+
 
 {% block content %}
   <main class="profile-page layout layout--2">

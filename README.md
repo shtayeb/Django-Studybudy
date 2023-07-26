@@ -113,9 +113,11 @@ class Product(models.Model):
 - [x] block room members
 - [x] Room members management(Kick, Block and suspend members of rooms by its Admin)
 - [x] Rooms message moderation by Admins
+- [x] SEO meta tags for pages
 
-- SEO meta tags for pages
-- Account removal request, user is soft deleted and after one month its hard deleted and its room and message are set to null
+- Account removal request, user is soft deleted
+    - After one month its hard deleted and its room and message are set to null or to anonymous
+    
 - Recaptcha for login and register page
 
 - Activity notification for joined rooms

@@ -1,8 +1,28 @@
-
 {% extends 'main.html' %} 
-{% block extra_heads %}
+
+{% block title %}
   <title>@{{ user.username }}'s Profile</title>
-{% endblock extra_heads %}
+{% endblock title %}
+
+{% block meta_tags %}
+  <meta name="title" content="{{user.name}}" head-key="title"/>
+  <meta name="description" content="{{user.bio | default:'User profile'}}" head-key="description"/>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{request.build_absolute_uri}}" />
+  <meta property="og:title" content="{{user.name}}" />
+  <meta property="og:description" content="{{user.bio| default:'User profile'}}" />
+  <meta property="og:image" content="{{user.avatar}}" />
+ 
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="{{request.build_absolute_uri}}" />
+  <meta property="twitter:title" content="{{user.name}}" />
+  <meta property="twitter:description" content="{{user.bio| default:'User profile'}}" />
+  <meta property="twitter:image" content="{{user.avatar}}" />
+{% endblock meta_tags %} 
+
 {% block content %}
   <main class="profile-page layout layout--3">
     <div class="my_container">
@@ -57,5 +77,4 @@
       <!-- Activities End -->
     </div>
   </main>
-
-  {% endblock content %}
+{% endblock content %}

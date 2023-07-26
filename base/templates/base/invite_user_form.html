@@ -1,9 +1,9 @@
 {% extends 'main.html' %} 
 {% load i18n %}
 
-{% block extra_heads %}
+{% block title %}
 <title>Send Invitation</title>
-{% endblock extra_heads %}
+{% endblock title %}
 
 {% block content %}
 
@@ -16,9 +16,9 @@
         </div>
       </div>
 
-       <div class="layout__body">
-        <p class="">Please add an email below. The user will receive an email with instructions.</p>
-        <br/>
+        <div class="layout__body">
+            <p class="">Please add an email below. The user will receive an email with instructions.</p>
+            <br/>
             <form id="invite-form" method="POST" action="{% url 'invite-room' room.slug %}" autocomplete="off">
                 {% csrf_token %}
 
@@ -37,7 +37,7 @@
                         required
                     >
                     <div class="absolute rounded-b bg-bg border border-dark-medium w-full" id="users-list">
-                       
+                        
                     </div>
                 </div>
                 
@@ -50,8 +50,7 @@
                 
                 <input type="submit" value="Send Invitation" class="btn btn--main generic-ajax-submit">
             </form>
-       </div>
-       
+        </div>
     </div>
 </div>
 </main>
