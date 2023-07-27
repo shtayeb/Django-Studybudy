@@ -91,6 +91,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
+    "accounts.middleware.OnlineNowMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"

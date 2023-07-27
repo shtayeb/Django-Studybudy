@@ -1,24 +1,21 @@
 {% load static %}
-{% load markdown_extras %} 
+{% load markdown_extras %}
 
-<details open class="thread" id="message-{{reply.parent_id}}-reply-{{reply.id}}" >
+<details open class="thread" id="message-{{reply.parent_id}}-reply-{{reply.id}}">
     <summary class="thread__top">
         <div class="thread__author">
-            <a
-                href="{% url 'user-profile' reply.user.username %}"
-                class="thread__authorInfo"
-            >
-                <div class="avatar avatar--small">
-                <img src="{{reply.user.avatar}}" alt="user-avatar" />
+            <a href="{% url 'user-profile' reply.user.username %}" class="thread__authorInfo">
+                <div class="avatar avatar--smal {% if reply.user.id in request.online_now_ids %} active {% endif %}l">
+                    <img src="{{reply.user.avatar}}" alt="user-avatar" />
                 </div>
                 <span>@{{reply.user.username}}</span>
             </a>
             <span class="thread__date">{{reply.created|timesince}} ago</span>
 
-             {% if request.user == reply.user %}
+            {% if request.user == reply.user %}
             <a href="{% url 'delete-message' reply.id %}">
                 <div class="thread__delete">
-                <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
+                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm">
                 </div>
             </a>
             {% endif %}
@@ -42,7 +39,7 @@
                 </span>
             </div>
             {% endif %}
-            
+
             {% if reaction.name == '👍' %}
             <div class="item">
                 <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}} </span>
@@ -51,7 +48,7 @@
                 </span>
             </div>
             {% endif %}
-            
+
             {% if reaction.name == '💩' %}
             <div class="item">
                 <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">{{reaction.name}}</span>
@@ -69,39 +66,39 @@
 
 {% comment %} Add the reaction event listners when returned from htmx partial {% endcomment %}
 {% if request.user.is_authenticated and request.htmx %}
-    {% block extra_scripts %}
-        <script>
-            // ==================== Message Replies Reaction  ===================
-            messageRepliesList = document.getElementById("message-{{reply.parent_id}}-replies-list")
+{% block extra_scripts %}
+<script>
+    // ==================== Message Replies Reaction  ===================
+    messageRepliesList = document.getElementById("message-{{reply.parent_id}}-replies-list")
 
-            //console.log("message-{{reply.parent_id}}-replies-list")
-            //console.log(messageRepliesList)
+    //console.log("message-{{reply.parent_id}}-replies-list")
+    //console.log(messageRepliesList)
 
-            // ! BUG: The new replies added with HTMX wont have an eventlistener attached to them
-            messageRepliesList.querySelectorAll(".item-reaction").forEach(reaction => {
-            reaction.addEventListener("click", (e) => {
-                
-                console.log(e)
-                console.log("reation_type_id",e.target.id)
-                console.log("message_or_reply_id",e.target.dataset.message)
+    // ! BUG: The new replies added with HTMX wont have an eventlistener attached to them
+    messageRepliesList.querySelectorAll(".item-reaction").forEach(reaction => {
+        reaction.addEventListener("click", (e) => {
 
-                reaction_type_id = e.target.id
-                message_id = e.target.dataset.message
+            console.log(e)
+            console.log("reation_type_id", e.target.id)
+            console.log("message_or_reply_id", e.target.dataset.message)
 
-                data = {
-                reaction_type_id:reaction_type_id
-                }
+            reaction_type_id = e.target.id
+            message_id = e.target.dataset.message
 
-                // message/<int:pk>/reaction
-                const URL = `/message/${message_id}/reaction`
+            data = {
+                reaction_type_id: reaction_type_id
+            }
 
-                fetch(URL,{
-                method:"POST",
-                body: JSON.stringify(data),
-                headers: { 
-                    "X-CSRFToken": '{{csrf_token}}',
-                    'content-type': 'application/json',
-                },
+            // message/<int:pk>/reaction
+            const URL = `/message/${message_id}/reaction`
+
+            fetch(URL, {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "X-CSRFToken": '{{csrf_token}}',
+                        'content-type': 'application/json',
+                    },
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -109,20 +106,20 @@
                     // update html --- m-1-count-1
                     countSpan = document.getElementById(`m-${message_id}-count-${reaction_type_id}`)
 
-                    if(data.operation === 'added'){
-                    countSpan.innerHTML = parseInt(countSpan.innerText) + 1
-                    }else if(data.operation === 'removed'){
-                    countSpan.innerHTML = parseInt(countSpan.innerText) - 1
-                    }else{
-                    // do nothing
+                    if (data.operation === 'added') {
+                        countSpan.innerHTML = parseInt(countSpan.innerText) + 1
+                    } else if (data.operation === 'removed') {
+                        countSpan.innerHTML = parseInt(countSpan.innerText) - 1
+                    } else {
+                        // do nothing
                     }
 
                 }).catch(e => {
                     console.log(e)
                 })
 
-            })
-            })
-        </script>
-    {% endblock %}
+        })
+    })
+</script>
+{% endblock %}
 {% endif %}

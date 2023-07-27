@@ -1,50 +1,42 @@
 {% load static %}
 
 {% for room in page_obj.object_list  %}
-  {% if forloop.last and page_obj.has_next%}
-    <div 
-        class="roomListRoom" 
-        hx-get="{% url 'home' %}?page={{ page_obj.number|add:1 }}" 
-        hx-trigger="revealed" 
-        hx-swap="afterend" 
-        hx-indicator="#spinner"
-      >
+{% if forloop.last and page_obj.has_next%}
+<div class="roomListRoom" hx-get="{% url 'home' %}?page={{ page_obj.number|add:1 }}" hx-trigger="revealed"
+  hx-swap="afterend" hx-indicator="#spinner">
   {% else %}
-    <div class="roomListRoom ">
-  {% endif %}
-  <div class="roomListRoom__header">
-    <a
-      href="{% url 'user-profile' room.host.username %}"
-      class="roomListRoom__author"
-    >
-      <div class="avatar avatar--small">
-        <img src="{{room.host.avatar}}" alt="user-avatar" />
+  <div class="roomListRoom ">
+    {% endif %}
+    <div class="roomListRoom__header">
+      <a href="{% url 'user-profile' room.host.username %}" class="roomListRoom__author">
+        <div class="avatar avatar--small {% if room.host.id in request.online_now_ids %} active {% endif %}">
+          <img src="{{room.host.avatar}}" alt="user-avatar" />
+        </div>
+        <span>@{{room.host.username}}</span>
+      </a>
+      <div class="roomListRoom__actions">
+        <span>{{room.created|timesince}} ago</span>
       </div>
-      <span>@{{room.host.username}}</span>
-    </a>
-    <div class="roomListRoom__actions">
-      <span>{{room.created|timesince}} ago</span>
     </div>
-  </div>
-  <div class="roomListRoom__content">
-    {% comment %} <a href="{% url 'room' room. %}">{{room.name}}</a> {% endcomment %}
-    <a href="{{room.get_absolute_url}}">{{room.name}}</a>
-  </div>
-  <div class="roomListRoom__meta">
-    <a href="{% url 'room' room.slug %}" class="roomListRoom__joined">
-      {% if room.type == 'private' %}
+    <div class="roomListRoom__content">
+      {% comment %} <a href="{% url 'room' room. %}">{{room.name}}</a> {% endcomment %}
+      <a href="{{room.get_absolute_url}}">{{room.name}}</a>
+    </div>
+    <div class="roomListRoom__meta">
+      <a href="{% url 'room' room.slug %}" class="roomListRoom__joined">
+        {% if room.type == 'private' %}
         {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
 
         <button class="bg-dark-medium px-4 py-2 rounded-full border border-dark-light" type="submit">
-          <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
+          <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock">
         </button>
-      {% endif %}
-      
-      <img src="{% static 'images/icons/user-group.svg'  %}" alt="lock" >
-      {{room.participants_count}} Joined
-    </a>
-    
-    <p class="roomListRoom__topic">{{room.topic.name}}</p>
+        {% endif %}
+
+        <img src="{% static 'images/icons/user-group.svg'  %}" alt="lock">
+        {{room.participants_count}} Joined
+      </a>
+
+      <p class="roomListRoom__topic">{{room.topic.name}}</p>
+    </div>
   </div>
-</div>
-{% endfor %}
+  {% endfor %}

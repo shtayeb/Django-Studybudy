@@ -35,7 +35,7 @@
 
       <div class="profile">
         <div class="profile__avatar">
-          <div class="avatar avatar--large active">
+          <div class="avatar avatar--large  {% if request.user.id in request.online_now_ids %} active {% endif %} ">
             <img src="{{user.avatar}}" alt="user-avatar" />
           </div>
         </div>
