@@ -1,5 +1,10 @@
+import urllib
+
+import requests
+from allauth.account.adapter import get_adapter
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -9,6 +14,37 @@ from base.models import Topic
 
 from .forms import UserForm
 from .models import User
+
+
+def test(request):
+    # get the response from the URL
+    response = requests.get('https://blog.shahryartayeb.com/generate_banner?text=Title')
+
+    gg = urllib.request.urlretrieve("https://blog.shahryartayeb.com/generate_banner?text=Title", 'media/room_thumb/test.jpg') 
+
+    # print(response)
+    print(gg)
+
+    return HttpResponse(response,content_type='image/png')
+
+@login_required(login_url="/accounts/login")
+def deleteUser(request, username):
+    user = User.objects.get(username=username)
+    
+    if request.user != user:
+        return HttpResponse("You do not have permission to perform this action !")
+
+    if request.method == "POST":
+        user.delete()
+        # Logout the user
+        adapter = get_adapter(request)
+        adapter.add_message(
+            request, messages.SUCCESS, "account/messages/logged_out.txt"
+        )
+        adapter.logout(request)
+        return redirect('home')
+
+    return render(request, "base/delete.html", {"obj": user})
 
 
 @require_http_methods('POST')

@@ -1,20 +1,21 @@
 import datetime
 import json
+import urllib
 
 import jwt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import EmailMessage
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Count, Prefetch, Q, When
+from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.http import urlencode
 from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
-from pytz import timezone
 
 from .forms import MessageForm, RoomForm
 from .models import Membership, Message, ReactionType, Room, RoomInvitation, Topic, User
@@ -582,6 +583,8 @@ def createRoom(request):
             room=room, user=request.user, is_admin=True
         )
         room.membership_set.add(membership)
+        
+        urllib.request.urlretrieve(f"https://blog.shahryartayeb.com/generate_banner?{urlencode({'text':room.name})}", f"media/room_thumb/{room.slug}.png") 
 
         return redirect("room", room.slug)
 

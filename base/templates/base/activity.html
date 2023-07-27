@@ -3,10 +3,14 @@
 {% load static %}
 
 {% block extra_heads %}
-  <title>Activities</title>
   <link rel="stylesheet" href="{% static 'styles/markdown.css' %}" />
   <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
 {% endblock extra_heads %}
+
+{% block title %}
+  <title>Activities</title>
+{% endblock title %}
+
 
 {% block content %}
 <main class="layout">
