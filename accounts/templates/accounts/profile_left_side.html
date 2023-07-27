@@ -1,0 +1,22 @@
+{% load static %}
+<!-- Topics Start -->
+<div class="sticky_panel sticky_left_panel topics">
+  <div class="topics__header">
+    <h2>Profile Actions</h2>
+  </div>
+
+  <ul class=" scroll gap-8 flex flex-col ">
+    {% if request.user == user%}
+    <a href="{% url 'update-user' %}" class="hover:bg-dark p-2 rounded-md ">Edit Profile</a>
+    <a href="{% url 'account_email' %}" class="hover:bg-dark p-2 rounded-md ">Emails</a>
+    <a href="{% url 'account_change_password' %}" class="hover:bg-dark p-2 rounded-md ">Change Password</a>
+    <a href="{% url 'account_reset_password' %}" class="hover:bg-dark p-2 rounded-md ">Forgot Password ?</a>
+    <a href="{% url 'socialaccount_connections' %}" class="hover:bg-dark p-2 rounded-md ">Social Accounts</a>
+    <a href="{% url 'invitations:send-invite' %}" class="hover:bg-dark p-2 rounded-md ">Invite Friends</a>
+    <a href="{% url 'delete-user' user.username %}" class=" rounded-md p-2 text-red-500 hover:bg-red-900">Delete
+      Account</a>
+    {% endif %}
+  </ul>
+
+</div>
+<!-- Topics End -->

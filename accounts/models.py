@@ -1,6 +1,10 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-from django_softdelete.models import SoftDeleteModel
+from django_softdelete.models import SoftDeleteManager, SoftDeleteModel
+
+
+class CustomUserManager(UserManager, SoftDeleteManager):
+    pass
 
 
 class User(SoftDeleteModel, AbstractUser):
@@ -9,14 +13,13 @@ class User(SoftDeleteModel, AbstractUser):
     bio = models.TextField(null=True)
 
     avatar = models.URLField(
-        max_length=200,
-        default='https://avatars.dicebear.com/api/bottts/default.svg'
+        max_length=200, default="https://avatars.dicebear.com/api/bottts/default.svg"
     )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
-    objects = UserManager()
+    objects = CustomUserManager()
 
     def __str__(self):
         return self.username

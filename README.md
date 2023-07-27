@@ -116,7 +116,8 @@ class Product(models.Model):
 - [x] SEO meta tags for pages
 - [x] Automatically Create a meta tag banner for a room (use GET blog.shahryartayeb.com/generate_banner?text=Title)
 
-- Account removal request, user is soft deleted
+- [x] Account removal request, user is soft deleted
+    - [x] Soft deleted user should'nt be able to login
     - After one month its hard deleted and its room and message are set to null or to anonymous
     
 - Recaptcha for login and register page

@@ -1,11 +1,11 @@
-{% extends 'main.html' %} 
+{% extends 'main.html' %}
 
 {% load static %}
 
 {% block content %}
 
 <main class=" my_container ">
- 
+
   <div class="auth">
     <div class="layout__box">
 
@@ -14,22 +14,24 @@
           <h3>Register</h3>
         </div>
       </div>
-      
+
       <div class="layout__body">
         <h2 class="auth__tagline">Find your study partner</h2>
 
-       <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" autocomplete="off">
-          {% csrf_token %} 
-          
+        {{form.non_field_errors }}
+
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" autocomplete="off">
+          {% csrf_token %}
+
           {% for field in form %}
           <div class="form__group form__group">
             <label for="room_name">{{field.label}}</label>
             {{field}}
 
             {% for error in field.errors %}
-                <span class="error-validation">
-                    {{ error }}
-                </span>
+            <span class="error-validation">
+              {{ error }}
+            </span>
             {% endfor %}
           </div>
           {% endfor %}

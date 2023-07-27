@@ -1,4 +1,4 @@
-{% extends 'main.html' %} 
+{% extends 'main.html' %}
 
 {% load account socialaccount %}
 {% load static %}
@@ -11,75 +11,72 @@
 <main class=" my_container">
   <div class="auth">
     <div class="layout__box">
-      
-        <div class="layout__boxHeader">
-          <div class="layout__boxTitle">
-            <h3>Login</h3>
-          </div>
+
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Find your study partner</h3>
         </div>
+      </div>
 
-        <div class="layout__body">
-          <h2 class="auth__tagline">Find your study partner</h2>
-          {% get_providers as socialaccount_providers %}
+      <div class="layout__body">
+        {% comment %} <h2 class="auth__tagline">Find your study partner</h2> {% endcomment %}
+        {% get_providers as socialaccount_providers %}
+        {% if socialaccount_providers %}
+        <div class="socialaccount_ballot">
+          <ul class="socialaccount_providers border border-dark-light rounded-md px-8 py-4 hover:bg-dark-medium">
+            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+          </ul>
+        </div>
+        {% include "socialaccount/snippets/login_extra.html" %}
+        {% else %}
+        <p>
+          If you have not created an account yet, then please <a href="{{ signup_url }}">sign up</a> first
+        </p>
+        {% endif %}
 
-          {% if socialaccount_providers %}
+        <hr class="h-px my-10 bg-gray-200 border-0 dark:bg-gray-600">
 
+        {{form.non_field_errors }}
+        <form class="login" method="POST" action="{% url 'account_login' %}">
+          {% csrf_token %}
 
-          <div class="socialaccount_ballot">
+          {% for field in form.visible_fields %}
+          {% if field.name != "remember" %}
+          <div class="form__group">
+            {{ field.label_tag }}
+            {{ field }}
 
-            <ul class="socialaccount_providers">
-              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-            </ul>
-
+            {{field.errors}}
+            {% for error in field.error %}
+            <span class="error-validation">
+              {{ error }}
+            </span>
+            {% endfor %}
           </div>
+          {% endif %}
+          {% endfor %}
 
-          {% include "socialaccount/snippets/login_extra.html" %}
-
-          {% else %}
-            <p>
-              If you have not created an account yet, then please <a href="{{ signup_url }}">sign up</a> first
-            </p>
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
           {% endif %}
 
-          <form class="login" method="POST" action="{% url 'account_login' %}">
-            {% csrf_token %}
+          <button class="btn btn--main" type="submit">
+            <img src="{% static 'images/icons/lock.svg' %}" alt="lock">
+            Login
+          </button>
+        </form>
 
-            {% for field in form.visible_fields %}
-              {% if field.name != "remember" %}
-                <div class="form__group">
-                  {{ field.label_tag }}
-                  {{ field }}
-                  
-                  {% for error in field.errors %}
-                    <span class="error-validation">
-                      {{ error }}
-                    </span>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            {% endfor %}
-
-            {% if redirect_field_value %}
-              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-            {% endif %}
-
-            <button class="btn btn--main" type="submit">
-              <img src="{% static 'images/icons/lock.svg' %}" alt="lock">
-              Login
-            </button>
-          </form>
-
-          <div class="auth__action">
-            <p>Haven't signed up yet?</p>
-            <a href="{% url 'account_signup' %}" class="btn btn--link">Sign Up</a>
-            <span>---</span>
-            <a class="btn btn--link" href="{% url 'account_reset_password' %}">Forgot Password?</a>
-          </div>
-
-          </div>
+        <div class="auth__action">
+          <p>Haven't signed up yet?</p>
+          <a href="{% url 'account_signup' %}" class="btn btn--link">Sign Up</a>
+          <span>---</span>
+          <a class="btn btn--link" href="{% url 'account_reset_password' %}">Forgot Password?</a>
         </div>
 
+      </div>
     </div>
+
+  </div>
   </div>
 </main>
 {% endblock content %}
