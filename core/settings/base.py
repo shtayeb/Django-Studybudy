@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     # Installed apps
+    "guardian",
     "django_htmx",
     "allauth",
     "invitations",
@@ -187,6 +188,12 @@ INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
 ACCOUNT_FORMS = {
     "signup": "accounts.forms.MyUserCreationForm",
 }
+
+#
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 # Provider specific settings
 SITE_ID = 1

@@ -100,6 +100,10 @@ class Message(SoftDeleteModel):
 
     class Meta:
         ordering = ["-updated", "-created"]
+        permissions = (
+            ('delete_msg', 'Delete Msg'),
+            ('reply_msg', 'Reply Msg'),
+        )
 
     def __str__(self):
         return self.body[0:50]
