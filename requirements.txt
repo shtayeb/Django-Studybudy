@@ -42,6 +42,7 @@ django-invitations==2.0.0
 django-htmx==1.16.0
 django-mdeditor==0.1.20
 django_vite_plugin==1.1.1
+django-guardian==2.4.0
 #railway
 gunicorn==20.1.0
 # Dev
