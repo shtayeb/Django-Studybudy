@@ -40,7 +40,7 @@
     {% block title %}
     <title>StudyBuddy - Find study partners around the world!</title>
     {% endblock title %}
-
+    
     {% if APP_ENV == "production" %}
       <!-- Hotjar Tracking Code for https://study-buddy-app.up.railway.app/ -->
       <script>
@@ -59,7 +59,7 @@
 
   <body hx-ext="debug">
     <div class="progress bg-dark" style="height: 3px;">
-      <div class="indeterminate bg-dark-light" style=""></div>
+      <div class="indeterminate bg-dark-light"></div>
     </div>
 
     {% include 'components/navbar.html' %} 
