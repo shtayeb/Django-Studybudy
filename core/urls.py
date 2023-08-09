@@ -2,8 +2,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+    ),
     path("admin/", admin.site.urls),
     path("", include("base.urls")),
     path("accounts/", include("accounts.urls")),
