@@ -74,7 +74,7 @@
     <!-- Reply form start -->
     <div class="">
         <form hx-post="{% url 'message-reply' message.id %}" hx-target="#message-{{message.id}}-replies-list"
-            hx-swap="beforeend show:#message-{{message.id}}-replies-list:bottom" hx-indicator=".progress"
+            hx-swap="afterbegin show:#message-{{message.id}}-replies-list" hx-indicator=".progress"
             hx-ext="disable-element" hx-disable-element="#sumbit-btn-reply"
             class="reply-form d-none bg-dark/50 border border-gray-600 rounded-md "
             id="comment-{{message.id}}-replyForm">
