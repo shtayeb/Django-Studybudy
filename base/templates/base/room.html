@@ -127,7 +127,7 @@
               <form 
                 hx-post="{% url 'room-add-message' room.id %}" 
                 hx-target="#messages-list" 
-                hx-swap="beforeend show:#messages-list:bottom"
+                hx-swap="afterbegin"
                 hx-indicator=".progress" 
                 hx-ext="disable-element"
                 hx-disable-element="#sumbit-btn-message"

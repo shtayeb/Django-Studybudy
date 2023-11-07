@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     # Installed apps
+    "guardian",
     "django_htmx",
     "allauth",
     "invitations",
@@ -91,6 +92,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
+    "accounts.middleware.OnlineNowMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -106,6 +108,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "base.context_processors.env_variables",
             ],
         },
     },
@@ -186,6 +189,12 @@ INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
 ACCOUNT_FORMS = {
     "signup": "accounts.forms.MyUserCreationForm",
 }
+
+#
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",  # this is default
+    "guardian.backends.ObjectPermissionBackend",
+)
 
 # Provider specific settings
 SITE_ID = 1

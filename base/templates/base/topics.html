@@ -1,4 +1,4 @@
-{% extends 'main.html' %} 
+{% extends 'main.html' %}
 
 {% load static %}
 
@@ -9,11 +9,11 @@
 {% block content %}
 <main class="create-room layout">
   <div class="my_container">
-    <div class="layout__box">
+    <div class="layout__box w-full">
       <div class="layout__boxHeader">
         <div class="layout__boxTitle">
           <a href="{{request.META.HTTP_REFERER}}">
-            <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
+            <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow">
           </a>
           <h3>Browse Topics</h3>
         </div>
@@ -24,22 +24,16 @@
           {% csrf_token %}
           <label>
             <img class="" src="{% static 'images/icons/search.svg' %}" alt="search" />
-            <input name="q" placeholder="Search for topics"
-              hx-post="{% url 'search-topic' %}" 
-              hx-trigger="keyup changed delay:300ms" 
-              hx-target="#topic-list"
-              required
-            />
+            <input name="q" placeholder="Search for topics" hx-post="{% url 'search-topic' %}"
+              hx-trigger="keyup changed delay:300ms" hx-target="#topic-list" required />
           </label>
         </form>
 
         <ul class="topics__list">
           <li>
-            <a href="{% url 'topics' %}" class="active"
-              >All <span>{{topics|length}}</span></a
-            >
+            <a href="{% url 'topics' %}" class="active">All <span>{{topics|length}}</span></a>
           </li>
-          <div id="topic-list" >
+          <div id="topic-list">
             {% include 'base/partials/topic_list.html' %}
           </div>
         </ul>

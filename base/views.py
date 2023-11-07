@@ -24,6 +24,10 @@ expiry_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
 
 SECRET_KEY = "secret_key_001"
 
+fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
+like_count = Count("reaction", filter=Q(reaction__reaction_type__name="👍"))
+poop_count = Count("reaction", filter=Q(reaction__reaction_type__name="💩"))
+
 
 @require_http_methods("POST")
 @login_required(login_url="/accounts/login")
@@ -55,10 +59,12 @@ def toggleMessageReaction(request, pk):
         next_url = request.htmx.current_url_abs_path or ""
         return HttpResponseClientRedirect(f"/accounts/login/?next={next_url}")
 
-    data = {"operation": ""}
+    operation = ""
     if request.method == "POST":
         message = Message.objects.get(pk=pk)
-        reaction_type_id = json.loads(request.body)["reaction_type_id"]
+
+        reaction_type_id = request.POST.get("reaction_type_id")
+
         user = request.user
 
         # Check if the reaction exists
@@ -69,7 +75,7 @@ def toggleMessageReaction(request, pk):
         if msg_reaction.exists():
             # remove the reaction
             msg_reaction.delete()
-            data["operation"] = "removed"
+            operation = "removed"
         else:
             # add the reaction
             message.reaction_set.create(
@@ -77,11 +83,20 @@ def toggleMessageReaction(request, pk):
                 reaction_type_id=reaction_type_id,
                 user_id=user.id,
             )
-            data["operation"] = "added"
+            operation = "added"
     else:
         messages.error(request, "GET request is not supported for this route !!")
 
-    return JsonResponse(data, safe=False)
+    context = {
+        "operation": operation,
+        # TODO: Could be better
+        "msg_or_reply": Message.objects.annotate(
+            fire_count=fire_count, like_count=like_count, poop_count=poop_count
+        ).get(pk=pk),
+        "reaction": ReactionType.objects.get(pk=reaction_type_id),
+    }
+
+    return render(request, "base/partials/reaction.html", context)
 
 
 def toggleJoinRoom(request, pk):
@@ -318,10 +333,6 @@ def addMessage(request, room_id):
 
 
 def room(request, slug):
-    fire_count = Count("reaction", filter=Q(reaction__reaction_type__name="🔥"))
-    like_count = Count("reaction", filter=Q(reaction__reaction_type__name="👍"))
-    poop_count = Count("reaction", filter=Q(reaction__reaction_type__name="💩"))
-
     room = get_object_or_404(
         Room.objects.prefetch_related(
             Prefetch(
@@ -527,7 +538,6 @@ def toggleRoomMemberBlock(request, pk):
         membership.blocked_at = datetime.datetime.now()
     else:
         membership.blocked_at = None
-        
 
     membership.save()
 
@@ -583,8 +593,11 @@ def createRoom(request):
             room=room, user=request.user, is_admin=True
         )
         room.membership_set.add(membership)
-        
-        urllib.request.urlretrieve(f"https://blog.shahryartayeb.com/generate_banner?{urlencode({'text':room.name})}", f"media/room_thumb/{room.slug}.png") 
+
+        urllib.request.urlretrieve(
+            f"https://blog.shahryartayeb.com/generate_banner?{urlencode({'text':room.name})}",
+            f"media/room_thumb/{room.slug}.png",
+        )
 
         return redirect("room", room.slug)
 
@@ -675,7 +688,6 @@ def deleteMessage(request, pk):
     if request.user != message.user and not is_admin:
         return HttpResponse("You do not have permission to perform this action !")
     # endCheck
-
 
     if request.method == "POST":
         message.delete()

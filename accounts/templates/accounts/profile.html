@@ -1,82 +1,70 @@
-{% extends 'main.html' %} 
+{% extends 'main.html' %}
 
 {% block title %}
-  <title>@{{ user.username }}'s Profile</title>
+<title>@{{ user.username }}'s Profile</title>
 {% endblock title %}
 
 {% block meta_tags %}
-  <meta name="title" content="{{user.name}}" head-key="title"/>
-  <meta name="description" content="{{user.bio | default:'User profile'}}" head-key="description"/>
+<meta name="title" content="{{user.name}}" head-key="title" />
+<meta name="description" content="{{user.bio | default:'User profile'}}" head-key="description" />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{request.build_absolute_uri}}" />
-  <meta property="og:title" content="{{user.name}}" />
-  <meta property="og:description" content="{{user.bio| default:'User profile'}}" />
-  <meta property="og:image" content="{{user.avatar}}" />
- 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="{{request.build_absolute_uri}}" />
-  <meta property="twitter:title" content="{{user.name}}" />
-  <meta property="twitter:description" content="{{user.bio| default:'User profile'}}" />
-  <meta property="twitter:image" content="{{user.avatar}}" />
-{% endblock meta_tags %} 
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{request.build_absolute_uri}}" />
+<meta property="og:title" content="{{user.name}}" />
+<meta property="og:description" content="{{user.bio| default:'User profile'}}" />
+<meta property="og:image" content="{{user.avatar}}" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="{{request.build_absolute_uri}}" />
+<meta property="twitter:title" content="{{user.name}}" />
+<meta property="twitter:description" content="{{user.bio| default:'User profile'}}" />
+<meta property="twitter:image" content="{{user.avatar}}" />
+{% endblock meta_tags %}
 
 {% block content %}
-  <main class="profile-page layout layout--3">
-    <div class="my_container">
-      <!-- Topics Start -->
-      {% include 'base/topic_component.html' %}
-      <!-- Topics End -->
+<main class="profile-page layout layout--3">
+  <div class="my_container">
+    <!-- Topics Start -->
+    {% include 'accounts/profile_left_side.html' %}
+    <!-- Topics End -->
 
-      <!-- Room List Start -->
-      <div class="roomList">
+    <!-- Room List Start -->
+    <div class="roomList">
 
-        <div class="profile">
-          <div class="profile__avatar">
-            <div class="avatar avatar--large active">
-              <img src="{{user.avatar}}" alt="user-avatar" />
-            </div>
-          </div>
-          <div class="profile__info">
-            <h3>{{user.name}}</h3>
-            <p>@{{user.username}}</p>
-            <div class="" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center">
-              {% if request.user == user%}
-                <a href="{% url 'update-user' %}" class="btn  btn--pill">Edit Profile</a>
-                <a href="{% url 'account_email' %}" class="btn  btn--pill">Emails</a>
-                <a href="{% url 'account_change_password' %}" class="btn  btn--pill">Change Password</a>
-                <a href="{% url 'account_reset_password' %}" class="btn  btn--pill">Forgot Password ?</a>
-                <a href="{% url 'socialaccount_connections' %}" class="btn  btn--pill">Social Accounts</a>
-                <a href="{% url 'invitations:send-invite' %}" class="btn  btn--pill">Invite Friends</a>
-                <a href="{% url 'delete-user' user.username %}" class="btn  btn--pill bg-red-500 text-white">Delete
-                  Account</a>
-              {% endif %}
-            </div>
-          </div>
-          <div class="profile__about">
-            <h3>About</h3>
-            <p>
-              {{user.bio}}
-            </p>
+      <div class="profile">
+        <div class="profile__avatar">
+          <div class="avatar avatar--large  {% if request.user.id in request.online_now_ids %} active {% endif %} ">
+            <img src="{{user.avatar}}" alt="user-avatar" />
           </div>
         </div>
-
-        <div class="roomList__header">
-          <div>
-            <h2>Study Rooms</a>
-            </h2>
-          </div>
+        <div class="profile__info">
+          <h3>{{user.name}}</h3>
+          <p>@{{user.username}}</p>
         </div>
-
-         {% include 'base/feed_component.html' %}
+        <div class="profile__about">
+          <h3>About</h3>
+          <p>
+            {{user.bio}}
+          </p>
+        </div>
       </div>
-      <!-- Room List End -->
 
-      <!-- Activities Start -->
-      {% include 'base/activity_component.html' %}
-      <!-- Activities End -->
+      <div class="roomList__header">
+        <div>
+          <h2>Study Rooms</a>
+          </h2>
+        </div>
+      </div>
+
+      {% include 'base/feed_component.html' %}
     </div>
-  </main>
+    <!-- Room List End -->
+
+    <!-- Activities Start -->
+    {% include 'base/activity_component.html' %}
+    <!-- Activities End -->
+  </div>
+</main>
 {% endblock content %}

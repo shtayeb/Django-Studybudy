@@ -1,28 +1,25 @@
 {% load static %}
-{% load markdown_extras %} 
+{% load markdown_extras %}
 
 <details open class="thread border-l">
     <summary class="thread__top">
         <div class="thread__author">
 
-            <a
-                href="{% url 'user-profile' message.user.username %}"
-                class="flex items-center gap-4"
-            >
-                <div class="avatar avatar--small">
+            <a href="{% url 'user-profile' message.user.username %}" class="flex items-center gap-4">
+                <div class="avatar avatar--small {% if message.user.id in request.online_now_ids %} active {% endif %}">
                     <img src="{{message.user.avatar}}" alt="user-avatar" />
                 </div>
                 <p>@{{message.user.username}}</p>
                 <p class="text-gray-600">({{message.created|timesince}} ago)</p>
             </a>
-            
+
 
             {% if request.user == message.user or is_admin %}
-                <a class="hover:bg-dark" href="{% url 'delete-message' message.id %}">
-                    <div class="thread__delete">
-                        <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm" >
-                    </div>
-                </a>
+            <a class="hover:bg-dark" href="{% url 'delete-message' message.id %}">
+                <div class="thread__delete">
+                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm">
+                </div>
+            </a>
             {% endif %}
             <a href="{% url 'message-show' message.id %}" class="underline hover:font-semibold">Show Message</a>
         </div>
@@ -37,159 +34,80 @@
     <div class="thread__footer border-y border-gray-700 py-5 flex justify-between">
         <div class="flex gap-3">
             {% for reaction in reaction_types %}
-            {% if reaction.name == '🔥' %}
-                <div class="item">
-                    <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
-                    <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                        {{message.fire_count | default:0}}
+                <form class="item" 
+                    hx-post="{% url 'message-reaction' message.id %}" 
+                    method="POST"
+                    hx-target="this" 
+                    hx-trigger="click"
+                    hx-swap="outerHTML"
+                >
+                    {% csrf_token %}
+                     <input type="hidden" name="reaction_type_id" value="{{ reaction.id }}">
+                    <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">
+                        {{reaction.name}}
                     </span>
-                </div>
-            {% endif %}
-            
-            {% if reaction.name == '👍' %}
-            <div class="item">
-                <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}} </span>
-                <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                {{message.like_count | default:0}}
-                </span>
-            </div>
-            {% endif %}
-            
-            {% if reaction.name == '💩' %}
-            <div class="item">
-                <span class="item-reaction" id="{{ reaction.id }}" data-message="{{message.id}}">{{reaction.name}}</span>
-                <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
-                    {{message.poop_count | default:0}}
-                </span>
-            </div>
-            {% endif %}
+                    <span class="reaction_count" id="m-{{message.id}}-count-{{reaction.id}}">
+                        {% if reaction.name == '👍' %}
+                            {{message.like_count | default:0}}
+                        {% elif reaction.name == '🔥' %}
+                            {{message.fire_count | default:0}}
+                        {% elif reaction.name == '💩' %}
+                            {{message.poop_count | default:0}}
+                        {% endif %}
+                    </span>
+                </form>
             {% endfor %}
         </div>
 
         <div>
             {% if not is_blocked %}
-                <button class="border border-dark-light rounded-full px-4 hover:bg-dark-light" 
-                    id="add-reply-btn-{{message.id}}" 
-                    data-toggle="reply-form" 
-                    data-target="comment-{{message.id}}-replyForm"
-                >
-                    Add Reply
-                </button>
+            <button class="border border-dark-light rounded-full px-4 hover:bg-dark-light"
+                id="add-reply-btn-{{message.id}}" data-toggle="reply-form"
+                data-target="comment-{{message.id}}-replyForm">
+                Add Reply
+            </button>
             {% endif %}
         </div>
     </div>
 
     {% if not is_blocked %}
-        <!-- Reply form start -->
-        <div class="">
-            <form 
-                hx-post="{% url 'message-reply' message.id %}" 
-                hx-target="#message-{{message.id}}-replies-list" 
-                hx-swap="beforeend show:#message-{{message.id}}-replies-list:bottom" 
-                hx-indicator=".progress" 
-                hx-ext="disable-element"
-                hx-disable-element="#sumbit-btn-reply"
-                class="reply-form d-none bg-dark/50 border border-gray-600 rounded-md " 
-                id="comment-{{message.id}}-replyForm"
-            >
-                {% csrf_token %}
-                <textarea 
-                    class="bg-transparent focus:outline-none m-0 outline-none p-5 " 
-                    name="body" 
-                    placeholder="Reply to comment" 
-                    rows="4" 
-                    required
-                ></textarea>
+    <!-- Reply form start -->
+    <div class="">
+        <form hx-post="{% url 'message-reply' message.id %}" hx-target="#message-{{message.id}}-replies-list"
+            hx-swap="afterbegin show:#message-{{message.id}}-replies-list" hx-indicator=".progress"
+            hx-ext="disable-element" hx-disable-element="#sumbit-btn-reply"
+            class="reply-form d-none bg-dark/50 border border-gray-600 rounded-md "
+            id="comment-{{message.id}}-replyForm">
+            {% csrf_token %}
+            <textarea class="bg-transparent focus:outline-none m-0 outline-none p-5 " name="body"
+                placeholder="Reply to comment" rows="4" required></textarea>
 
-                <input type="hidden" name="room_id" value="{{message.room_id}}">
+            <input type="hidden" name="room_id" value="{{message.room_id}}">
 
-                <div class="flex items-center justify-between gap-3 border-t border-gray-600 p-5">   
-                    <p class="text-gray-500">
-                        Supports Markdown
-                    </p>
-                    <div>
-                        <button 
-                            type="button" 
-                            class="border border-dark-light px-4 rounded-md hover:bg-dark-medium"  
-                            data-toggle="reply-form" 
-                            data-target="comment-{{message.id}}-replyForm"
-                        >
-                            Cancel
-                        </button>
-                        <button 
-                            type="submit" 
-                            id="sumbit-btn-reply" 
-                            class="disabled:bg-gray bg-dark-light px-4 rounded-md hover:bg-dark-medium"
-                        >
-                            Submit
-                        </button>
-                    </div>
+            <div class="flex items-center justify-between gap-3 border-t border-gray-600 p-5">
+                <p class="text-gray-500">
+                    Supports Markdown
+                </p>
+                <div>
+                    <button type="button" class="border border-dark-light px-4 rounded-md hover:bg-dark-medium"
+                        data-toggle="reply-form" data-target="comment-{{message.id}}-replyForm">
+                        Cancel
+                    </button>
+                    <button type="submit" id="sumbit-btn-reply"
+                        class="disabled:bg-gray bg-dark-light px-4 rounded-md hover:bg-dark-medium">
+                        Submit
+                    </button>
                 </div>
-            </form>
-        </div>
-        <!-- Reply form end -->
+            </div>
+        </form>
+    </div>
+    <!-- Reply form end -->
     {% endif %}
 
     <details class="message_replies py-5" open id="message-{{message.id}}-replies-list">
         {% for reply in message.replies.all %}
             {% include 'base/_reply.html' %}
-        {% endfor %} 
+        {% endfor %}
     </details>
 
 </details>
-
-{% comment %} Add the reaction event listners when returned from htmx partial {% endcomment %}
-{% if request.user.is_authenticated and request.htmx %}
-    {% block extra_scripts %}
-        <script>
-            // ==================== Message Reaction  ===================
-            messagesList = document.getElementById("messages-list")
-            // ! BUG: The will add the eventlistner two times for replies
-            messagesList.querySelectorAll(".item-reaction").forEach(reaction => {
-            reaction.addEventListener("click", (e) => {
-                
-                console.log(e)
-                console.log("reation_type_id",e.target.id)
-                console.log("message_or_reply_id",e.target.dataset.message)
-
-                reaction_type_id = e.target.id
-                message_id = e.target.dataset.message
-
-                data = {
-                reaction_type_id:reaction_type_id
-                }
-
-                // message/<int:pk>/reaction
-                const URL = `/message/${message_id}/reaction`
-
-                fetch(URL,{
-                method:"POST",
-                body: JSON.stringify(data),
-                headers: { 
-                    "X-CSRFToken": '{{csrf_token}}',
-                    'content-type': 'application/json',
-                },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    // update html --- m-1-count-1
-                    countSpan = document.getElementById(`m-${message_id}-count-${reaction_type_id}`)
-
-                    if(data.operation === 'added'){
-                    countSpan.innerHTML = parseInt(countSpan.innerText) + 1
-                    }else if(data.operation === 'removed'){
-                    countSpan.innerHTML = parseInt(countSpan.innerText) - 1
-                    }else{
-                    // do nothing
-                    }
-
-                }).catch(e => {
-                    console.log(e)
-                })
-
-            })
-            })
-        </script>
-    {% endblock %}
-{% endif %}

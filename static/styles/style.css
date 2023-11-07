@@ -12,34 +12,34 @@
   --color-bg: #2d2d39;
   --color-success: #79d6a3;
   --color-error: #fc4b0b;
-  --color-warning:#dbc039;
+  --color-warning: #dbc039;
 }
 
 /* Utilities */
-.w-full{
+.w-full {
   width: 100%;
 }
 
 
-.success{
-  background-color:var(--color-success);
-  border-radius:5px;
-  padding:5px 8px;
-  color:black;
+.success {
+  background-color: var(--color-success);
+  border-radius: 5px;
+  padding: 5px 8px;
+  color: black;
 }
 
-.warning{
-  background-color:var(--color-warning);
-  border-radius:5px;
-  padding:5px 8px;
-  color:black;
+.warning {
+  background-color: var(--color-warning);
+  border-radius: 5px;
+  padding: 5px 8px;
+  color: black;
 }
 
-.error{
-  background-color:var(--color-error);
-  border-radius:5px;
-  padding:5px 8px;
-  color:black;
+.error {
+  background-color: var(--color-error);
+  border-radius: 5px;
+  padding: 5px 8px;
+  color: black;
 }
 
 /*========== base styles ==========*/
@@ -137,7 +137,7 @@ a {
   color: var(--color-light);
 }
 
-.btn > img {
+.btn>img {
   fill: currentColor;
   width: 1.6rem;
   height: 1.6rem;
@@ -164,7 +164,7 @@ a {
   position: relative;
   display: inline-block;
   border-radius: 50%;
-  border: 2px solid var(--color-main);
+  border: 2px solid var(--color-dark);
 }
 
 .avatar img {
@@ -182,6 +182,10 @@ a {
   z-index: 111;
   border-radius: 50%;
   border: 0.3rem solid var(--color-dark);
+}
+
+.avatar.active {
+  border: 2px var(--color-success) solid;
 }
 
 .avatar.active::after {
@@ -265,7 +269,7 @@ a {
   background-color: var(--color-dark-medium);
 }
 
-.dropdown-menu > a:not(:last-child) {
+.dropdown-menu>a:not(:last-child) {
   border-bottom: 1px solid var(--color-dark-medium);
 }
 
@@ -299,7 +303,7 @@ a {
   background-color: var(--color-dark);
 }
 
-.header > .my_container {
+.header>.my_container {
   display: flex;
   gap: 9.5rem;
 }
@@ -311,18 +315,18 @@ a {
   align-items: center;
 }
 
-.header__logo > img {
+.header__logo>img {
   height: 3.2rem;
   width: 3.2rem;
 }
 
-.header__logo > h1 {
+.header__logo>h1 {
   font-weight: 700;
   font-size: 2rem;
   color: var(--color-light);
 }
 
-.header__search > label {
+.header__search>label {
   background-color: var(--color-dark-medium);
   padding: 1.3rem 1rem;
   display: flex;
@@ -351,7 +355,7 @@ a {
     width: 20rem;
   }
 
-  .header > .my_container {
+  .header>.my_container {
     gap: 3rem;
   }
 }
@@ -420,48 +424,49 @@ a {
 
 .layout {
   margin-top: 2.4rem;
-  
-  
+
+
 }
 
-.layout > .my_container {
+.layout>.my_container {
   display: flex;
   justify-content: center;
   gap: 2.5rem;
   /* align-items: flex-start; */
- 
+
 }
 
-.layout--3 > .my_container > div:first-child {
+.layout--3>.my_container>div:first-child {
   flex-basis: 18%;
   max-width: 22.5rem;
 }
 
-.layout--3 > .my_container > div:nth-child(2) {
+.layout--3>.my_container>div:nth-child(2) {
   flex-basis: 50%;
 }
 
-.layout--3 > .my_container > div:last-child {
+.layout--3>.my_container>div:last-child {
   flex-basis: 25%;
 }
 
 
 
-.layout--2-v2 > .my_container > div:first-child {
+.layout--2-v2>.my_container>div:first-child {
   flex-basis: 25%;
 }
 
-.layout--2-v2 > .my_container > div:last-child {
+.layout--2-v2>.my_container>div:last-child {
   flex-basis: 72%;
 }
 
-.layout--2 > .my_container > div:first-child {
+.layout--2>.my_container>div:first-child {
   flex-basis: 72%;
 }
 
-.layout--2 > .my_container > div:last-child {
+.layout--2>.my_container>div:last-child {
   flex-basis: 25%;
 }
+
 /*========== Layout Box ==========*/
 
 .layout__box {
@@ -508,16 +513,17 @@ a {
 }
 
 @media screen and (max-width: 900px) {
+
   .activities,
   .topics {
     display: none;
   }
 
-  .layout--3 > .my_container > div:nth-child(2) {
+  .layout--3>.my_container>div:nth-child(2) {
     flex-basis: 100%;
   }
 
-  .layout > .my_container {
+  .layout>.my_container {
     display: block;
     justify-content: center;
     /* align-items: flex-start; */
@@ -870,7 +876,7 @@ a {
 =>  Auth
 ================================*/
 
-.auth{
+.auth {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -884,6 +890,7 @@ a {
   font-weight: 500;
   font-size: 1.8rem;
 }
+
 .auth .layout__boxHeader {
   text-align: center;
   justify-content: center;
@@ -958,38 +965,38 @@ a {
 /*==============================
 =>  Room
 ================================*/
-.sticky_panel{
+.sticky_panel {
   border-radius: 0.7rem;
   max-height: 87.5vh;
 
   overflow: hidden;
-  
+
   position: sticky;
-  position: -webkit-sticky; /* Safari */
+  position: -webkit-sticky;
+  /* Safari */
   top: 1.5rem;
 }
 
-.sticky_right_panel{
+.sticky_right_panel {
   background: var(--color-dark);
 }
 
-.sticky_left_panel{
+.sticky_left_panel {}
 
-}
-
-.participants{
+.participants {
   background: var(--color-dark);
   border-radius: 0.7rem;
   max-height: 87.5vh;
 
   overflow: hidden;
-  
+
   position: sticky;
-  position: -webkit-sticky; /* Safari */
+  position: -webkit-sticky;
+  /* Safari */
   top: 1.5rem;
 }
 
-.room{
+.room {
   background: var(--color-dark);
   border-radius: 0.7rem;
   position: relative;
@@ -1003,7 +1010,7 @@ a {
     display: none;
   }
 
-  .layout--2 > .my_container > div:first-child {
+  .layout--2>.my_container>div:first-child {
     flex-basis: 100%;
   }
 }
@@ -1157,18 +1164,18 @@ a {
   padding: 0 2rem 4rem 2rem;
 }
 
-.thread__footer{
+.thread__footer {
   display: flex;
   gap: 10px;
   margin: 1.5rem 0rem 1.5rem 0rem;
 }
 
-.thread__footer .item{
+.thread__footer .item {
   padding: 0px 8px;
   border-radius: 0.7rem;
 }
 
-.thread__footer .item:hover{
+.thread__footer .item:hover {
   background-color: var(--color-dark-light);
   cursor: pointer;
 }
@@ -1183,21 +1190,22 @@ a {
   position: absolute;
 } */
 
-.message_replies .thread::before{
+.message_replies .thread::before {
   content: "";
   width: 43px;
   height: 2px;
   background: var(--color-dark);
   position: absolute;
   left: -2rem;
-  top:3.5rem;
-  
+  top: 3.5rem;
+
 }
 
-.reply-body{
+.reply-body {
   margin-left: 32px;
   position: relative;
 }
+
 /* 
 .reply-body::before{
   content: "";
@@ -1215,37 +1223,42 @@ a {
 
 /* Adjustments for toggleable comments */
 
-.message_replies .thread{
+.message_replies .thread {
   padding-left: 1rem;
   margin: 2rem 0;
   padding: 2rem;
 }
 
 details summary {
-    position: relative;
-    list-style: none;
-    cursor: pointer;
+  position: relative;
+  list-style: none;
+  cursor: pointer;
 }
+
 details::-webkit-details-marker {
-    display: none;
+  display: none;
 }
+
 details.thread:not([open]) .thread__author {
-    /* border-bottom: 1px solid rgba(0, 0, 0, 0.2); */
+  /* border-bottom: 1px solid rgba(0, 0, 0, 0.2); */
 }
+
 .thread__author::after {
-    display: inline-block;
-    position: absolute;
-    right: 5px;
-    align-self: center;
-    font-size: 12px;
+  display: inline-block;
+  position: absolute;
+  right: 5px;
+  align-self: center;
+  font-size: 12px;
 }
+
 details.thread[open] .thread__author::after {
-    content: "Click to hide";
-    color: var(--color-light);
+  content: "Click to hide";
+  color: var(--color-light);
 }
+
 details.thread:not([open]) .thread__author::after {
-    content: "Click to show";
-    color: var(--color-light);
+  content: "Click to show";
+  color: var(--color-light);
 
 }
 
@@ -1255,20 +1268,21 @@ details.thread:not([open]) .thread__author::after {
 /* Styling the reply to comment form */
 
 .reply-form textarea {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 16px;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 15px;
-    margin-bottom: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 15px;
+  margin-bottom: 5px;
 }
+
 .d-none {
-    display: none;
+  display: none;
 }
 
 /* END */
 
-.border-l{
+.border-l {
   border-left: 2px solid var(--color-dark);
 }
 
@@ -1318,7 +1332,7 @@ details.thread:not([open]) .thread__author::after {
   background: transparent;
 }
 
-.room__message > form > textarea {
+.room__message>form>textarea {
   background-color: var(--color-dark-light);
   color: var(--color-light);
   border: none;
@@ -1332,7 +1346,7 @@ details.thread:not([open]) .thread__author::after {
   /* position: relative; */
 }
 
-.room__message > form > textarea::placeholder {
+.room__message>form>textarea::placeholder {
   color: var(--color-light-gray);
 }
 
@@ -1347,7 +1361,7 @@ details.thread:not([open]) .thread__author::after {
   gap: 0.5rem;
 }
 
-.activities__list{
+.activities__list {
   height: 82.5vh;
   overflow-y: scroll;
   padding-bottom: 0;
@@ -1379,12 +1393,12 @@ details.thread:not([open]) .thread__author::after {
   font-weight: 1.4rem;
 }
 
-pre{
+pre {
   background-color: var(--color-dark);
   margin: 8px 0px;
 }
 
-.thread__details >>> code {
+.thread__details>>>code {
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
@@ -1392,25 +1406,23 @@ pre{
   word-wrap: break-word;
 }
 
-.error-validation{
+.error-validation {
   color: var(--color-error);
 }
 
-.messages{
+.messages {
   list-style: none;
   text-decoration: none;
 }
 
-.blockLabels{
+.blockLabels {
   padding: 5px;
   border-radius: 5px;
 }
 
-.ctrlHolder{
+.ctrlHolder {}
 
-}
-
-.buttonHolder{
+.buttonHolder {
   /* margin-left: 0.75rem; 12px */
   margin: 5px;
 }
@@ -1430,15 +1442,15 @@ pre{
   }
 } */
 
-.socialaccount_ballot{
+.socialaccount_ballot {
   display: flex;
   justify-content: center;
 
- 
+
 }
 
 
-.size-sm{
+.size-sm {
   width: 1.6rem;
   height: 1.6rem;
 }
