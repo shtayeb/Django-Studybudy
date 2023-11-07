@@ -4,25 +4,24 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0010_remove_room_participants_alter_room_host_membership_and_more'),
+        ("base", "0010_remove_room_participants_alter_room_host_membership_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='roominvitation',
-            old_name='invitee_id',
-            new_name='invitee',
+            model_name="roominvitation",
+            old_name="invitee_id",
+            new_name="invitee",
         ),
         migrations.RenameField(
-            model_name='roominvitation',
-            old_name='inviter_id',
-            new_name='inviter',
+            model_name="roominvitation",
+            old_name="inviter_id",
+            new_name="inviter",
         ),
         migrations.RenameField(
-            model_name='roominvitation',
-            old_name='room_id',
-            new_name='room',
+            model_name="roominvitation",
+            old_name="room_id",
+            new_name="room",
         ),
     ]

@@ -42,9 +42,7 @@ def deleteUser(request, username):
         user.delete()
         # Logout the user
         adapter = get_adapter(request)
-        adapter.add_message(
-            request, messages.SUCCESS, "account/messages/logged_out.txt"
-        )
+        adapter.add_message(request, messages.SUCCESS, "account/messages/logged_out.txt")
         adapter.logout(request)
         return redirect("home")
 
@@ -68,9 +66,7 @@ def checkUsername(request):
     username = request.POST.geT("username")
 
     if User.objects.filter(username=username).exists():
-        return HttpResponse(
-            "<div style='color:red'>This username is not available</div>"
-        )
+        return HttpResponse("<div style='color:red'>This username is not available</div>")
     else:
         return HttpResponse("<div style='color:green'>This username is available</div>")
 
@@ -78,9 +74,7 @@ def checkUsername(request):
 def userProfile(request, username):
     user = User.objects.get(username=username)
 
-    rooms = user.room_set.select_related("host", "topic").annotate(
-        participants_count=Count("members")
-    )
+    rooms = user.room_set.select_related("host", "topic").annotate(participants_count=Count("members"))
 
     room_messages = user.message_set.prefetch_related("user", "room")
 

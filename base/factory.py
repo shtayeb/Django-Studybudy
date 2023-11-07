@@ -1,12 +1,11 @@
 import factory
 from factory.django import DjangoModelFactory
 from factory.faker import faker
-from faker.providers import job
 
 from accounts.factory import UserFactory
 from accounts.models import User
 
-from .models import Membership, Message, ReactionType, Room, RoomInvitation, Topic
+from .models import Membership, Message, ReactionType, Room, Topic
 
 FAKE = faker.Faker()
 

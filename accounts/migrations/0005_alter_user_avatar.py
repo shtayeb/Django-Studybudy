@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0004_alter_user_managers'),
+        ("accounts", "0004_alter_user_managers"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='avatar',
-            field=models.URLField(default='https://avatars.dicebear.com/api/bottts/default.svg'),
+            model_name="user",
+            name="avatar",
+            field=models.URLField(default="https://avatars.dicebear.com/api/bottts/default.svg"),
         ),
     ]

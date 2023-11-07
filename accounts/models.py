@@ -12,9 +12,7 @@ class User(SoftDeleteModel, AbstractUser):
     email = models.EmailField(unique=True, null=False)
     bio = models.TextField(null=True)
 
-    avatar = models.URLField(
-        max_length=200, default="https://avatars.dicebear.com/api/bottts/default.svg"
-    )
+    avatar = models.URLField(max_length=200, default="https://avatars.dicebear.com/api/bottts/default.svg")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]

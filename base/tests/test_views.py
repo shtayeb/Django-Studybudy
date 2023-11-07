@@ -56,12 +56,10 @@ class TestViewResponses(TestCase):
         request = HttpRequest()
         response = home(request)
         html = response.content.decode("utf8")
-        self.assertIn(
-            "<title>StudyBuddy - Find study partners around the world!</title>", html
-        )
+        self.assertIn("<title>StudyBuddy - Find study partners around the world!</title>", html)
         self.assertTrue(html.find("\n<!DOCTYPE html>\n"))
         self.assertEqual(response.status_code, 200)
 
-    def test_url_allowed_hosts(self):
+    def test_url_allowed_hosts_2(self):
         response = self.c.get("/", HTTP_HOST="noaddresss.com")
         self.assertEqual(response.status_code, 400)

@@ -9,6 +9,7 @@ from .models import Message, ReactionType, Room, RoomInvitation, Topic
 admin.site.register(RoomInvitation)
 admin.site.register(ReactionType)
 
+
 class MessageAdmin(admin.ModelAdmin):
     list_display = (
         "id",
@@ -19,23 +20,21 @@ class MessageAdmin(admin.ModelAdmin):
 
     search_fields = ("user__username", "room__name")
 
-admin.site.register(Message,MessageAdmin)
+
+admin.site.register(Message, MessageAdmin)
+
+
 class MembersInline(admin.TabularInline):
     model = Room.members.through
 
 
 class RoomAdmin(admin.ModelAdmin):
     # prepopulated_fields = {'slug': ('name',)}
-    list_display = (
-        "id",
-        "name",
-        "host",
-        "type"
-    )
+    list_display = ("id", "name", "host", "type")
 
-    list_filter = ('type',)
+    list_filter = ("type",)
     search_fields = ("host__username", "name")
-    
+
     inlines = [
         MembersInline,
     ]
@@ -74,7 +73,7 @@ class TopicAdmin(admin.ModelAdmin):
 
             for x in csv_data:
                 fields = x.split(",")
-                created = Topic.objects.update_or_create(
+                Topic.objects.update_or_create(
                     name=fields[1],
                     description=fields[2],
                     github_url=fields[3],

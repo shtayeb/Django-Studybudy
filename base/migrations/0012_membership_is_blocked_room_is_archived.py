@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0011_rename_invitee_id_roominvitation_invitee_and_more'),
+        ("base", "0011_rename_invitee_id_roominvitation_invitee_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='membership',
-            name='is_blocked',
+            model_name="membership",
+            name="is_blocked",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='room',
-            name='is_archived',
+            model_name="room",
+            name="is_archived",
             field=models.BooleanField(default=False),
         ),
     ]

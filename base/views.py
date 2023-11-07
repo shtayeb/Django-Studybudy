@@ -1,5 +1,4 @@
 import datetime
-import json
 import urllib
 
 import jwt
@@ -9,8 +8,8 @@ from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Prefetch, Q
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.http import urlencode
@@ -41,9 +40,7 @@ def addMessageReply(request, pk):
     user_id = request.user.id
     room_id = request.POST.get("room_id")
 
-    reply = Message.objects.create(
-        room_id=room_id, user_id=user_id, parent_id=message.id, body=body
-    )
+    reply = Message.objects.create(room_id=room_id, user_id=user_id, parent_id=message.id, body=body)
     # messages.success(request, "Reply Added Successfully !")
 
     reaction_types = ReactionType.objects.all()
@@ -168,7 +165,7 @@ def sendRoomInvite(request, slug):
             algorithm="HS256",
         )
 
-        invitation = RoomInvitation.objects.create(
+        RoomInvitation.objects.create(
             inviter_id=request.user.id,
             invitee_id=invitee.id,
             room_id=room.id,
@@ -211,9 +208,7 @@ def sendRoomInvite(request, slug):
 def acceptRoomInvite(request, token):
     # decode the token
     try:
-        decoded_token = jwt.decode(
-            token, SECRET_KEY, algorithms=["HS256"], verify_expiration=True
-        )
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"], verify_expiration=True)
     except jwt.ExpiredSignatureError:
         # Token has expired
         messages.error(request, "The token has expired.")
@@ -242,17 +237,12 @@ def home(request):
     q = request.GET.get("q")
     template_name = "base/home.html"
 
-    if request.GET.get("q") == None:
+    if request.GET.get("q") is None:
         q = ""
 
     rooms = (
         Room.objects.filter(
-            (
-                Q(topic__name__icontains=q)
-                | Q(name__icontains=q)
-                | Q(description__icontains=q)
-            )
-            & ~Q(type="private")
+            (Q(topic__name__icontains=q) | Q(name__icontains=q) | Q(description__icontains=q)) & ~Q(type="private")
             | Q(host_id=request.user.id)
         )
         .prefetch_related("host", "topic")
@@ -273,9 +263,7 @@ def home(request):
     ).exclude(room__type="private")
 
     if request.user.is_authenticated:
-        room_messages = room_messages.filter(
-            room__members=request.user
-        ).prefetch_related("user", "room")[:10]
+        room_messages = room_messages.filter(room__members=request.user).prefetch_related("user", "room")[:10]
 
     page_number = request.GET.get("page", 1)
     paginator = Paginator(rooms, 20)  # Show 25 rooms per page.
@@ -338,9 +326,7 @@ def room(request, slug):
             Prefetch(
                 "message_set",
                 Message.objects.filter(parent=None)
-                .annotate(
-                    fire_count=fire_count, like_count=like_count, poop_count=poop_count
-                )
+                .annotate(fire_count=fire_count, like_count=like_count, poop_count=poop_count)
                 .prefetch_related(
                     Prefetch(
                         "replies",
@@ -419,9 +405,7 @@ def roomInvitation(request, slug):
         Room.objects.prefetch_related(
             Prefetch(
                 "roominvitation_set",
-                RoomInvitation.objects.select_related("invitee", "inviter").order_by(
-                    "created"
-                ),
+                RoomInvitation.objects.select_related("invitee", "inviter").order_by("created"),
             )
         ),
         slug=slug,
@@ -472,13 +456,12 @@ def searchMember(request, room):
 
     print(f"---- room == {room}")
 
-    if request.GET.get("member") == None:
+    if request.GET.get("member") is None:
         member = ""
 
     membership_set = (
         Membership.objects.filter(
-            Q(room=room)
-            & (Q(user__email__icontains=member) | Q(user__username__icontains=member))
+            Q(room=room) & (Q(user__email__icontains=member) | Q(user__username__icontains=member))
         )
         .select_related("user")
         .order_by("created")
@@ -541,9 +524,7 @@ def toggleRoomMemberBlock(request, pk):
 
     membership.save()
 
-    messages.success(
-        request, f"User has been {'Blocked' if membership.is_blocked else 'Unblocked'}!"
-    )
+    messages.success(request, f"User has been {'Blocked' if membership.is_blocked else 'Unblocked'}!")
 
     context = {"membership": membership}
 
@@ -589,9 +570,7 @@ def createRoom(request):
         )
 
         # Make host a member and admin
-        membership = Membership.objects.create(
-            room=room, user=request.user, is_admin=True
-        )
+        membership = Membership.objects.create(room=room, user=request.user, is_admin=True)
         room.membership_set.add(membership)
 
         urllib.request.urlretrieve(
@@ -701,12 +680,10 @@ def deleteMessage(request, pk):
 def searchTopic(request):
     q = request.POST.get("q")
 
-    if request.POST.get("q") == None:
+    if request.POST.get("q") is None:
         q = ""
 
-    topics = Topic.objects.filter(name__icontains=q).annotate(
-        rooms_count=Count("room")
-    )[:10]
+    topics = Topic.objects.filter(name__icontains=q).annotate(rooms_count=Count("room"))[:10]
 
     context = {"topics": topics}
 
@@ -716,7 +693,7 @@ def searchTopic(request):
 def topicsPage(request):
     q = request.GET.get("q")
 
-    if request.GET.get("q") == None:
+    if request.GET.get("q") is None:
         q = ""
 
     topics = Topic.objects.filter(name__icontains=q).annotate(rooms_count=Count("room"))
@@ -734,9 +711,7 @@ def activityPage(request):
     # topics = Topic.objects.filter(name__icontains=q)
     # context = {'topics':topics}
 
-    room_messages = Message.objects.prefetch_related("user", "room").exclude(
-        Q(room__type="private")
-    )
+    room_messages = Message.objects.prefetch_related("user", "room").exclude(Q(room__type="private"))
 
     context = {"room_messages": room_messages}
     return render(request, "base/activity.html", context)

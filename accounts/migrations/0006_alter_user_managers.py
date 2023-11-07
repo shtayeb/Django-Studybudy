@@ -5,16 +5,15 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0005_alter_user_avatar'),
+        ("accounts", "0005_alter_user_avatar"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='user',
+            name="user",
             managers=[
-                ('objects', accounts.models.CustomUserManager()),
+                ("objects", accounts.models.CustomUserManager()),
             ],
         ),
     ]

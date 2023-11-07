@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0003_message_deleted_at_message_is_deleted_and_more'),
+        ("base", "0003_message_deleted_at_message_is_deleted_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='room',
-            name='type',
-            field=models.TextField(choices=[('public', 'Public'), ('private', 'Private')], default='Public'),
+            model_name="room",
+            name="type",
+            field=models.TextField(choices=[("public", "Public"), ("private", "Private")], default="Public"),
         ),
     ]

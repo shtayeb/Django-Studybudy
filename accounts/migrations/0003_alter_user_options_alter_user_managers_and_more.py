@@ -4,34 +4,32 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0002_alter_user_avatar'),
+        ("accounts", "0002_alter_user_avatar"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='user',
+            name="user",
             options={},
         ),
         migrations.AlterModelManagers(
-            name='user',
-            managers=[
-            ],
+            name="user",
+            managers=[],
         ),
         migrations.AddField(
-            model_name='user',
-            name='deleted_at',
+            model_name="user",
+            name="deleted_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='is_deleted',
+            model_name="user",
+            name="is_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='avatar',
-            field=models.ImageField(default='avatar.svg', null=True, upload_to='profile_pics'),
+            model_name="user",
+            name="avatar",
+            field=models.ImageField(default="avatar.svg", null=True, upload_to="profile_pics"),
         ),
     ]

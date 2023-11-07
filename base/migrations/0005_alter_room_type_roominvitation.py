@@ -6,30 +6,54 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('base', '0004_room_type'),
+        ("base", "0004_room_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='room',
-            name='type',
-            field=models.TextField(choices=[('public', 'Public'), ('private', 'Private')], default='public'),
+            model_name="room",
+            name="type",
+            field=models.TextField(choices=[("public", "Public"), ("private", "Private")], default="public"),
         ),
         migrations.CreateModel(
-            name='RoomInvitation',
+            name="RoomInvitation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('token', models.CharField(max_length=100)),
-                ('is_accepted', models.BooleanField(default=False)),
-                ('is_valid', models.BooleanField(default=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('invitee_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='invitee', to=settings.AUTH_USER_MODEL)),
-                ('inviter_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='inviter', to=settings.AUTH_USER_MODEL)),
-                ('room_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.room')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("token", models.CharField(max_length=100)),
+                ("is_accepted", models.BooleanField(default=False)),
+                ("is_valid", models.BooleanField(default=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                (
+                    "invitee_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="invitee",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "inviter_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="inviter",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "room_id",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="base.room"),
+                ),
             ],
         ),
     ]

@@ -1,3 +1,4 @@
+# ruff: noqa
 from .base import *
 
 LOCAL_INSTALLED_APPS = [

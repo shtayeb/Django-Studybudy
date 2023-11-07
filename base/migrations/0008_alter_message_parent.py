@@ -5,15 +5,21 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0007_message_parent'),
+        ("base", "0007_message_parent"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='message',
-            name='parent',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='replies', related_query_name='message', to='base.message'),
+            model_name="message",
+            name="parent",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="replies",
+                related_query_name="message",
+                to="base.message",
+            ),
         ),
     ]

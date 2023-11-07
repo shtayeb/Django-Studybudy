@@ -4,14 +4,19 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0013_membership_blocked_at_reaction_created_and_more'),
+        ("base", "0013_membership_blocked_at_reaction_created_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='message',
-            options={'ordering': ['-updated', '-created'], 'permissions': (('delete_msg', 'Delete Msg'), ('reply_msg', 'Reply Msg'))},
+            name="message",
+            options={
+                "ordering": ["-updated", "-created"],
+                "permissions": (
+                    ("delete_msg", "Delete Msg"),
+                    ("reply_msg", "Reply Msg"),
+                ),
+            },
         ),
     ]

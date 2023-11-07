@@ -16,7 +16,7 @@ urlpatterns = [
     # Installed apps
     path("invitations/", include("invitations.urls", namespace="invitations")),
     path("__debug__/", include("debug_toolbar.urls")),
-    path(r'mdeditor/', include('mdeditor.urls'))
+    path(r"mdeditor/", include("mdeditor.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

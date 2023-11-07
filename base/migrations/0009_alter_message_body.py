@@ -5,15 +5,14 @@ import mdeditor.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0008_alter_message_parent'),
+        ("base", "0008_alter_message_parent"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='message',
-            name='body',
+            model_name="message",
+            name="body",
             field=mdeditor.fields.MDTextField(),
         ),
     ]

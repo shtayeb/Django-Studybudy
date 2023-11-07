@@ -5,20 +5,19 @@ import django_extensions.db.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0001_initial'),
+        ("base", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='room',
-            name='slug',
-            field=django_extensions.db.fields.AutoSlugField(blank=True, editable=False, populate_from=['name']),
+            model_name="room",
+            name="slug",
+            field=django_extensions.db.fields.AutoSlugField(blank=True, editable=False, populate_from=["name"]),
         ),
         migrations.AlterField(
-            model_name='topic',
-            name='slug',
-            field=django_extensions.db.fields.AutoSlugField(blank=True, editable=False, populate_from=['name']),
+            model_name="topic",
+            name="slug",
+            field=django_extensions.db.fields.AutoSlugField(blank=True, editable=False, populate_from=["name"]),
         ),
     ]
