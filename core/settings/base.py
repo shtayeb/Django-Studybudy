@@ -93,6 +93,7 @@ MIDDLEWARE = [
     "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "accounts.middleware.OnlineNowMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
