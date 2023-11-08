@@ -1,4 +1,5 @@
 # Django project
+
 Project Demo - [Study Buddy App Link](https://study-buddy-app.up.railway.app/)
 
 Project Kanban - [Consider Contributing](https://github.com/users/shtayeb/projects/1)
@@ -27,10 +28,10 @@ source ./.venv/bin/activate
 
 ```shell
 # Django packages
-pip install -r requirements.txt
+make install
 
 # npm packages
-npm install
+make npm-install
 ```
 
 - Create `.env` file
@@ -42,42 +43,47 @@ cp .env.sample .env
 - Migrate the database
 
 ```shell
-python manage.py migrate
+make migrate
+make update
 ```
 
 - Create a superuser
 
 ```shell
-python manage.py createsuperuser
+make superuser
 ```
 
-- Seed database with fake data 
+- Seed database with fake data
 
 ```shell
-python manange.py seed
+make db-seed
 ```
 
 - Run the server
 
 ```shell
-python manage.py runserver --setting=core.settings.local # local settings
-python manage.py runserver --setting=core.settings.production # production settings
+make serve
+```
+
+```shell
+python src/manage.py runserver --setting=core.settings.local # local settings
+python src/manage.py runserver --setting=core.settings.production # production settings
 ```
 
 - Run the vite server
 
 ```shell
-npm run dev
+make vite
 ```
 
-
 ## Docs
+
 ```python
 
 class Product(models.Model):
     content_type = models.ForeignKey(
-        ContentType, 
-        on_delete=models.CASCADE, 
+        ContentType,
+        on_delete=models.CASCADE,
         limit_choices_to=
             {
                 'model__in':('book','cupboard')
@@ -88,14 +94,15 @@ class Product(models.Model):
 
 ```
 
-
 ## Installed Packages
+
 - [django-easy-audit](https://github.com/soynatan/django-easy-audit)
 - [django-extensions](https://github.com/django-extensions/django-extensions)
 - [nplusone](https://github.com/jmcarp/nplusone)
 - [django-debug-toolbar](https://)
 
 ## Packages to consider
+
 - [django-prose](https://github.com/withlogicco/django-prose)
 - [django-extra-settings](https://github.com/fabiocaccamo/django-extra-settings)
 - [django-jet-reboot](https://github.com/assem-ch/django-jet-reboot)
