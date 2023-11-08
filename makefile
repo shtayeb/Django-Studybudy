@@ -31,7 +31,7 @@ npm-install:
 	cd src && npm install
 
 .PHONY: npm-build
-npm-install:
+npm-build:
 	cd src && npm run build
 
 .PHONY: superuser

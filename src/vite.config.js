@@ -1,12 +1,11 @@
 //vite.config.js
 import { defineConfig } from "vite";
-import djangoVite from "django-vite-plugin";
+import { djangoVitePlugin } from "django-vite-plugin";
 
 export default defineConfig({
   plugins: [
-    djangoVite({
+    djangoVitePlugin({
       input: ["./static/js/main.js", "./static/styles/tailwind.css"],
-      pyArgs: ["--settings", "core.settings.local"],
     }),
   ],
 });
