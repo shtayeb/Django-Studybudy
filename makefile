@@ -2,10 +2,6 @@
 install:
 	poetry install
 
-.PHONY: test
-test:
-	poetry run python manage.py test
-
 .PHONY: install-pre-commit
 install-pre-commit:
 	poetry run pre-commit uninstall && poetry run pre-commit install
@@ -16,27 +12,35 @@ lint:
 
 .PHONY: migrate
 migrate:
-	poetry run python manage.py migrate
+	poetry run python src/manage.py migrate
 
 .PHONY: migrations
 migrations:
-	poetry run python manage.py makemigrations
+	poetry run python src/manage.py makemigrations
 
 .PHONY: serve
 serve:
-	poetry run python manage.py runserver
+	poetry run python src/manage.py runserver
 
 .PHONY: vite
 vite:
-	cd static && npm run dev
+	cd src && npm run dev
 
 .PHONY: npm-install
 npm-install:
-	cd static && npm install
+	cd src && npm install
+
+.PHONY: npm-build
+npm-install:
+	cd src && npm run build
 
 .PHONY: superuser
 superuser:
-	poetry run python manage.py createsuperuser
+	poetry run python src/manage.py createsuperuser
 
 .PHONY: update
 update: install migrate install-pre-commit;
+
+.PHONY: test
+test:
+	poetry run python src/manage.py test
