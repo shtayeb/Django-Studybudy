@@ -1,28 +1,28 @@
 {% if results %}
     <ul class="space-y-4 flex-wrap p-4">
         {% for user in results %}
-            <li id="{{user.email}}" class="user_item hover:bg-dark-medium cursor-pointer p-3 break-words">
-                {{user.username}}
-                ({{user.email}})
+            <li id="{{ user.email }}"
+                class="user_item hover:bg-dark-medium cursor-pointer p-3 break-words">
+                {{ user.username }}
+                ({{ user.email }})
             </li>
         {% endfor %}
     </ul>
 {% else %}
     <p>No results for the above query!</p>
 {% endif %}
-
 {% block extra_scripts %}
-  {% if request.user.is_authenticated %}
-    <script>
-        document.querySelectorAll(".user_item").forEach(reaction => {
-        reaction.addEventListener("click", (e) => {
-          userEmail = e.target.id
-          document.getElementById('id_email').value = userEmail
+    {% if request.user.is_authenticated %}
+        <script>
+            document.querySelectorAll(".user_item").forEach(reaction => {
+                reaction.addEventListener("click", (e) => {
+                    userEmail = e.target.id
+                    document.getElementById('id_email').value = userEmail
 
-          // remove the list
-          document.getElementById('users-list').innerHTML = ""
-        })
-      })
-    </script>
-  {% endif %}
+                    // remove the list
+                    document.getElementById('users-list').innerHTML = ""
+                })
+            })
+        </script>
+    {% endif %}
 {% endblock extra_scripts %}

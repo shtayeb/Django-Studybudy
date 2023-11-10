@@ -1,23 +1,21 @@
-{% extends 'main.html' %} 
-
+{% extends "main.html" %}
 {% load static %}
-
 {% block title %}
-<title>Create Room</title>
+    <title>Create Room</title>
 {% endblock title %}
-
 {% block content %}
-<div class="layout__box my_container create-room layout">
-  <div class="layout__boxHeader">
-    <div class="layout__boxTitle">
-      <a href="{{request.META.HTTP_REFERER}}">
-        <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
-      </a>
-      <h3>Create Study Room</h3>
+    <div class="layout__box my_container create-room layout">
+        <div class="layout__boxHeader">
+            <div class="layout__boxTitle">
+                <a href="{{ request.META.HTTP_REFERER }}">
+                    <img height="30"
+                         width="30"
+                         src="{% static 'images/icons/arrow-left.svg' %}"
+                         alt="left-arrow">
+                </a>
+                <h3>Create Study Room</h3>
+            </div>
+        </div>
+        <div class="layout__body p-5">{% include "base/room_form.html" %}</div>
     </div>
-  </div>
-  <div class="layout__body p-5">
-    {% include 'base/room_form.html' %}
-  </div>
-</div>
 {% endblock content %}

@@ -1,24 +1,18 @@
 <form>
     {% csrf_token %}
-    <button 
-        type="submit"
-        class="room__topics btn bg-yellow-600 flex gap-3"
-        hx-post="{% url 'toggle-room-archived' room.slug %}" 
-        hx-indicator=".progress" 
-        hx-ext="disable-element"
-        hx-disable-element="this"
-        hx-confirm="Are you sure?" 
-        hx-target="#archive-toggle"
-    >
-    {% if room.is_archived %}
-        Archive Room
-    {% else %}
-        Unarchive Room
-    {% endif %}
-
+    <button type="submit"
+            class="room__topics btn bg-yellow-600 flex gap-3"
+            hx-post="{% url 'toggle-room-archived' room.slug %}"
+            hx-indicator=".progress"
+            hx-ext="disable-element"
+            hx-disable-element="this"
+            hx-confirm="Are you sure?"
+            hx-target="#archive-toggle">
+        {% if room.is_archived %}
+            Archive Room
+        {% else %}
+            Unarchive Room
+        {% endif %}
     </button>
 </form>
-
-<div id="messages" hx-swap-oob="true" hx-swap="innerHTML">
-    {% include 'components/messages.html' %} 
-</div>
+<div id="messages" hx-swap-oob="true" hx-swap="innerHTML">{% include "components/messages.html" %}</div>

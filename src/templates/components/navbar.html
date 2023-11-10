@@ -1,70 +1,81 @@
 {% load static %}
 <header class="header header--loggedIn">
-  <div class="my_container">
-    <a href="{% url 'home' %}" class="header__logo">
-      <img src="{% static 'images/logo.svg' %}" />
-      <h1>StudyBuddy</h1>
-    </a>
-    <form class="header__search" method="GET" action="{% url 'home' %}">
-      <label>
-        <img class="" src="{% static 'images/icons/search.svg' %}" alt="search" />
-        <input placeholder="Search for rooms..." name="q" />
-      </label>
-    </form>
-    <nav class="header__menu">
-      <!-- Logged In -->
-      {% if request.user.is_authenticated %}
-      <div class="header__user">
-        <a href="{% url 'user-profile' request.user.username %}">
-          <div class="avatar avatar--medium {% if request.user.id in request.online_now_ids %} active {% endif %}">
-            <img src="{{request.user.avatar}}" alt="user-avatar" />
-          </div>
-          <p>
-            {{request.user.username}} <span>@{{request.user.username}}</span>
-          </p>
+    <div class="my_container">
+        <a href="{% url 'home' %}" class="header__logo">
+            <img src="{% static 'images/logo.svg' %}"
+                 height="30"
+                 width="30"
+                 alt="logo" />
+            <h1>StudyBuddy</h1>
         </a>
-        <button class="dropdown-button">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-            <title>chevron-down</title>
-            <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
-          </svg>
-        </button>
-      </div>
-      {% else %}
-      <!-- Not Logged In -->
-      <a href="{% url 'account_login' %}">
-        <img src="{% static 'images/avatar.svg' %}" />
-        <p>Login</p>
-      </a>
-      {% endif %}
-
-      <div class="dropdown-menu">
-        {% if request.user.is_authenticated %}
-        <a href="{% url 'activity' %}" class="dropdown-link"> Activities </a>
-        <a href="{% url 'user-profile' request.user.username %}" class="dropdown-link">
-          Profile
-        </a>
-        {% endif %}
-
-        <a href="{% url 'topics' %}" class="dropdown-link"> Topics </a>
-
-
-        <a href="{% url 'update-user' %}" class="dropdown-link">
-          <img class="w-6 h-6" src="{% static 'images/icons/tool.svg' %}" alt="tool-icon">
-          Settings
-        </a>
-        <a href="{% url 'account_logout' %}" class="dropdown-link">
-          <img class="w-6 h-6" src="{% static 'images/icons/logout.svg' %}" alt="logout-icon">
-          Logout</a>
-      </div>
-    </nav>
-  </div>
+        <form class="header__search" method="get" action="{% url 'home' %}">
+            <label>
+                <img height="30"
+                     width="30"
+                     src="{% static 'images/icons/search.svg' %}"
+                     alt="search" />
+                <input placeholder="Search for rooms..." name="q" />
+            </label>
+        </form>
+        <nav class="header__menu">
+            <!-- Logged In -->
+            {% if request.user.is_authenticated %}
+                <div class="header__user">
+                    <a href="{% url 'user-profile' request.user.username %}">
+                        <div class="avatar avatar--medium {% if request.user.id in request.online_now_ids %}active{% endif %}">
+                            <img height="30"
+                                 width="30"
+                                 src="{{ request.user.avatar }}"
+                                 alt="user-avatar" />
+                        </div>
+                        <p>
+                            {{ request.user.username }} <span>@{{ request.user.username }}</span>
+                        </p>
+                    </a>
+                    <button class="dropdown-button">
+                        <svg version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             width="32"
+                             height="32"
+                             viewBox="0 0 32 32">
+                            <title>chevron-down</title>
+                            <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
+                        </svg>
+                    </button>
+                </div>
+            {% else %}
+                <!-- Not Logged In -->
+                <a href="{% url 'account_login' %}">
+                    <img height="30"
+                         width="30"
+                         src="{% static 'images/avatar.svg' %}"
+                         alt="avatar" />
+                    <p>Login</p>
+                </a>
+            {% endif %}
+            <div class="dropdown-menu">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'activity' %}" class="dropdown-link">Activities</a>
+                    <a href="{% url 'user-profile' request.user.username %}"
+                       class="dropdown-link">Profile</a>
+                {% endif %}
+                <a href="{% url 'topics' %}" class="dropdown-link">Topics</a>
+                <a href="{% url 'update-user' %}" class="dropdown-link">
+                    <img class="w-6 h-6"
+                         height="30"
+                         width="30"
+                         src="{% static 'images/icons/tool.svg' %}"
+                         alt="tool-icon">
+                    Settings
+                </a>
+                <a href="{% url 'account_logout' %}" class="dropdown-link">
+                    <img class="w-6 h-6"
+                         height="30"
+                         width="30"
+                         src="{% static 'images/icons/logout.svg' %}"
+                         alt="logout-icon">
+                Logout</a>
+            </div>
+        </nav>
+    </div>
 </header>
-{% comment %}
-<!-- {% if request.user.is_authenticated %}
-<p>Hello {{request.user.username}}</p>
-<a href="{% url 'account_logout' %}">Logout</a>
-{% else %}
-<a href="{% url 'account_login' %}">Login</a>
-{% endif %} -->
-{% endcomment %}

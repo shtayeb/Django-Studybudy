@@ -1,7 +1,8 @@
 {% extends "main_email.html" %}
 {% load i18n %}
-
-{% block content %}{% autoescape off %}{% blocktrans %}You are receiving this e-mail because you or someone else tried to signup for an
+{% block content %}
+    {% autoescape off %}
+        {% blocktrans %}You are receiving this e-mail because you or someone else tried to signup for an
 account using e-mail address:
 
 {{ email }}
@@ -13,5 +14,5 @@ your account:
  <a class="button" href="{{password_reset_url}}">Reset Link </a>
 
 {% endblocktrans %}
-{% endautoescape %}
-{% endblock %}
+    {% endautoescape %}
+{% endblock content %}

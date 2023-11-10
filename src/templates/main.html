@@ -1,78 +1,77 @@
-<!DOCTYPE html>
 {% load static %}
 {% load vite %}
-
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
-    
-    <meta name="theme-color" content="cyan" />
-    {% comment %} <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" /> {% endcomment %}
-    
-    {% vite 'styles/tailwind.css' %}
-
-    {% block meta_tags %}
-      <meta name="title" content="StudyBuddy - Find study partners around the world!" head-key="title"/>
-      <meta name="description" content="StudyBuddy - Find study partners around the world!" head-key="description"/>
-
-      <!-- Open Graph / Facebook -->
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content="{{request.build_absolute_uri}}" />
-      <meta property="og:title" content="StudyBuddy - Find study partners around the world!" />
-      <meta property="og:description" content="StudyBuddy - Find study partners around the world!" />
-      <meta property="og:image" content="https://blog.shahryartayeb.com/assets/images/shtb3.webp" />
-
-      <!-- Twitter -->
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content="{{request.build_absolute_uri}}" />
-      <meta property="twitter:title" content="StudyBuddy - Find study partners around the world!" />
-      <meta property="twitter:description" content="StudyBuddy - Find study partners around the world!" />
-      <meta property="twitter:image" content='https://blog.shahryartayeb.com/assets/images/shtb3.webp' />
-    {% endblock meta_tags %}
-
-    {% block extra_heads %}
-    {% endblock extra_heads %}
-
-    {% block title %}
-    <title>StudyBuddy - Find study partners around the world!</title>
-    {% endblock title %}
-    
-    {% if APP_ENV == "production" %}
-      <!-- Hotjar Tracking Code for https://study-buddy-app.up.railway.app/ -->
-      <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:3606744,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-      </script>
-    {% endif %}
-
-  </head>
-
-  <body hx-ext="debug">
-    <div class="progress bg-dark" style="height: 3px;">
-      <div class="indeterminate bg-dark-light"></div>
-    </div>
-
-    {% include 'components/navbar.html' %} 
-    
-    <div id="messages">
-      {% include 'components/messages.html' %} 
-    </div>
-    
-    {% block content %} {% endblock %}
-
-
-    {% vite 'js/main.js' %}
-    {% block extra_scripts %} {% endblock extra_scripts %}
-  
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon"
+              href="{% static 'images/favicon.ico' %}"
+              type="image/x-icon" />
+        <meta name="theme-color" content="cyan" />
+        {% vite 'styles/tailwind.css' %}
+        {% block meta_tags %}
+            <meta name="title"
+                  content="StudyBuddy - Find study partners around the world!"
+                  head-key="title" />
+            <meta name="description"
+                  content="StudyBuddy - Find study partners around the world!"
+                  head-key="description" />
+            <!-- Open Graph / Facebook -->
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+            <meta property="og:title"
+                  content="StudyBuddy - Find study partners around the world!" />
+            <meta property="og:description"
+                  content="StudyBuddy - Find study partners around the world!" />
+            <meta property="og:image"
+                  content="https://blog.shahryartayeb.com/assets/images/shtb3.webp" />
+            <!-- Twitter -->
+            <meta property="twitter:card" content="summary_large_image" />
+            <meta property="twitter:url" content="{{ request.build_absolute_uri }}" />
+            <meta property="twitter:title"
+                  content="StudyBuddy - Find study partners around the world!" />
+            <meta property="twitter:description"
+                  content="StudyBuddy - Find study partners around the world!" />
+            <meta property="twitter:image"
+                  content='https://blog.shahryartayeb.com/assets/images/shtb3.webp' />
+        {% endblock meta_tags %}
+        {% block extra_heads %}
+        {% endblock extra_heads %}
+        {% block title %}
+            <title>StudyBuddy - Find study partners around the world!</title>
+        {% endblock title %}
+        {% if APP_ENV == "production" %}
+            <!-- Hotjar Tracking Code for https://study-buddy-app.up.railway.app/ -->
+            <script>
+                (function(h, o, t, j, a, r) {
+                    h.hj = h.hj || function() {
+                        (h.hj.q = h.hj.q || []).push(arguments)
+                    };
+                    h._hjSettings = {
+                        hjid: 3606744,
+                        hjsv: 6
+                    };
+                    a = o.getElementsByTagName('head')[0];
+                    r = o.createElement('script');
+                    r.async = 1;
+                    r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                    a.appendChild(r);
+                })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+            </script>
+        {% endif %}
+    </head>
+    <body hx-ext="debug">
+        <div class="progress bg-dark h-1">
+            <div class="indeterminate bg-dark-light"></div>
+        </div>
+        {% include "components/navbar.html" %}
+        <div id="messages">{% include "components/messages.html" %}</div>
+        {% block content %}
+        {% endblock content %}
+        {% vite "js/main.js" %}
+        {% block extra_scripts %}
+        {% endblock extra_scripts %}
+    </body>
 </html>

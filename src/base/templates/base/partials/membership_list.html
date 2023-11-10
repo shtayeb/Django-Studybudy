@@ -1,9 +1,9 @@
 {% if request.htmx %}
     {% for membership in membership_set %}
-        {% include 'base/partials/membership_item.html' %}
+        {% include "base/partials/membership_item.html" %}
     {% endfor %}
 {% else %}
     {% for membership in room.membership_set.all %}
-        {% include 'base/partials/membership_item.html' %}
+        {% include "base/partials/membership_item.html" %}
     {% endfor %}
 {% endif %}

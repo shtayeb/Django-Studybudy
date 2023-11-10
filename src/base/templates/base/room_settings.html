@@ -1,162 +1,166 @@
-{% extends 'base/room_settings_base.html' %} 
-
+{% extends "base/room_settings_base.html" %}
 {% load static %}
-
 {% block title %}
-<title>Settings: Room Details</title>
+    <title>Settings: Room Details</title>
 {% endblock title %}
-
 {% block settings_content %}
-<section class="bg-dark">
-
-     <div class="participants__top flex justify-between">
-        <h3 class="">
-             Room Details
-        </h3>
-    </div>
-    
-    <div class="p-10">
-        <div class="mb-10">
-            <h4 class="mb-5 text-2xl font-medium">{{room.name}}</h4>
-            <p class="text-gray-500">{{room.description}}</p>
+    <section class="bg-dark">
+        <div class="participants__top flex justify-between">
+            <h3>Room Details</h3>
         </div>
-        
-        <div class="flex flex-col gap-16">
-            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <div class="space-y-2">
-                    <span class="font-medium">Type</span>
-                    <p class="text-xl">
-                    </p>
-                </div>
-                <p class="roomListRoom__topic  ">{{room.type}}</p>
+        <div class="p-10">
+            <div class="mb-10">
+                <h4 class="mb-5 text-2xl font-medium">{{ room.name }}</h4>
+                <p class="text-gray-500">{{ room.description }}</p>
             </div>
-            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <div class="space-y-2">
-                    <span class="font-medium">Created At</span>
-                    <p class="text-xl">
-                    </p>
-                </div>
-                <p>{{room.created|timesince}}</p>
-            </div>
-            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <div class="space-y-2">
-                    <span class="font-medium">Topic</span>
-                    <p class="text-xl">
-                    </p>
-                </div>
-                <p class="roomListRoom__topic ">{{room.topic}}</p>
-            </div>
-            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <div class="space-y-2">
-                    <span class="font-medium">Host</span>
-                    <p class="text-xl">
-                    </p>
-                </div>
-                <a href="{% url 'user-profile' room.host.username %}"  class="participant mb-0 flex gap-5">
-                    <div class="avatar avatar--medium">
-                        <img src="{{room.host.avatar}}" alt="user-avatar" />
-                    </div>
-                    <p>
-                        {{room.host.name}}
-                        <span>@{{room.host.username}}</span>
-                    </p>
-            </a>
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 my-16">
-            <div class="group  rounded-md relative bg-white dark:bg-gray-800 transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10">
-                <div class="relative space-y-8 py-12 p-8">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4341/4341139.png" class="w-12" width="512" height="512" alt="burger illustration">
-
+            <div class="flex flex-col gap-16">
+                <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
                     <div class="space-y-2">
-                        <h5 class="text-xl font-semibold text-gray-700 dark:text-white transition group-hover:text-secondary">
-                            {{room.members.count}}
-                        </h5>
-                        <p class="text-gray-600 dark:text-gray-300">
-                            Total <b>members</b> of the room.
-                        </p>
+                        <span class="font-medium">Type</span>
+                        <p class="text-xl"></p>
                     </div>
-                    <a href="{% url 'room-members' room.slug %}" class="flex items-center justify-between group-hover:text-secondary">
-                        <span class="text-sm">See more</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 -translate-x-4 text-2xl opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                            <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clip-rule="evenodd"></path>
-                        </svg>                
+                    <p class="roomListRoom__topic  ">{{ room.type }}</p>
+                </div>
+                <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
+                    <div class="space-y-2">
+                        <span class="font-medium">Created At</span>
+                        <p class="text-xl"></p>
+                    </div>
+                    <p>{{ room.created|timesince }}</p>
+                </div>
+                <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
+                    <div class="space-y-2">
+                        <span class="font-medium">Topic</span>
+                        <p class="text-xl"></p>
+                    </div>
+                    <p class="roomListRoom__topic ">{{ room.topic }}</p>
+                </div>
+                <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
+                    <div class="space-y-2">
+                        <span class="font-medium">Host</span>
+                        <p class="text-xl"></p>
+                    </div>
+                    <a href="{% url 'user-profile' room.host.username %}"
+                       class="participant mb-0 flex gap-5">
+                        <div class="avatar avatar--medium">
+                            <img src="{{ room.host.avatar }}" height="35" width="35" alt="user-avatar" />
+                        </div>
+                        <p>
+                            {{ room.host.name }}
+                            <span>@{{ room.host.username }}</span>
+                        </p>
                     </a>
                 </div>
             </div>
-
-            <div class="group rounded-md  relative bg-white dark:bg-gray-800 transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10">
-                <div class="relative space-y-8 py-12 p-8">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4341/4341139.png" class="w-12" width="512" height="512" alt="burger illustration">
-
-                    <div class="space-y-2">
-                        <h5 class="text-xl font-semibold text-gray-700 dark:text-white transition group-hover:text-secondary">
-                            {{room.roominvitation_set.count}}
-                        </h5>
-                        <p class="text-gray-600 dark:text-gray-300">
-                            Total <b>Invitations</b> of the room.
-                        </p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 my-16">
+                <div class="group  rounded-md relative bg-white dark:bg-gray-800 transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10">
+                    <div class="relative space-y-8 py-12 p-8">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4341/4341139.png"
+                             class="w-12"
+                             width="512"
+                             height="512"
+                             alt="burger illustration">
+                        <div class="space-y-2">
+                            <h5 class="text-xl font-semibold text-gray-700 dark:text-white transition group-hover:text-secondary">
+                                {{ room.members.count }}
+                            </h5>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Total <b>members</b> of the room.
+                            </p>
+                        </div>
+                        <a href="{% url 'room-members' room.slug %}"
+                           class="flex items-center justify-between group-hover:text-secondary">
+                            <span class="text-sm">See more</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor"
+                                 class="w-5 h-5 -translate-x-4 text-2xl opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                                <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clip-rule="evenodd">
+                                </path>
+                            </svg>
+                        </a>
                     </div>
-                    <a href="{% url 'room-invitations' room.slug %}" class="flex items-center justify-between group-hover:text-secondary">
-                        <span class="text-sm">See more</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 -translate-x-4 text-2xl opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                            <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clip-rule="evenodd"></path>
-                        </svg>                
+                </div>
+                <div class="group rounded-md  relative bg-white dark:bg-gray-800 transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10">
+                    <div class="relative space-y-8 py-12 p-8">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4341/4341139.png"
+                             class="w-12"
+                             width="512"
+                             height="512"
+                             alt="burger illustration">
+                        <div class="space-y-2">
+                            <h5 class="text-xl font-semibold text-gray-700 dark:text-white transition group-hover:text-secondary">
+                                {{ room.roominvitation_set.count }}
+                            </h5>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Total <b>Invitations</b> of the room.
+                            </p>
+                        </div>
+                        <a href="{% url 'room-invitations' room.slug %}"
+                           class="flex items-center justify-between group-hover:text-secondary">
+                            <span class="text-sm">See more</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor"
+                                 class="w-5 h-5 -translate-x-4 text-2xl opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                                <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clip-rule="evenodd">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="group rounded-md  relative bg-white dark:bg-gray-800 transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10">
+                    <div class="relative space-y-8 py-12 p-8">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4341/4341139.png"
+                             class="w-12"
+                             width="512"
+                             height="512"
+                             alt="burger illustration">
+                        <div class="space-y-2">
+                            <h5 class="text-xl font-semibold text-gray-700 dark:text-white transition group-hover:text-secondary">
+                                {{ room.message_set.count }}
+                            </h5>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Total <b>messages</b> in the room
+                            </p>
+                        </div>
+                        <a href="#"
+                           class="flex items-center justify-between group-hover:text-secondary">
+                            <span class="text-sm">See more</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor"
+                                 class="w-5 h-5 -translate-x-4 text-2xl opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                                <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clip-rule="evenodd">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-16">
+                <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
+                    <div class="space-y-2">
+                        <span class="font-medium">Archive Room</span>
+                        <p class="text-xl">Archiving the room will close the room for new messages/replies and joining the room.</p>
+                    </div>
+                    <div id="archive-toggle">{% include "base/partials/toggle_archived.html" %}</div>
+                </div>
+                <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
+                    <div class="space-y-2">
+                        <span class="font-medium">Delete Room</span>
+                        <p class="text-xl">Deleting a room will delete all its members and messages/replies.</p>
+                    </div>
+                    <a href="{% url 'delete-room' room.id %}"
+                       class="room__topics btn bg-red-700 flex gap-3">
+                        <img src="{% static 'images/icons/times.svg' %}"
+                             height="20"
+                             width="20"
+                             alt="close">
+                        Delete
                     </a>
                 </div>
             </div>
-
-            <div class="group rounded-md  relative bg-white dark:bg-gray-800 transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10">
-                <div class="relative space-y-8 py-12 p-8">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4341/4341139.png" class="w-12" width="512" height="512" alt="burger illustration">
-
-                    <div class="space-y-2">
-                        <h5 class="text-xl font-semibold text-gray-700 dark:text-white transition group-hover:text-secondary">
-                           {{room.message_set.count}}
-                        </h5>
-                        <p class="text-gray-600 dark:text-gray-300">
-                            Total <b>messages</b> in the room
-                        </p>
-                    </div>
-                    <a href="#" class="flex items-center justify-between group-hover:text-secondary">
-                        <span class="text-sm">See more</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 -translate-x-4 text-2xl opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                            <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clip-rule="evenodd"></path>
-                        </svg>                
-                    </a>
-                </div>
-            </div>
-            
         </div>
-
-        <div class="flex flex-col gap-16">
-            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <div class="space-y-2">
-                    <span class="font-medium">Archive Room</span>
-                    <p class="text-xl">
-                        Archiving the room will close the room for new messages/replies and joining the room.
-                    </p>
-                </div>
-                <div id="archive-toggle">
-                    {% include 'base/partials/toggle_archived.html' %}
-                </div>
-            </div>
-
-            <div class="flex justify-between items-center border-b border-dark-medium pb-5 ">
-                <div class="space-y-2">
-                    <span class="font-medium">Delete Room</span>
-                    <p class="text-xl">
-                        Deleting a room will delete all its members and messages/replies.
-                    </p>
-                </div>
-                <a href="{% url 'delete-room' room.id %}" class="room__topics btn bg-red-700 flex gap-3">
-                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" >
-                    Delete
-                </a>
-            </div>
-        </div>
-
-    </div>
-</section>
+    </section>
 {% endblock settings_content %}

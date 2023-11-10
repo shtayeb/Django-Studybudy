@@ -65,6 +65,10 @@ exclude = [
     "**/migrations",
 ]
 
+[tool.djlint]
+format_js=true
+ignore="H005,H021,H031"
+extend_exclude=""
 
 [build-system]
 requires = ["poetry-core"]

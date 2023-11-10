@@ -55,7 +55,7 @@ class TopicAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         new_urls = [
-            path("upload-csv/", self.upload_csv),
+            path("upload-csv/", self.upload_csv, name="upload-csv-topics"),
         ]
         return new_urls + urls
 

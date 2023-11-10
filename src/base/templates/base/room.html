@@ -1,194 +1,161 @@
-{% extends 'main.html' %} 
-
+{% extends "main.html" %}
 {% load static %}
-
 {% block extra_heads %}
-  <link rel="stylesheet" href="{% static 'styles/default.css' %}" />
-  <link rel="stylesheet" href="{% static 'styles/markdown.css' %}" />
+    <link rel="stylesheet" href="{% static "styles/default.css" %}" />
+    <link rel="stylesheet" href="{% static "styles/markdown.css" %}" />
 {% endblock extra_heads %}
-
 {% block meta_tags %}
-  <title>{{ room.name }}</title>
-  
-  <meta name="title" content="{{room.title}}" head-key="title"/>
-  <meta name="description" content="{{room.description.strip|slice:":100"}}" head-key="description"/>
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{request.build_absolute_uri}}" />
-  <meta property="og:title" content="{{room.title}}" />
-  <meta property="og:description" content="{{room.description.strip|slice:":100"}}" />
-  <meta property="og:image"
-    content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/media/room_thumb/{{room.slug}}.png" />
-
-  {% comment %}
+    <title>{{ room.name }}</title>
+    <meta name="title" content="{{ room.title }}" head-key="title" />
+    <meta name="description"
+          content="{{ room.description.strip|slice:":100" }}"
+          head-key="description" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:title" content="{{ room.title }}" />
+    <meta property="og:description"
+          content="{{ room.description.strip|slice:":100" }}" />
+    <meta property="og:image"
+          content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/media/room_thumb/{{ room.slug }}.png" />
+    {% comment %}
   <meta property="og:image" content="https://blog.shahryartayeb.com/generate_banner?text={{room.slug}}" />
-  {% endcomment %}
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="{{request.build_absolute_uri}}" />
-  <meta property="twitter:title" content="{{room.title}}" />
-  <meta property="twitter:description" content="{{room.description.strip|slice:":100"}}" />
-  <meta property="twitter:image"
-    content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/media/room_thumb/{{room.slug}}.png" />
-
+    {% endcomment %}
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="twitter:title" content="{{ room.title }}" />
+    <meta property="twitter:description"
+          content="{{ room.description.strip|slice:":100" }}" />
+    <meta property="twitter:image"
+          content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/media/room_thumb/{{ room.slug }}.png" />
 {% endblock meta_tags %}
-
-
 {% block content %}
-  <main class="profile-page layout layout--2">
-    <div class="my_container " >
-      <!-- Room Start -->
-      <div class="room ">
-        <div class="room__top">
-
-          <div class="room__topLeft items-center">
-            <a href="{{request.META.HTTP_REFERER}}">
-              <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow" >
-            </a>
-            <h3 class="">Study Room</h3>
-            {% if room.type == 'private' %}
-              {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
-              <button class="bg-dark-medium px-4 py-2 rounded-full border border-dark-light" type="submit">
-                <img src="{% static 'images/icons/lock-2.svg'  %}" alt="lock" >
-              </button>
-            {% endif %}
-          </div>
-
-          <div class="room__topRight">
-            {% if room.host == request.user or is_admin  %}
-              <a href="{% url 'room-settings' room.slug %}" class="room__topics btn bg-dark-medium">
-                Settings
-              </a>
-
-              <a href="{% url 'update-room' room.slug %}" class="room__topics btn bg-dark-medium">
-                <img src="{% static 'images/icons/pen.svg'  %}" alt="pen" >
-              </a>
-
-            {% endif %}
-
-            {% if not request.user.id == room.host_id %}
-              <form hx-post="{% url 'toggle-room-join' room.id %}" hx-indicator=".progress"  >
-                {% csrf_token %}
-                <button type="submit" class="room__topics  btn bg-dark-medium">
-                  {% if is_joined %}
-                      Leave Room
-                  {% else %}
-                      Join Room
-                  {% endif %}
-                </button>
-              </form>
-            {% endif %}
-
-            {% if room.host_id == request.user.id or is_admin %}
-              <a href="{% url 'invite-room' room.slug %}" class="room__topics btn bg-dark-medium" id="invite-user-btn">
-                Invite Users
-              </a>
-            {% endif %}
-
-          </div>
-
-        </div>
-
-        <div class="room__box scroll">
-
-          <div class="room__header scroll">
-
-            <div class="room__info">
-              <h3>{{room.name}}</h3>
-              <span>{{room.created|timesince}} ago</span>
-            </div>
-
-            <div class="room__hosted">
-              <p>Hosted By</p>
-              <a
-                href="{% url 'user-profile' room.host.username %}"
-                class="room__author w-fit"
-              >
-                <div class="avatar avatar--small">
-                  <img src="{{room.host.avatar}}" alt="user-avatar" />
+    <main class="profile-page layout layout--2">
+        <div class="my_container ">
+            <!-- Room Start -->
+            <div class="room ">
+                <div class="room__top">
+                    <div class="room__topLeft items-center">
+                        <a href="{{ request.META.HTTP_REFERER }}">
+                            <img height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/arrow-left.svg' %}"
+                                 alt="left-arrow">
+                        </a>
+                        <h3>Study Room</h3>
+                        {% if room.type == 'private' %}
+                            {% comment %} <span class="roomListRoom__topic">{{room.type}}</span> {% endcomment %}
+                            <button class="bg-dark-medium px-4 py-2 rounded-full border border-dark-light"
+                                    type="submit">
+                                <img height="30"
+                                     width="30"
+                                     src="{% static 'images/icons/lock-2.svg' %}"
+                                     alt="lock">
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="room__topRight">
+                        {% if room.host == request.user or is_admin %}
+                            <a href="{% url 'room-settings' room.slug %}"
+                               class="room__topics btn bg-dark-medium">Settings</a>
+                            <a href="{% url 'update-room' room.slug %}"
+                               class="room__topics btn bg-dark-medium">
+                                <img height="30"
+                                     width="30"
+                                     src="{% static 'images/icons/pen.svg' %}"
+                                     alt="pen">
+                            </a>
+                        {% endif %}
+                        {% if not request.user.id == room.host_id %}
+                            <form hx-post="{% url 'toggle-room-join' room.id %}"
+                                  hx-indicator=".progress">
+                                {% csrf_token %}
+                                <button type="submit" class="room__topics  btn bg-dark-medium">
+                                    {% if is_joined %}
+                                        Leave Room
+                                    {% else %}
+                                        Join Room
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+                        {% if room.host_id == request.user.id or is_admin %}
+                            <a href="{% url 'invite-room' room.slug %}"
+                               class="room__topics btn bg-dark-medium"
+                               id="invite-user-btn">Invite Users</a>
+                        {% endif %}
+                    </div>
                 </div>
-                <span>@{{ room.host.username }}</span>
-              </a>
-            </div>
-            
-            <div class="room__details my-2">
-              {{room.description}}
-            </div>
-            
-            <span class="room__topics bg-dark-medium my-2">{{room.topic}}</span>
-          
-          </div>
-
-          {% comment %} The message {% endcomment %}
-          {% if request.user.is_authenticated and not is_blocked and not room.is_archived %}
-            <div class="room__message">
-              <form 
-                hx-post="{% url 'room-add-message' room.id %}" 
-                hx-target="#messages-list" 
-                hx-swap="afterbegin"
-                hx-indicator=".progress" 
-                hx-ext="disable-element"
-                hx-disable-element="#sumbit-btn-message"
-                class="reply-form  bg-bg border border-gray-600 rounded-xl " 
-            >
-                {% csrf_token %}
-                {{ msg_form.media }}
-                {{msg_form.as_p}}
-
-                <div class="flex items-center justify-between gap-3 border-t border-dark  p-5">   
-                    <p class="text-gray-400">
-                        Supports Markdown
-                    </p>
-                    <button 
-                        type="submit" 
-                        class="disabled:bg-gray btn btn--dark hover:bg-dark-medium"
-                        id="sumbit-btn-message" 
-                        hx-disable-element="self"
-                    >
-                        Add Message
-                    </button>
+                <div class="room__box scroll">
+                    <div class="room__header scroll">
+                        <div class="room__info">
+                            <h3>{{ room.name }}</h3>
+                            <span>{{ room.created|timesince }} ago</span>
+                        </div>
+                        <div class="room__hosted">
+                            <p>Hosted By</p>
+                            <a href="{% url 'user-profile' room.host.username %}"
+                               class="room__author w-fit">
+                                <div class="avatar avatar--small">
+                                    <img height="30" width="30" src="{{ room.host.avatar }}" alt="user-avatar" />
+                                </div>
+                                <span>@{{ room.host.username }}</span>
+                            </a>
+                        </div>
+                        <div class="room__details my-2">{{ room.description }}</div>
+                        <span class="room__topics bg-dark-medium my-2">{{ room.topic }}</span>
+                    </div>
+                    {% comment %} The message {% endcomment %}
+                    {% if request.user.is_authenticated and not is_blocked and not room.is_archived %}
+                        <div class="room__message">
+                            <form hx-post="{% url 'room-add-message' room.id %}"
+                                  hx-target="#messages-list"
+                                  hx-swap="afterbegin"
+                                  hx-indicator=".progress"
+                                  hx-ext="disable-element"
+                                  hx-disable-element="#sumbit-btn-message"
+                                  class="reply-form  bg-bg border border-gray-600 rounded-xl ">
+                                {% csrf_token %}
+                                {{ msg_form.media }}
+                                {{ msg_form.as_p }}
+                                <div class="flex items-center justify-between gap-3 border-t border-dark  p-5">
+                                    <p class="text-gray-400">Supports Markdown</p>
+                                    <button type="submit"
+                                            class="disabled:bg-gray btn btn--dark hover:bg-dark-medium"
+                                            id="sumbit-btn-message"
+                                            hx-disable-element="self">Add Message</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                    {% include "base/converstion_component.html" %}
                 </div>
-            </form>
             </div>
-          {% endif %}
-
-          
-          {% include 'base/converstion_component.html' %}
-
+            <!--   Members -->
+            <div class="sticky_right_panel sticky_panel  ">
+                <h3 class="participants__top">
+                    Latest Members <span>({{ room.membership_set.all.count }} Joined)</span>
+                </h3>
+                <div class="participants__list scroll">
+                    {% for membership in room.membership_set.all %}
+                        <a href="{% url 'user-profile' membership.user.username %}"
+                           class="participant {% if membership.is_admin %}bg-dark-light p-3 rounded-md{% endif %}">
+                            <div class="avatar avatar--medium">
+                                <img height="30"
+                                     width="30"
+                                     src="{{ membership.user.avatar }}"
+                                     alt="user-avatar" />
+                            </div>
+                            <p>
+                                {{ membership.user.username }}
+                                <span>@{{ membership.user.username }}</span>
+                            </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <!--  End -->
         </div>
-
-      </div>
-
-      <!--   Members -->
-      <div class="sticky_right_panel sticky_panel  ">
-        <h3 class="participants__top">
-          Latest Members <span>({{room.membership_set.all.count}} Joined)</span>
-        </h3>
-        <div class="participants__list scroll">
-          {% for membership in room.membership_set.all %}
-            <a href="{% url 'user-profile' membership.user.username %}" class="participant {% if membership.is_admin %} bg-dark-light p-3 rounded-md {% endif %}">
-              <div class="avatar avatar--medium">
-                <img src="{{membership.user.avatar}}" alt="user-avatar" />
-              </div>
-              <p>
-                {{membership.user.username}}
-                <span>@{{membership.user.username}}</span>
-              </p>
-            </a>
-          {% endfor %}
-        </div>
-      </div>
-      <!--  End -->
-    </div>
-  </main>
+    </main>
 {% endblock content %}
-
-{% comment %} {% block extra_scripts %}
-  {% if request.user.is_authenticated %}
-    <script>
-      
-    </script>
-  {% endif %}
-{% endblock extra_scripts %} {% endcomment %}

@@ -1,44 +1,47 @@
-{% extends 'main.html' %}
-
+{% extends "main.html" %}
 {% load static %}
-
 {% block title %}
-<title>Topics</title>
+    <title>Topics</title>
 {% endblock title %}
-
 {% block content %}
-<main class="create-room layout">
-  <div class="my_container">
-    <div class="layout__box w-full">
-      <div class="layout__boxHeader">
-        <div class="layout__boxTitle">
-          <a href="{{request.META.HTTP_REFERER}}">
-            <img src="{% static 'images/icons/arrow-left.svg'  %}" alt="left-arrow">
-          </a>
-          <h3>Browse Topics</h3>
+    <main class="create-room layout">
+        <div class="my_container">
+            <div class="layout__box w-full">
+                <div class="layout__boxHeader">
+                    <div class="layout__boxTitle">
+                        <a href="{{ request.META.HTTP_REFERER }}">
+                            <img height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/arrow-left.svg' %}"
+                                 alt="left-arrow">
+                        </a>
+                        <h3>Browse Topics</h3>
+                    </div>
+                </div>
+                <div class="topics-page layout__body">
+                    <form class="header__search" action="" method="post">
+                        {% csrf_token %}
+                        <label>
+                            <img height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/search.svg' %}"
+                                 alt="search" />
+                            <input name="q"
+                                   placeholder="Search for topics"
+                                   hx-post="{% url 'search-topic' %}"
+                                   hx-trigger="keyup changed delay:300ms"
+                                   hx-target="#topic-list"
+                                   required />
+                        </label>
+                    </form>
+                    <ul class="topics__list">
+                        <li>
+                            <a href="{% url 'topics' %}" class="active">All <span>{{ topics|length }}</span></a>
+                        </li>
+                        <div id="topic-list">{% include "base/partials/topic_list.html" %}</div>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <div class="topics-page layout__body">
-        <form class="header__search" action="" method="POST">
-          {% csrf_token %}
-          <label>
-            <img class="" src="{% static 'images/icons/search.svg' %}" alt="search" />
-            <input name="q" placeholder="Search for topics" hx-post="{% url 'search-topic' %}"
-              hx-trigger="keyup changed delay:300ms" hx-target="#topic-list" required />
-          </label>
-        </form>
-
-        <ul class="topics__list">
-          <li>
-            <a href="{% url 'topics' %}" class="active">All <span>{{topics|length}}</span></a>
-          </li>
-          <div id="topic-list">
-            {% include 'base/partials/topic_list.html' %}
-          </div>
-        </ul>
-      </div>
-    </div>
-  </div>
-</main>
+    </main>
 {% endblock content %}

@@ -1,49 +1,45 @@
-{% extends 'main.html' %}
-
+{% extends "main.html" %}
 {% load static %}
-
 {% block title %}
-<title>StudyBuddy - Find study partners around the world!</title>
+    <title>StudyBuddy - Find study partners around the world!</title>
 {% endblock title %}
-
 {% block content %}
-<main class="layout layout--3">
-  <div class="my_container">
-    {% include 'base/topic_component.html' %}
-    <!-- Room List Start -->
-    <div class="roomList">
-      <div class="mobile-menu">
-        <form class="header__search" action="{% url 'home' %}" method="GET">
-          <label>
-            <img class="" src="{% static 'images/icons/search.svg' %}" alt="search" />
-            <input placeholder="Search for posts" name="q" />
-          </label>
-        </form>
-      </div>
-
-      <div class="roomList__header">
-        <div>
-          <h2>Study Room</h2>
-          <p>{{page_obj.object_list|length}} Rooms available</p>
+    <main class="layout layout--3">
+        <div class="my_container">
+            {% include "base/topic_component.html" %}
+            <!-- Room List Start -->
+            <div class="roomList">
+                <div class="mobile-menu">
+                    <form class="header__search" action="{% url 'home' %}" method="get">
+                        <label>
+                            <img height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/search.svg' %}"
+                                 alt="search" />
+                            <input placeholder="Search for posts" name="q" />
+                        </label>
+                    </form>
+                </div>
+                <div class="roomList__header">
+                    <div>
+                        <h2>Study Room</h2>
+                        <p>{{ page_obj.object_list|length }} Rooms available</p>
+                    </div>
+                    <a class="btn btn--main" href="{% url 'create-room' %}">
+                        <img height="30"
+                             width="30"
+                             src="{% static 'images/icons/plus.svg' %}"
+                             alt="plus">
+                        Create Room
+                    </a>
+                </div>
+                {% include "base/feed_component.html" %}
+                <div class="text-center">{% include "base/_spinner.html" %}</div>
+            </div>
+            <!-- Room List End -->
+            <!-- Activities Start -->
+            {% include "base/activity_component.html" %}
+            <!-- Activities End -->
         </div>
-        <a class="btn btn--main" href="{% url 'create-room' %}">
-          <img src="{% static 'images/icons/plus.svg'  %}" alt="plus">
-          Create Room
-        </a>
-      </div>
-
-      {% include 'base/feed_component.html' %}
-
-      <div class="text-center">
-        {% include 'base/_spinner.html' %}
-      </div>
-
-    </div>
-    <!-- Room List End -->
-
-    <!-- Activities Start -->
-    {% include 'base/activity_component.html' %}
-    <!-- Activities End -->
-  </div>
-</main>
-{% endblock %}
+    </main>
+{% endblock content %}

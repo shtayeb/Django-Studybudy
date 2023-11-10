@@ -1,62 +1,61 @@
 {% load static %}
 {% load markdown_extras %}
-
-<details open class="thread" id="message-{{reply.parent_id}}-reply-{{reply.id}}">
+<details open
+         class="thread"
+         id="message-{{ reply.parent_id }}-reply-{{ reply.id }}">
     <summary class="thread__top">
         <div class="thread__author">
-            <a href="{% url 'user-profile' reply.user.username %}" class="thread__authorInfo">
-                <div class="avatar avatar--small {% if reply.user.id in request.online_now_ids %} active {% endif %}l">
-                    <img src="{{reply.user.avatar}}" alt="user-avatar" />
+            <a href="{% url 'user-profile' reply.user.username %}"
+               class="thread__authorInfo">
+                <div class="avatar avatar--small {% if reply.user.id in request.online_now_ids %}active{% endif %}l">
+                    <img src="{{ reply.user.avatar }}"
+                         alt="user-avatar"
+                         height="30"
+                         width="30" />
                 </div>
-                <span>@{{reply.user.username}}</span>
+                <span>@{{ reply.user.username }}</span>
             </a>
-            <span class="thread__date">{{reply.created|timesince}} ago</span>
-
+            <span class="thread__date">{{ reply.created|timesince }} ago</span>
             {% if request.user == reply.user %}
-            <a href="{% url 'delete-message' reply.id %}">
-                <div class="thread__delete">
-                    <img src="{% static 'images/icons/times.svg'  %}" alt="close" class="size-sm">
-                </div>
-            </a>
+                <a href="{% url 'delete-message' reply.id %}">
+                    <div class="thread__delete">
+                        <img src="{% static 'images/icons/times.svg' %}"
+                             height="30"
+                             width="30"
+                             alt="close"
+                             class="size-sm">
+                    </div>
+                </a>
             {% endif %}
         </div>
-
     </summary>
-
     <div class=" reply-body">
-
-        <div class="thread__details markdown-prose " style="font-size:unset;line-height:unset">
-            {{ reply.body | markdown | safe }}
-        </div>
-
+        <div class="thread__details markdown-prose "
+             style="font-size:unset;
+                    line-height:unset">{{ reply.body | markdown | safe }}</div>
         <div class="thread__footer border-y border-gray-700 py-5 flex">
             {% for reaction in reaction_types %}
-                <form 
-                    class="item" 
-                    hx-post="{% url 'message-reaction' reply.id %}" 
-                    hx-trigger="click"
-                    hx-target="this" 
-                    hx-swap="outerHTML"
-                >
+                <form class="item"
+                      hx-post="{% url 'message-reaction' reply.id %}"
+                      hx-trigger="click"
+                      hx-target="this"
+                      hx-swap="outerHTML">
                     {% csrf_token %}
                     <input type="hidden" name="reaction_type_id" value="{{ reaction.id }}">
-
-                    <span class="item-reaction" id="{{ reaction.id }}" data-message="{{reply.id}}">
-                        {{reaction.name}}
-                    </span>
-                    <span class="reaction_count" id="m-{{reply.id}}-count-{{reaction.id}}">
+                    <span class="item-reaction"
+                          id="{{ reaction.id }}"
+                          data-message="{{ reply.id }}">{{ reaction.name }}</span>
+                    <span class="reaction_count" id="m-{{ reply.id }}-count-{{ reaction.id }}">
                         {% if reaction.name == '👍' %}
-                            {{reply.like_count | default:0}}
+                            {{ reply.like_count | default:0 }}
                         {% elif reaction.name == '🔥' %}
-                            {{reply.fire_count | default:0}}
+                            {{ reply.fire_count | default:0 }}
                         {% elif reaction.name == '💩' %}
-                            {{reply.poop_count | default:0}}
+                            {{ reply.poop_count | default:0 }}
                         {% endif %}
                     </span>
                 </form>
             {% endfor %}
         </div>
-
     </div>
-
 </details>

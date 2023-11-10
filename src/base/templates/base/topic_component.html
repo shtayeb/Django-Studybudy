@@ -1,28 +1,25 @@
 {% load static %}
 <!-- Topics Start -->
 <div class="sticky_panel sticky_left_panel topics">
-  <div class="topics__header">
-    <h2>Browse Topics</h2>
-  </div>
-  
-  <ul class="topics__list scroll ">
-    <li>
-      <a href="{% url 'home' %}" class="active"
-        >All <span>{{topics|length}}</span></a
-      >
-    </li>
-    {% for topic in topics %}
-    <li>
-      <a href="{% url 'home' %}?q={{topic.name}}"
-        >{{topic.name}} <span>{{topic.rooms_count}}</span></a
-      >
-    </li>
-    {% endfor %}
-  </ul>
-  <a class="btn btn--link" href="{% url 'topics' %}">
-    More
-    <img src="{% static 'images/icons/chevron-down.svg'  %}" alt="left-arrow" >
-   
-  </a>
+    <div class="topics__header">
+        <h2>Browse Topics</h2>
+    </div>
+    <ul class="topics__list scroll ">
+        <li>
+            <a href="{% url 'home' %}" class="active">All <span>{{ topics|length }}</span></a>
+        </li>
+        {% for topic in topics %}
+            <li>
+                <a href="{% url 'home' %}?q={{ topic.name }}">{{ topic.name }} <span>{{ topic.rooms_count }}</span></a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn--link" href="{% url 'topics' %}">
+        More
+        <img height="30"
+             width="30"
+             src="{% static 'images/icons/chevron-down.svg' %}"
+             alt="left-arrow">
+    </a>
 </div>
 <!-- Topics End -->

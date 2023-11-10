@@ -1,69 +1,70 @@
-{% extends 'main.html' %} 
-
+{% extends "main.html" %}
 {% load static %}
-
 {% block title %}
-  <title>Settings: {{ room.name }}</title>
+    <title>Settings: {{ room.name }}</title>
 {% endblock title %}
-
 {% block content %}
-<main class="layout layout--2-v2">
-    <div class="my_container justify-normal items-start">
-
-        <div class="sticky_panel sticky_right_panel ">
-            <div class="activities__header">
-                <h2>
-                    <a href="{% url 'room' room.slug %}">
-                        Settings
-                     - {{room.name|slice:":15"}}...</a>
-                </h2>
+    <main class="layout layout--2-v2">
+        <div class="my_container justify-normal items-start">
+            <div class="sticky_panel sticky_right_panel ">
+                <div class="activities__header">
+                    <h2>
+                        <a href="{% url 'room' room.slug %}">
+                            Settings
+                        - {{ room.name|slice:":15" }}...</a>
+                    </h2>
+                </div>
+                <ul class="activities_list p-5 space-y-5 scroll ">
+                    <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium {% if request.resolver_match.view_name == 'room-settings' %}bg-dark-medium rounded-md{% endif %} ">
+                        <a href="{% url 'room-settings' room.slug %}"
+                           class="w-full flex items-center gap-5">
+                            <img class="w-6 h-6"
+                                 height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/tool.svg' %}"
+                                 alt="tool-icon">
+                            Info
+                        </a>
+                    </li>
+                    <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium {% if request.resolver_match.view_name == 'update-room' %}bg-dark-medium rounded-md{% endif %} ">
+                        <a href="{% url 'update-room' room.slug %}"
+                           class="w-full flex items-center gap-5">
+                            <img class="w-6 h-6"
+                                 height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/pen.svg' %}"
+                                 alt="pen-icon">
+                            Edit Room
+                        </a>
+                    </li>
+                    <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium {% if request.resolver_match.view_name == 'room-members' %}bg-dark-medium rounded-md{% endif %} ">
+                        <a href="{% url 'room-members' room.slug %}"
+                           class="w-full flex items-center gap-5">
+                            <img class="w-6 h-6"
+                                 height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/user-group.svg' %}"
+                                 alt="user-group-icon">
+                            Members
+                        </a>
+                    </li>
+                    <li class="hover:bg-dark-medium p-3 hover:rounded-md {% if request.resolver_match.view_name == 'room-invitations' %}bg-dark-medium rounded-md{% endif %}} ">
+                        <a href="{% url 'room-invitations' room.slug %}"
+                           class="w-full flex items-center gap-5">
+                            <img class="w-6 h-6"
+                                 height="30"
+                                 width="30"
+                                 src="{% static 'images/icons/invite.svg' %}"
+                                 alt="invite-icon">
+                            Invitations
+                        </a>
+                    </li>
+                </ul>
             </div>
-
-            <ul class="activities_list p-5 space-y-5 scroll ">
-                <li 
-                    class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium
-                    {% if request.resolver_match.view_name == 'room-settings' %}bg-dark-medium rounded-md {% endif %}
-                    "
-                >
-                    <a href="{% url 'room-settings' room.slug %}" class="w-full flex items-center gap-5">
-                        <img class="w-6 h-6" src="{% static 'images/icons/tool.svg' %}" alt="tool-icon" >
-                        Info 
-                    </a>
-                </li>
-                <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium
-                        {% if request.resolver_match.view_name == 'update-room' %}bg-dark-medium rounded-md {% endif %}
-                    "
-                >
-                    <a href="{% url 'update-room' room.slug %}" class="w-full flex items-center gap-5">
-                        <img class="w-6 h-6" src="{% static 'images/icons/pen.svg' %}" alt="pen-icon" >
-                        Edit Room 
-                    </a>
-                </li>
-                <li class="hover:bg-dark-medium p-3 hover:rounded-md border-b border-dark-medium
-                    {% if request.resolver_match.view_name == 'room-members' %}bg-dark-medium rounded-md {% endif %}
-                "
-                >
-                    <a href="{% url 'room-members' room.slug %}" class="w-full flex items-center gap-5">
-                        <img class="w-6 h-6" src="{% static 'images/icons/user-group.svg' %}" alt="user-group-icon" >
-                        Members
-                    </a>
-                </li>
-                <li class="hover:bg-dark-medium p-3 hover:rounded-md 
-                    {% if request.resolver_match.view_name == 'room-invitations' %}bg-dark-medium rounded-md {% endif %}}
-                "
-                >
-                    <a href="{% url 'room-invitations' room.slug %}" class="w-full flex items-center gap-5">
-                        <img class="w-6 h-6" src="{% static 'images/icons/invite.svg' %}" alt="invite-icon" >
-                        Invitations
-                    </a>
-                </li>
-            </ul>
+            <div>
+                {% block settings_content %}
+                {% endblock settings_content %}
+            </div>
         </div>
-
-        <div class="">
-            {% block settings_content %}
-            {% endblock settings_content %}
-        </div>
-    </div>
-</main>
-{% endblock %}
+    </main>
+{% endblock content %}

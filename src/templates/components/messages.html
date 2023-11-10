@@ -2,26 +2,29 @@
 {% if messages %}
     <div class="layout space-y-3">
         {% for message in messages %}
-            <div  class="my_container {{ message.tags }}" id="{{forloop.counter}}">
+            <div class="my_container {{ message.tags }}" id="{{ forloop.counter }}">
                 <ul class="messages">
                     <li class="flex gap-5 items-center">
-                        {{ message }} 
-                        <img data-message="{{forloop.counter}}" src="{% static '/images/icons/remove.svg' %}" alt="close" class="message_close fill-white w-6 h-6 cursor-pointer hover:bg-main" />
+                        {{ message }}
+                        <img data-message="{{ forloop.counter }}"
+                             height="30"
+                             width="30"
+                             src="{% static '/images/icons/remove.svg' %}"
+                             alt="close"
+                             class="message_close fill-white w-6 h-6 cursor-pointer hover:bg-main" />
                     </li>
                 </ul>
             </div>
         {% endfor %}
     </div>
-{% endif %} 
-
+{% endif %}
 {% block extra_scripts %}
-<script>
-    document.querySelectorAll(".message_close").forEach(reaction => {
-        reaction.addEventListener("click", (e) => {
-          const msg_id = e.target.dataset.message
-          document.getElementById(msg_id).remove()
+    <script>
+        document.querySelectorAll(".message_close").forEach(reaction => {
+            reaction.addEventListener("click", (e) => {
+                const msg_id = e.target.dataset.message
+                document.getElementById(msg_id).remove()
+            })
         })
-    })
-</script>
-
+    </script>
 {% endblock extra_scripts %}

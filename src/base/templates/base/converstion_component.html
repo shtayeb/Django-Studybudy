@@ -1,29 +1,27 @@
 <div class="room__conversation">
     <div class="threads scroll" id="messages-list">
         {% for message in room.message_set.all %}
-          {% include 'base/_message.html' %}
+            {% include "base/_message.html" %}
         {% empty %}
             <span>No Messages Yet !</span>
         {% endfor %}
     </div>
 </div>
-
-
 {% if request.user.is_authenticated %}
-  {% block extra_scripts %}
-    <script>
-      document.addEventListener(
-            "click",
-            function(event) {
-                var target = event.target;
-                var replyForm;
-                if (target.matches("[data-toggle='reply-form']")) {
-                    replyForm = document.getElementById(target.getAttribute("data-target"));
-                    replyForm.classList.toggle("d-none");
-                }
-            },
-            false
-        );
-    </script>
-  {% endblock %}
+    {% block extra_scripts %}
+        <script>
+            document.addEventListener(
+                "click",
+                function(event) {
+                    var target = event.target;
+                    var replyForm;
+                    if (target.matches("[data-toggle='reply-form']")) {
+                        replyForm = document.getElementById(target.getAttribute("data-target"));
+                        replyForm.classList.toggle("d-none");
+                    }
+                },
+                false
+            );
+        </script>
+    {% endblock extra_scripts %}
 {% endif %}

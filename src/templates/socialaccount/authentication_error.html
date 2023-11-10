@@ -1,28 +1,22 @@
-{% extends 'main.html' %} 
-
+{% extends "main.html" %}
 {% block extra_heads %}
-<title>Social Network Login Failure</title>
+    <title>Social Network Login Failure</title>
 {% endblock extra_heads %}
-
 {% block content %}
-<main class=" my_containernerner">
-  <div class="auth">
-    <div class="layout__box">
-      <div class="layout__boxHeader">
-        <div class="layout__boxTitle">
-          <h3>Social Network Login Failure</h3>
+    <main class=" my_containernerner">
+        <div class="auth">
+            <div class="layout__box">
+                <div class="layout__boxHeader">
+                    <div class="layout__boxTitle">
+                        <h3>Social Network Login Failure</h3>
+                    </div>
+                </div>
+                <div class="layout__body">
+                    <div class="auth__action">
+                        <p>An error occurred while attempting to login via your social network account.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="layout__body">
-        <div class="auth__action">
-          <p>
-            An error occurred while attempting to login via your social network account.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
- 
-</main>
-
+    </main>
 {% endblock content %}

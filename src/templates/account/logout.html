@@ -1,41 +1,30 @@
-{% extends 'main.html' %} 
-
+{% extends "main.html" %}
 {% block extra_heads %}
-<title>Sign Out</title>
+    <title>Sign Out</title>
 {% endblock extra_heads %}
-
 {% block content %}
-<main class=" my_container">
-<div class="auth">
-    <div class="layout__box">
-      <div class="layout__boxHeader">
-        <div class="layout__boxTitle">
-          <h3>Sign Out</h3>
+    <main class=" my_container">
+        <div class="auth">
+            <div class="layout__box">
+                <div class="layout__boxHeader">
+                    <div class="layout__boxTitle">
+                        <h3>Sign Out</h3>
+                    </div>
+                </div>
+                <div class="layout__body">
+                    {% comment %} <h2 class="auth__tagline">Change Password</h2> {% endcomment %}
+                    <p>Are you sure you want to sign out?'</p>
+                    <form method="post" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                        {% if redirect_field_value %}
+                            <input type="hidden"
+                                   name="{{ redirect_field_name }}"
+                                   value="{{ redirect_field_value }}" />
+                        {% endif %}
+                        <button class="btn btn--main" type="submit">Sign Out</button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="layout__body">
-        {% comment %} <h2 class="auth__tagline">Change Password</h2> {% endcomment %}
-        <p>
-          Are you sure you want to sign out?'
-        </p>
-
-         <form method="post" action="{% url 'account_logout' %}">
-          {% csrf_token %}
-
-            {% if redirect_field_value %}
-              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-            {% endif %}
-
-        <button class="btn btn--main" type="submit">
-            Sign Out
-        </button>
-        </form>
-
-       
-      </div>
-    </div>
-  </div>
-</main>
- 
-
+    </main>
 {% endblock content %}
