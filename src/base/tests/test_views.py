@@ -18,7 +18,9 @@ import inspect  # Import the inspect module to check the source of the functions
 # Import the modules you need
 from django_extensions.management.commands.show_urls import Command as ShowUrlsCommand
 import json
+
 # Define a test case class
+from base.urls import urlpatterns
 
 
 class ViewTestCase(TestCase):
@@ -42,10 +44,6 @@ class ViewTestCase(TestCase):
 
         return output_list
 
-        # print(output_list[0]["module"])
-        # Assert that the output contains the expected urls
-        # self.assertIn('/service-session/status django_app.views.service_session_status', output)
-
     # Define a helper method to get all the view functions in views.py
     def get_view_functions(self):
         # Get all the attributes of the views module
@@ -63,33 +61,18 @@ class ViewTestCase(TestCase):
     def test_view_functions_are_used_in_urls(self):
         # Get all the view functions
         view_funcs = self.get_view_functions()
-        view_urls = self.get_all_base_urls()
+        view_urls = urlpatterns
 
         # Loop through each function
         for func in view_funcs:
-            # Try to resolve the function name as a url pattern name
-            # TODO: We cant get the path from view_name without its url params.
-            # And the url param is defferent for all of it.
             found = False
             for url in view_urls:
-                if func.__name__ in url["module"]:
+                if func is url.callback:
                     found = True
                     break
 
             if not found:
                 self.fail(f"{func.__name__} is not used in urls")
-                # print(f"View: {func.__name__}")
-                # resolver = resolve(f"/{func.__name__}/")
-                # path = reverse(func.__name__)
-                # print(f"View: {func.__name__} has Path: {path}")
-                # Assert that the resolver matches the function
-                # self.assertTrue(resolve)
-                # self.assertEqual(resolve(reverse(func.__name__)).func.__name__, func.__name__)
-                # self.fail(f"{func.__name__} is not used in urls: {e}")
-
-            # try:
-            # If the function name is not a valid url pattern name, raise an assertion error
-            # except Exception as e:
 
 
 class RobotsTxtTests(TestCase):
