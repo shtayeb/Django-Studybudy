@@ -55,7 +55,7 @@ STORAGES = {
 }
 
 #
-NPLUSONE_LOGGER = logging.getLogger("nplusone")
+NPLUSONE_LOGGER = structlog.get_logger("nplusone")
 NPLUSONE_LOG_LEVEL = logging.WARN
 
 DJANGO_VITE_PLUGIN = {
