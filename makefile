@@ -43,7 +43,7 @@ update: install migrate install-pre-commit;
 
 .PHONY: test
 test:
-	poetry run python src/manage.py test
+	cd src && poetry run python manage.py test
 
 .PHONY: db-seed
 db-seed:
