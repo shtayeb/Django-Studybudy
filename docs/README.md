@@ -107,7 +107,7 @@ class Product(models.Model):
 - [django-easy-audit](https://github.com/soynatan/django-easy-audit)
 - [django-extensions](https://github.com/django-extensions/django-extensions)
 - [nplusone](https://github.com/jmcarp/nplusone)
-- [django-debug-toolbar](https://)
+- django-debug-toolbar
 
 ## Packages to consider
 
