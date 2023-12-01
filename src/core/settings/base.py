@@ -319,12 +319,12 @@ LOGGING = {
         },
         "json_file": {
             "class": "logging.handlers.WatchedFileHandler",
-            "filename": "logs/json.log",
+            "filename": "../logs/json.log",
             "formatter": "json_formatter",
         },
         "flat_line_file": {
             "class": "logging.handlers.WatchedFileHandler",
-            "filename": "logs/flat_line.log",
+            "filename": "../logs/flat_line.log",
             "formatter": "key_value",
         },
     },
