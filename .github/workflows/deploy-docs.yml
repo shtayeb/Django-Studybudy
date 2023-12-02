@@ -15,10 +15,12 @@ jobs:
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
+
     - name: Setup cargo and Rust toolchain
-    - uses: actions-rs/toolchain@v1
+      uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
+    
     - name: 'Build and deploy'
       shell: bash
       run: |
