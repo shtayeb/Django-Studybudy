@@ -15,11 +15,15 @@ jobs:
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
+    
+    - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
 
     - name: 'Build and deploy'
       shell: bash
       run: |
-        brew install doctave/doctave/doctave
+        cargo install --git https://github.com/Doctave/doctave --tag 0.4.2
         doctave build --release --allow-failed-checks
         
     - name: GitHub Pages
