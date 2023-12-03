@@ -1,3 +1,12 @@
 ---
 title: "Study Buddy"
 base_path: /Django-Studybudy-YT
+logo: logo.svg
+
+colors:
+  main: #71c6dd
+
+navigation:
+  - path: docs/Get-Started.md
+  - path: docs/examples.md
+    children: "*"

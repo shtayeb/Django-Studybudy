@@ -2,6 +2,8 @@
 
 Project Demo - [Study Buddy App Link](https://study-buddy-app.up.railway.app/)
 
+Project Docs - [Documentation](https://shtayeb.github.io/Django-Studybudy-YT/)
+
 Project Kanban - [Consider Contributing](https://github.com/users/shtayeb/projects/1)
 
 ## Getting Started
