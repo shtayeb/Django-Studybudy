@@ -2,7 +2,11 @@ from django.urls import path
 
 from . import views
 
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
 urlpatterns = [
+    path('sentry-debug/', trigger_error),
     path("", views.home, name="home"),
     # Room
     path("room/create/", views.createRoom, name="create-room"),
