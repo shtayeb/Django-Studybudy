@@ -319,19 +319,19 @@ LOGGING = {
         },
         "json_file": {
             "class": "logging.handlers.WatchedFileHandler",
-            "filename": "../logs/json.log",
+            "filename": os.path.join(BASE_DIR.parent, "logs/json.log"),
             "formatter": "json_formatter",
         },
         "flat_line_file": {
             "class": "logging.handlers.WatchedFileHandler",
-            "filename": "../logs/flat_line.log",
+            "filename": os.path.join(BASE_DIR.parent, "logs/flat_line.log"),
             "formatter": "key_value",
         },
     },
     "loggers": {
         "django_structlog": {
             "handlers": ["console", "flat_line_file", "json_file"],
-            "level": "INFO",
+            "level": "ERROR",
         },
     },
 }
