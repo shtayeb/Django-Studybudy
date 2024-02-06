@@ -11,7 +11,7 @@
     <div class="roomListRoom ">
     {% endif %}
         <div class="roomListRoom__header">
-            <a href="{% url 'user-profile' room.host.username %}"
+            <a href="{% url 'user-public-profile' room.host.username %}"
                 class="roomListRoom__author">
                 <div class="avatar avatar--small {% if room.host.id in request.online_now_ids %}active{% endif %}">
                     <img height="30" width="30" src="{{ room.host.avatar }}" alt="user-avatar" />

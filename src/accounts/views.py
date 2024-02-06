@@ -109,7 +109,7 @@ def updateUser(request):
             form.avatar = form.cleaned_data["avatar"]
             form.save()
 
-            return redirect("user-profile", username=user.username)
+            return redirect("user-public-profile", username=user.username)
 
     context = {"form": form}
     return render(request, "accounts/update_user.html", context)

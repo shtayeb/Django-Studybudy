@@ -1,5 +1,5 @@
 <li class="participant justify-between w-full {% if membership.is_admin %}border border-dark-light p-3 rounded-md{% endif %}">
-    <a href="{% url 'user-profile' membership.user.username %}"
+    <a href="{% url 'user-public-profile' membership.user.username %}"
        class="participant mb-0 flex gap-5">
         <div class="avatar avatar--medium">
             <img src="{{ membership.user.avatar }}"

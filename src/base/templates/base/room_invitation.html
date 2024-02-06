@@ -18,7 +18,7 @@
             hx-swap="outerHTML swap:1s">
             {% for invitation in room.roominvitation_set.all %}
                 <li class="participant justify-between w-full">
-                    <a href="{% url 'user-profile' invitation.invitee.username %}"
+                    <a href="{% url 'user-public-profile' invitation.invitee.username %}"
                        class="participant mb-0 flex gap-5">
                         <div class="avatar avatar--medium">
                             <img height="30"

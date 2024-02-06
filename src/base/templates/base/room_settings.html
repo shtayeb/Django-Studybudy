@@ -40,7 +40,7 @@
                         <span class="font-medium">Host</span>
                         <p class="text-xl"></p>
                     </div>
-                    <a href="{% url 'user-profile' room.host.username %}"
+                    <a href="{% url 'user-public-profile' room.host.username %}"
                        class="participant mb-0 flex gap-5">
                         <div class="avatar avatar--medium">
                             <img src="{{ room.host.avatar }}" height="35" width="35" alt="user-avatar" />

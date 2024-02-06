@@ -3,7 +3,7 @@
 <details open class="thread border-l">
     <summary class="thread__top">
         <div class="thread__author">
-            <a href="{% url 'user-profile' message.user.username %}"
+            <a href="{% url 'user-public-profile' message.user.username %}"
                class="flex items-center gap-4">
                 <div class="avatar avatar--small {% if message.user.id in request.online_now_ids %}active{% endif %}">
                     <img src="{{ message.user.avatar }}"
