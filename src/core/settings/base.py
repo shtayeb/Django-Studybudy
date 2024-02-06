@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     # my apps
     "accounts.apps.AccountsConfig",
     "base.apps.BaseConfig",
+    "django_tui",
 ]
 
 MIDDLEWARE = [
