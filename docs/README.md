@@ -78,10 +78,10 @@ python src/manage.py runserver --setting=core.settings.local # local settings
 python src/manage.py runserver --setting=core.settings.production # production settings
 ```
 
-- Run the vite server
+- Run the tailwind watch
 
 ```shell
-make vite
+make t-watch
 ```
 
 ## Docs

@@ -1,5 +1,4 @@
 {% load static %}
-{% load vite %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -10,7 +9,7 @@
               href="{% static 'images/favicon.ico' %}"
               type="image/x-icon" />
         <meta name="theme-color" content="cyan" />
-        {% vite 'styles/tailwind.css' %}
+        <link rel="stylesheet" href="{% static 'styles/out.css' %}">
         {% block meta_tags %}
             <meta name="title"
                   content="StudyBuddy - Find study partners around the world!"
@@ -66,11 +65,16 @@
         <div class="progress bg-dark h-1">
             <div class="indeterminate bg-dark-light"></div>
         </div>
+
         {% include "components/navbar.html" %}
         <div id="messages">{% include "components/messages.html" %}</div>
+        
         {% block content %}
         {% endblock content %}
-        {% vite "js/main.js" %}
+        
+        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+        <script src="{% static 'js/main.js' %}"></script>
+        
         {% block extra_scripts %}
         {% endblock extra_scripts %}
     </body>

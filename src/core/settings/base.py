@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "easyaudit",
     "mdeditor",
-    "django_vite_plugin",
     "django_structlog",
     # my apps
     "accounts.apps.AccountsConfig",
