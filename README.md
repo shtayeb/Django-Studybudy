@@ -1,6 +1,6 @@
 # Django project
 
-Project Demo - [Study Buddy App Link](https://study-buddy-app.up.railway.app/)
+Project Demo - [Study Buddy App Link](https://study-buddy-vju9.onrender.com/)
 
 Project Docs - [Documentation](https://shtayeb.github.io/Django-Studybudy-YT/)
 
@@ -32,7 +32,7 @@ source ./.venv/bin/activate
 # Django packages
 make install
 
-# npm packages
+# npm packages for tailwindcss
 make npm-install
 ```
 
@@ -95,13 +95,6 @@ class Product(models.Model):
     item = GenericForeignKey('content_type','object_id')
 
 ```
-
-## Installed Packages
-
-- [django-easy-audit](https://github.com/soynatan/django-easy-audit)
-- [django-extensions](https://github.com/django-extensions/django-extensions)
-- [nplusone](https://github.com/jmcarp/nplusone)
-- [django-debug-toolbar](https://)
 
 ## Packages to consider
 
