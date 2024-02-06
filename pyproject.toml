@@ -29,6 +29,7 @@ django-structlog = "^6.0.0"
 sentry-sdk = {extras = ["django"], version = "^1.38.0"}
 dj-database-url = "^2.1.0"
 django-tui = "^24.1"
+psycopg2-binary = "^2.9.9"
 
 
 [tool.poetry.group.dev.dependencies]
