@@ -139,7 +139,8 @@
                 </h3>
                 <div class="participants__list scroll">
                     {% for membership in room.membership_set.all %}
-                        <a href="{% url 'user-public-profile' membership.user.username %}"
+                        <a 
+                            href="{% url 'user-public-profile' membership.user.username %}"
                            class="participant {% if membership.is_admin %}bg-dark-light p-3 rounded-md{% endif %}">
                             <div class="avatar avatar--medium">
                                 <img height="30"

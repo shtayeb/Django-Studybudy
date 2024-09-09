@@ -6,6 +6,7 @@ from accounts.factory import UserFactory
 from accounts.models import User
 
 from .models import Membership, Message, ReactionType, Room, Topic
+from django.db.models import Q
 
 FAKE = faker.Faker()
 
@@ -45,7 +46,7 @@ class RoomFactory(DjangoModelFactory):
             for user in extracted:
                 self.members.add(user)
 
-        users = User.objects.all()[:5]
+        users = User.objects.exclude(Q(username__isnull=True) | Q(username__exact=''))[:5]
 
         membership = Membership.objects.create(room=self, user=self.host, is_admin=True)
         self.membership_set.add(membership)
