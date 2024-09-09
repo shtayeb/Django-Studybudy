@@ -12,8 +12,12 @@ import os
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.parse(env("DATABASE_URL", default="local"))
-    # "default": {
+    "sqlite": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR.parent / "db.sqlite3",
+    },
+    "postgres": dj_database_url.parse(env("DATABASE_URL", default="local"))
+    # "mysql": {
     #     "ENGINE": "django.db.backends.mysql",
     #     "NAME": env("DB_NAME", default="test"),
     #     "USER": env("DB_USER", default="root"),
@@ -23,6 +27,10 @@ DATABASES = {
     #     "OPTIONS": {"charset": "utf8mb4"},
     # },
 }
+
+DB = env("DB", default="sqlite")
+
+DATABASES["default"] = DATABASES[DB]
 
 
 STORAGES = {
